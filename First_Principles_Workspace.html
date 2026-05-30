@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Principles Tracker — Deep Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0b11;
+    --surface: #131220;
+    --surface2: #1a1828;
+    --surface3: #201e30;
+    --border: #242238;
+    --border-strong: #302d4a;
+    --text: #e4e2f5;
+    --text-muted: #5a5778;
+    --text-dim: #8a87b0;
+    
+    /* Phase Accent Colors mapped inside left navigation bar */
+    --acc: #9d7ff4;
+    --acc-dim: rgba(157,127,244,.11);
+    --acc-glow: rgba(157,127,244,.25);
+
+    --gold: #f0c060;
+    --gold-dim: rgba(240,192,96,.10);
+    --mint: #5cd09a;
+    --mint-dim: rgba(92,208,154,.10);
+    --rose: #f06878;
+    --rose-dim: rgba(240,104,120,.10);
+    
+    --radius: 12px;
+    --radius-sm: 6px;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Mono', monospace;
+    --font-serif: 'Instrument Serif', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture simulation */
+  body::after {
+    content:''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: .4;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; position: relative; z-index: 1; }
+
+  /* ── SIDEBAR LEFT NAVIGATION ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+  .logo-mark { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 28px; height: 28px; background: var(--acc-dim); border: 1px solid var(--acc);
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--acc); font-weight: 800; flex-shrink: 0;
+  }
+  .logo-text { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
+  .logo-text em { font-style: normal; color: var(--acc); }
+  .logo-sub { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+  .sidebar-date { padding: 12px 20px; font-size: 11px; color: var(--text-dim); border-bottom: 1px solid var(--border); letter-spacing: 0.02em; }
+  .sidebar-nav { padding: 12px; flex: 1; }
+  .nav-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px; margin: 14px 0 6px; }
+  
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 12px; color: var(--text-dim); transition: all 0.15s; border: 1px solid transparent;
+  }
+  .nav-item:hover { color: #fff; background: var(--surface2); }
+  .nav-item.active { color: #fff; background: var(--surface3); border-color: var(--border); }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .nav-count { margin-left: auto; font-size: 10px; color: var(--acc); background: var(--bg); padding: 1px 6px; border-radius: 10px; }
+
+  .sidebar-progress { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--surface2); }
+  .progress-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .progress-bar-wrap { height: 4px; background: var(--bg); border-radius: 50px; overflow: hidden; margin-bottom: 4px; }
+  .progress-bar-fill { height: 100%; background: var(--acc); width: 0%; transition: width 0.4s ease; }
+
+  /* ── MAIN INTERFACE COLUMN ── */
+  .main { overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; padding: 16px 32px;
+    border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10;
+  }
+  .topbar-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: #fff; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  .btn {
+    padding: 6px 14px; border-radius: 50px; font-size: 11px; font-family: var(--font-body);
+    cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-dim); transition: all 0.15s;
+  }
+  .btn:hover { color: #fff; border-color: var(--border-strong); background: var(--surface2); }
+  .btn-primary { background: var(--acc); color: #08061a; border-color: var(--acc); font-weight: 600; }
+  .btn-primary:hover { background: #b099f7; color: #08061a; box-shadow: 0 0 12px var(--acc-glow); }
+  .btn-danger { border-color: rgba(240,104,120,0.3); color: var(--rose); background: var(--rose-dim); }
+  .btn-danger:hover { background: rgba(240,104,120,0.2); }
+
+  /* ── PANELS & VIEWS CONTENT ── */
+  .section { display: none; }
+  .section.active { display: block; }
+  .content-area { padding: 28px 32px; max-width: 1100px; }
+  
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;}
+  .section-head h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .section-head span { font-size: 11px; color: var(--text-muted); }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .stat-value { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--acc); line-height: 1; }
+  .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  @media(max-width: 850px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── COMPONENT CARDS & FORMS ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+  .card-header { padding: 12px 18px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-body { padding: 16px 18px; }
+
+  .field { margin-bottom: 14px; }
+  .field label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 6px; letter-spacing: 0.05em; }
+  textarea, input[type="text"], select {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text); font-family: var(--font-body); font-size: 12px; padding: 8px 12px; outline: none; transition: all 0.15s;
+  }
+  textarea:focus, input[type="text"]:focus, select:focus { border-color: var(--acc); box-shadow: 0 0 0 3px var(--acc-dim); }
+  textarea { min-height: 60px; resize: vertical; }
+
+  /* ── ATOMIC WORKSPACE MODULES ── */
+  .prompt-box { font-family: var(--font-serif); font-style: italic; font-size: 15px; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px; background: var(--surface2); padding: 12px; border-radius: var(--radius-sm); border-left: 2px solid var(--acc); }
+  .step-hint { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 6px; }
+
+  .dynamic-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform:none; } }
+  
+  .truth-toggle {
+    flex-shrink: 0; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+    background: var(--surface3); color: var(--text-dim); font-size: 11px; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .truth-toggle.busted { background: var(--rose-dim); border-color: var(--rose); color: var(--rose); }
+  .truth-toggle.true { background: var(--mint-dim); border-color: var(--mint); color: var(--mint); }
+  
+  .del-btn { background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted); padding: 5px 10px; cursor: pointer; }
+  .del-btn:hover { border-color: var(--rose); color: var(--rose); }
+
+  .solution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .solution-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; }
+  .sc-lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+
+  /* Sliders styling */
+  .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .slider-input { flex: 1; -webkit-appearance: none; height: 4px; background: var(--border); border-radius: 2px; outline: none; }
+  .slider-input::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--acc); cursor: pointer; }
+  .slider-val { font-size: 11px; font-weight: bold; color: var(--acc); min-width: 30px; text-align: right; }
+
+  .empty { text-align: center; padding: 24px; color: var(--text-muted); font-size: 11px; font-style: italic; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--surface3); border: 1px solid var(--border-strong); padding: 8px 16px; border-radius: var(--radius-sm); font-size: 12px; z-index: 200; pointer-events: none; animation: toastIn 0.2s ease forwards; }
+  @keyframes toastIn { from { bottom: 10px; opacity: 0; } to { bottom: 24px; opacity: 1; } }
+
+  .slots-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 6px; }
+  .slots-row.active { border-color: var(--acc); background: var(--surface2); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ── SIDEBAR LEFT NAVIGATION PANEL ── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-mark">
+        <div class="logo-icon">◆</div>
+        <div class="logo-text">First<em>.</em>Principles</div>
+      </div>
+      <div class="logo-sub">Deconstruct & Rebuild Studio</div>
+    </div>
+    <div class="sidebar-date" id="sidebarDate">—</div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-label">Core Dashboard</div>
+      <div class="nav-item active" id="nav-overview" onclick="switchSection('overview')">
+        📍 Workspace Summary
+      </div>
+      <div class="nav-item" id="nav-profile" onclick="switchSection('profile')">
+        ⚙️ Problem Framing
+      </div>
+
+      <div class="nav-label">Workspace Phases</div>
+      <div class="nav-item" id="nav-phase1" onclick="switchSection('phase1')">
+        <div class="nav-dot" style="background:var(--acc)"></div>Phase I: Deconstruct
+      </div>
+      <div class="nav-item" id="nav-phase2" onclick="switchSection('phase2')">
+        <div class="nav-dot" style="background:var(--gold)"></div>Phase II: Challenge
+      </div>
+      <div class="nav-item" id="nav-phase3" onclick="switchSection('phase3')">
+        <div class="nav-dot" style="background:var(--mint)"></div>Phase III: Ground Truth
+      </div>
+      <div class="nav-item" id="nav-phase4" onclick="switchSection('phase4')">
+        <div class="nav-dot" style="background:var(--text)"></div>Phase IV: Synthesize
+      </div>
+
+      <div class="nav-label">Data Engine</div>
+      <div class="nav-item" id="nav-storage" onclick="switchSection('storage')">
+        💾 Topic Memory Slots
+        <span class="nav-count" id="slotCountBadge">1</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-progress">
+      <div class="progress-label"><span>Analytical Depth</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+      <div style="font-size:9px; color:var(--text-muted)" id="progressSub">0 of 4 fields completed</div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT WORKSPACE AREA ── -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Workspace Summary</div>
+      <div class="topbar-actions">
+        <span style="font-size:11px; color:var(--acc); background:var(--surface2); padding: 4px 10px; border-radius:50px; border:1px solid var(--border);" id="currentSlotIndicator">Topic: Default Profile</span>
+        <button class="btn btn-primary" onclick="saveActiveState()">Save Progress ↗</button>
+      </div>
+    </div>
+
+    <!-- OVERVIEW SECTION -->
+    <div class="section active" id="section-overview">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Analytical Blueprint Overview</h2>
+          <span>Aggregated analytics for the active conceptual breakdown</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Assumptions</div>
+            <div class="stat-value" id="statAssumptions">0</div>
+            <div class="stat-sub">Isolated vectors</div>
+          </div>
+          <div class="stat-card" style="border-color: rgba(240,104,120,0.2)">
+            <div class="stat-label" style="color: var(--rose)">Beliefs Busted</div>
+            <div class="stat-value" style="color: var(--rose)" id="statBusted">0</div>
+            <div class="stat-sub">Biases broken down</div>
+          </div>
+          <div class="stat-card" style="border-color: rgba(92,208,154,0.2)">
+            <div class="stat-label" style="color: var(--mint)">Bedrock Axioms</div>
+            <div class="stat-value" style="color: var(--mint)" id="statTruths">0</div>
+            <div class="stat-sub">Physical/Math limits</div>
+          </div>
+          <div class="stat-card" style="border-color: rgba(240,192,96,0.2)">
+            <div class="stat-label" style="color: var(--gold)">Socratic Range</div>
+            <div class="stat-value" style="color: var(--gold)" id="statDepth">1/7</div>
+            <div class="stat-sub">Drill-down depth</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Framing Objective Statement</div></div>
+            <div class="card-body">
+              <p id="summaryProblem" style="font-family: var(--font-serif); font-size: 16px; font-style: italic; color: var(--text-dim);">No active tracking details. Please initialize inside the Problem Framing tab.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Synthesized Novel Solution Alpha</div></div>
+            <div class="card-body">
+              <p id="summarySolution" style="font-size: 12px; color: var(--text-dim);">Awaiting synthesis strategy inside Phase IV.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE SETTING SECTION -->
+    <div class="section" id="section-profile">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Problem Framing & Boundaries</h2>
+          <span>Strip away the superficial layers to reveal the underlying core architecture</span>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Boundary Configurations</div></div>
+          <div class="card-body">
+            <div class="field">
+              <label>Target Core Problem / Question</label>
+              <input type="text" id="f-title" placeholder="e.g., Why does computing infrastructure require localized servers?">
+            </div>
+            <div class="two-col">
+              <div class="field">
+                <label>Operational Domain</label>
+                <input type="text" id="f-domain" placeholder="Product, Business Model, Engineering...">
+              </div>
+              <div class="field">
+                <label>Critical Stakes Level</label>
+                <select id="f-stakes">
+                  <option value="Low">🟢 Low — Intellectual Exercise</option>
+                  <option value="Medium">🟡 Medium — Tactical Pivot</option>
+                  <option value="High">🔴 High — High Risk Vector</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Conventional Status Quo / Traditional Analogy</label>
+              <textarea id="f-consensus" placeholder="What does common practice claim is the 'only way things work'?"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 1 DECONSTRUCT -->
+    <div class="section" id="section-phase1">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Phase I: Isolation & Deconstruction</h2>
+          <span>Deconstruct the framework down into every constituent, embedded assumption</span>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Target Assumption Ledger</div>
+            <button class="btn btn-primary" style="font-size: 10px; padding: 2px 10px;" onclick="addAssumptionItem()">+ Append Assumption</button>
+          </div>
+          <div class="card-body">
+            <div class="prompt-box">List every premise you are accepting on faith regarding cost, raw speed, system rules, or user expectations.</div>
+            <div id="assumptionContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 CHALLENGE -->
+    <div class="section" id="section-phase2">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Phase II: Socratic Questioning & Analogy Audits</h2>
+          <span>Interrogate busted assumptions down to absolute fundamentals</span>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Socratic Core Drill-Down</div></div>
+          <div class="card-body">
+            <div class="prompt-box">Peel back layers of justification. Force yourself to explain exactly why a premise is assumed to be true until you reach hard physical realities.</div>
+            <div class="field">
+              <label>Interrogation Transcript Lines</label>
+              <textarea id="f-socratic" style="min-height: 120px;" placeholder="Why must [X] look like this? Because [Y]. Why must [Y] be true? ..."></textarea>
+            </div>
+            <div class="field">
+              <label>Root Depth Reached</label>
+              <div class="slider-container">
+                <input type="range" class="slider-input" id="f-depth-range" min="1" max="7" value="3" oninput="document.getElementById('depthValText').textContent = this.value + '/7 Layers'">
+                <span class="slider-val" id="depthValText">3/7 Layers</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 GROUND TRUTH -->
+    <div class="section" id="section-phase3">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Phase III: Bedrock Axioms Matrix</h2>
+          <span>The irreducible structural facts remaining after all assumptions are removed</span>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Bedrock Principles</div>
+            <button class="btn" style="font-size: 10px; padding: 2px 10px; border-color: var(--mint); color: var(--mint);" onclick="addTruthItem()">+ Append Axiom</button>
+          </div>
+          <div class="card-body">
+            <div class="prompt-box">Axioms here must map directly to physical laws, mathematical identities, or first-hand observations. No opinions allowed.</div>
+            <div id="truthContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 SYNTHESIZE -->
+    <div class="section" id="section-phase4">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Phase IV: First Principles Rebuild & Synthesis</h2>
+          <span>Reason upward exclusively from verified truths to construct entirely novel solutions</span>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Novel Solution Architecture Matrix</div></div>
+          <div class="card-body">
+            <div class="solution-grid">
+              <div class="solution-card">
+                <div class="sc-lbl">Solution Vector Alpha (Optimal)</div>
+                <textarea id="sol-alpha" placeholder="Build upward from Axioms 1 & 2..."></textarea>
+              </div>
+              <div class="solution-card">
+                <div class="sc-lbl">Solution Vector Beta (Asymmetric)</div>
+                <textarea id="sol-beta" placeholder="Alternative structural approach..."></textarea>
+              </div>
+            </div>
+            <div class="field" style="margin-top: 14px;">
+              <label>Smallest Valid Experiment to Test and Falsify This Model</label>
+              <input type="text" id="f-experiment" placeholder="What is the lowest cost verification check you can run within 48 hours?">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLOT MEMORY MACHINE MANAGEMENT -->
+    <div class="section" id="section-storage">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Topic Memory Management Engine</h2>
+          <span>Switch between multiple active system models or transfer offline file backups</span>
+        </div>
+        
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Active Topic Channels</div></div>
+            <div class="card-body">
+              <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+                <input type="text" id="newSlotInput" placeholder="New Topic Profile Name...">
+                <button class="btn btn-primary" style="border-radius: var(--radius-sm)" onclick="createNewTopicSlot()">Init Track</button>
+              </div>
+              <div id="slotsUIRenderer"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Data Transmission & System Purges</div></div>
+            <div class="card-body">
+              <div class="field">
+                <label>File Synchronization Backups</label>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Download or upload your complete system matrix as a standalone data file configuration.</p>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn" style="flex: 1;" onclick="exportStateToJSON()">Download JSON Backup 📥</button>
+                  <button class="btn" style="flex: 1;" onclick="document.getElementById('hiddenFileInput').click()">Upload Backup File 📤</button>
+                </div>
+                <input type="file" id="hiddenFileInput" style="display: none;" accept=".json" onchange="importStateFromJSON(event)">
+              </div>
+              <hr style="border: none; border-top: 1px solid var(--border); margin: 16px 0;">
+              <div class="field">
+                <label style="color: var(--rose);">System Destruct Sequences</label>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn btn-danger" style="flex: 1;" onclick="purgeActiveTopic()">Reset Active Topic Fields</button>
+                  <button class="btn btn-danger" style="flex: 1; background: rgba(240,104,120,0.05)" onclick="purgeEverything()">Wipe Total Memory Cache</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ── CORE DATA ENGINE SCHEMA DECLARATION ──
+  function generateBlankSessionModel() {
+    return {
+      title: '',
+      domain: '',
+      stakes: 'Medium',
+      consensus: '',
+      socraticText: '',
+      depthRange: 3,
+      experiment: '',
+      solAlpha: '',
+      solBeta: '',
+      assumptions: [
+        { id: 1, text: 'Traditional systems scale linearly with cost', status: 'busted' },
+        { id: 2, text: 'Customers require real-time synchronous handshakes', status: 'untested' }
+      ],
+      axioms: [
+        { id: 1, text: 'Data transport speeds are absolute bounds limited by fiber physics' }
+      ]
+    };
+  }
+
+  let activeSlotKey = "Default Profile";
+  let masterDatabaseManifest = { "Default Profile": generateBlankSessionModel() };
+  let liveSessionRef = masterDatabaseManifest[activeSlotKey];
+
+  // ── SYSTEM INITIALIZATION APPLICATION COMPILE ──
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('sidebarDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    bootstrapLocalStorageEngine();
+    renderUserInterface();
+  });
+
+  function bootstrapLocalStorageEngine() {
+    try {
+      const storedData = localStorage.getItem('fp_studio_master_manifest');
+      const storedActiveKey = localStorage.getItem('fp_studio_active_key');
+      if (storedData) masterDatabaseManifest = JSON.parse(storedData);
+      if (storedActiveKey && masterDatabaseManifest[storedActiveKey]) activeSlotKey = storedActiveKey;
+      liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    } catch(err) {
+      console.warn("Local storage lookup failed, compiling fresh sandbox instance.", err);
+    }
+  }
+
+  function saveActiveState() {
+    // Capture manual bound value sets before syncing structural arrays
+    liveSessionRef.title = document.getElementById('f-title').value;
+    liveSessionRef.domain = document.getElementById('f-domain').value;
+    liveSessionRef.stakes = document.getElementById('f-stakes').value;
+    liveSessionRef.consensus = document.getElementById('f-consensus').value;
+    liveSessionRef.socraticText = document.getElementById('f-socratic').value;
+    liveSessionRef.depthRange = parseInt(document.getElementById('f-depth-range').value);
+    liveSessionRef.solAlpha = document.getElementById('sol-alpha').value;
+    liveSessionRef.solBeta = document.getElementById('sol-beta').value;
+    liveSessionRef.experiment = document.getElementById('f-experiment').value;
+
+    masterDatabaseManifest[activeSlotKey] = liveSessionRef;
+    localStorage.setItem('fp_studio_master_manifest', JSON.stringify(masterDatabaseManifest));
+    localStorage.setItem('fp_studio_active_key', activeSlotKey);
+    
+    renderUserInterface();
+    displayToastNotification('Workspace configurations synchronized cleanly.');
+  }
+
+  // ── NAVIGATION CONTROLLER VIEW DISPATCHER ──
+  function switchSection(targetSectionId) {
+    document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(navItem => navItem.classList.remove('active'));
+    
+    document.getElementById('section-' + targetSectionId).classList.add('active');
+    document.getElementById('nav-' + targetSectionId).classList.add('active');
+    
+    // Auto-update top title text wrapper dynamically
+    const displayTitles = {
+      'overview': 'Workspace Summary', 'profile': 'Problem Framing Studio',
+      'phase1': 'Phase I: Isolation Framework', 'phase2': 'Phase II: Socratic Drill Down',
+      'phase3': 'Phase III: Absolute Bedrock Axioms', 'phase4': 'Phase IV: System Rebuild Matrix',
+      'storage': 'Topic Memory Engine Configuration'
+    };
+    document.getElementById('topbarTitle').textContent = displayTitles[targetSectionId] || 'Workspace Section';
+  }
+
+  // ── USER INTERACTIVE OBJECT ELEMENT INJECTIONS ──
+  function addAssumptionItem() {
+    liveSessionRef.assumptions.push({ id: Date.now(), text: '', status: 'untested' });
+    renderUserInterface();
+  }
+
+  function toggleAssumptionStatus(itemId) {
+    const targetItem = liveSessionRef.assumptions.find(item => item.id === itemId);
+    if (targetItem) {
+      const stateCycle = { 'untested': 'true', 'true': 'busted', 'busted': 'untested' };
+      targetItem.status = stateCycle[targetItem.status];
+      renderUserInterface();
+    }
+  }
+
+  function removeArrayElement(arrayKey, itemId) {
+    liveSessionRef[arrayKey] = liveSessionRef[arrayKey].filter(item => item.id !== itemId);
+    renderUserInterface();
+  }
+
+  function addTruthItem() {
+    liveSessionRef.axioms.push({ id: Date.now(), text: '' });
+    renderUserInterface();
+  }
+
+  // ── RENDER ENGINE CORE LOOP ──
+  function renderUserInterface() {
+    // Top bar Indicators
+    document.getElementById('currentSlotIndicator').textContent = "Topic: " + activeSlotKey;
+    document.getElementById('slotCountBadge').textContent = Object.keys(masterDatabaseManifest).length;
+
+    // Load standard values back to fields safely
+    document.getElementById('f-title').value = liveSessionRef.title || '';
+    document.getElementById('f-domain').value = liveSessionRef.domain || '';
+    document.getElementById('f-stakes').value = liveSessionRef.stakes || 'Medium';
+    document.getElementById('f-consensus').value = liveSessionRef.consensus || '';
+    document.getElementById('f-socratic').value = liveSessionRef.socraticText || '';
+    document.getElementById('f-depth-range').value = liveSessionRef.depthRange || 3;
+    document.getElementById('depthValText').textContent = (liveSessionRef.depthRange || 3) + '/7 Layers';
+    document.getElementById('sol-alpha').value = liveSessionRef.solAlpha || '';
+    document.getElementById('sol-beta').value = liveSessionRef.solBeta || '';
+    document.getElementById('f-experiment').value = liveSessionRef.experiment || '';
+
+    // Calculate Summary Dashboards
+    document.getElementById('statAssumptions').textContent = liveSessionRef.assumptions.length;
+    document.getElementById('statBusted').textContent = liveSessionRef.assumptions.filter(i => i.status === 'busted').length;
+    document.getElementById('statTruths').textContent = liveSessionRef.axioms.length;
+    document.getElementById('statDepth').textContent = (liveSessionRef.depthRange || 3) + '/7';
+
+    document.getElementById('summaryProblem').textContent = liveSessionRef.title ? `“${liveSessionRef.title}”` : "No tracking objective initialized yet.";
+    document.getElementById('summarySolution').textContent = liveSessionRef.solAlpha ? liveSessionRef.solAlpha : "Awaiting alpha target architecture layout generation inside Phase IV.";
+
+    // Render Dynamic Lists
+    renderAssumptionInputs();
+    renderTruthInputs();
+    renderSlotEngineUI();
+    calculateStudioMetrics();
+  }
+
+  function renderAssumptionInputs() {
+    const container = document.getElementById('assumptionContainer');
+    if (!liveSessionRef.assumptions.length) { container.innerHTML = '<div class="empty">No assumptions isolated yet.</div>'; return; }
+    
+    container.innerHTML = liveSessionRef.assumptions.map(item => `
+      <div class="dynamic-row">
+        <input type="text" value="${item.text}" onchange="updateArrayTextValue('assumptions', ${item.id}, this.value)" placeholder="Premise statement configuration...">
+        <button class="truth-toggle ${item.status}" onclick="toggleAssumptionStatus(${item.id})">${item.status.toUpperCase()}</button>
+        <button class="del-btn" onclick="removeArrayElement('assumptions', ${item.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderTruthInputs() {
+    const container = document.getElementById('truthContainer');
+    if (!liveSessionRef.axioms.length) { container.innerHTML = '<div class="empty">No irreducible bedrock statements cataloged.</div>'; return; }
+    
+    container.innerHTML = liveSessionRef.axioms.map(item => `
+      <div class="dynamic-row">
+        <input type="text" value="${item.text}" onchange="updateArrayTextValue('axioms', ${item.id}, this.value)" placeholder="Irreducible factual bound...">
+        <button class="del-btn" onclick="removeArrayElement('axioms', ${item.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function updateArrayTextValue(arrayKey, id, textValue) {
+    const target = liveSessionRef[arrayKey].find(item => item.id === id);
+    if(target) target.text = textValue;
+  }
+
+  function calculateStudioMetrics() {
+    let completeScore = 0;
+    if (liveSessionRef.title) completeScore++;
+    if (liveSessionRef.assumptions.length > 0) completeScore++;
+    if (liveSessionRef.axioms.length > 0) completeScore++;
+    if (liveSessionRef.solAlpha) completeScore++;
+
+    const combinedPercentage = Math.round((completeScore / 4) * 100);
+    document.getElementById('progressBar').style.width = combinedPercentage + '%';
+    document.getElementById('progressPct').textContent = combinedPercentage + '%';
+    document.getElementById('progressSub').textContent = `${completeScore} of 4 workspace hubs complete`;
+  }
+
+  // ── CORE STORAGE MEMORY ENGINE CONTEXT MULTI-SLOTS ──
+  function renderSlotEngineUI() {
+    const container = document.getElementById('slotsUIRenderer');
+    const systemKeys = Object.keys(masterDatabaseManifest);
+    
+    container.innerHTML = systemKeys.map(keyName => {
+      const isCurrentActive = keyName === activeSlotKey;
+      return `
+        <div class="slots-row ${isCurrentActive ? 'active' : ''}">
+          <div style="font-size: 12px; font-weight: bold; font-family: var(--font-display)">${keyName} ${isCurrentActive ? '<span style="color:var(--acc); font-size:10px; margin-left:4px;">(ACTIVE)</span>' : ''}</div>
+          <div style="display:flex; gap:4px">
+            ${!isCurrentActive ? `<button class="btn" style="padding:2px 8px; font-size:10px;" onclick="swapTopicProfileSlot('${keyName}')">Mount</button>` : ''}
+            <button class="btn btn-danger" style="padding:2px 8px; font-size:10px;" onclick="deleteSpecificSlot('${keyName}')" ${systemKeys.length === 1 ? 'disabled style="opacity:0.2"' : ''}>Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function createNewTopicSlot() {
+    const inputElement = document.getElementById('newSlotInput');
+    const targetedValue = inputElement.value.trim();
+    if(!targetedValue || masterDatabaseManifest[targetedValue]) return;
+    
+    masterDatabaseManifest[targetedValue] = generateBlankSessionModel();
+    inputElement.value = '';
+    activeSlotKey = targetedValue;
+    liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    saveActiveState();
+  }
+
+  function swapTopicProfileSlot(targetKeyName) {
+    if(!masterDatabaseManifest[targetKeyName]) return;
+    activeSlotKey = targetKeyName;
+    liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    localStorage.setItem('fp_studio_active_key', activeSlotKey);
+    renderUserInterface();
+    displayToastNotification(`Mounted Channel: ${targetKeyName}`);
+  }
+
+  function deleteSpecificSlot(targetKeyName) {
+    if(Object.keys(masterDatabaseManifest).length <= 1 || activeSlotKey === targetKeyName) return;
+    delete masterDatabaseManifest[targetKeyName];
+    localStorage.setItem('fp_studio_master_manifest', JSON.stringify(masterDatabaseManifest));
+    renderUserInterface();
+  }
+
+  function purgeActiveTopic() {
+    if(!confirm("Are you sure you want to completely flush the active working inputs?")) return;
+    liveSessionRef = generateBlankSessionModel();
+    saveActiveState();
+  }
+
+  function purgeEverything() {
+    if(!confirm("CRITICAL WARNING: This completely wipes local browser memory storage registers. Proceed?")) return;
+    localStorage.clear();
+    activeSlotKey = "Default Profile";
+    masterDatabaseManifest = { "Default Profile": generateBlankSessionModel() };
+    liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    renderUserInterface();
+  }
+
+  // ── BACKUP DATA PIPELINE TRANSMISSIONS ──
+  function exportStateToJSON() {
+    masterDatabaseManifest[activeSlotKey] = liveSessionRef;
+    const trackingBlob = new Blob([JSON.stringify(masterDatabaseManifest, null, 2)], { type: "application/json" });
+    const virtualLink = document.createElement('a');
+    virtualLink.href = URL.createObjectURL(trackingBlob);
+    virtualLink.download = `first-principles-manifest-${new Date().toISOString().slice(0,10)}.json`;
+    virtualLink.click();
+  }
+
+  function importStateFromJSON(event) {
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
+    const textReader = new FileReader();
+    textReader.onload = function(e) {
+      try {
+        const parsedManifest = JSON.parse(e.target.result);
+        masterDatabaseManifest = parsedManifest;
+        activeSlotKey = Object.keys(parsedManifest)[0];
+        liveSessionRef = masterDatabaseManifest[activeSlotKey];
+        localStorage.setItem('fp_studio_master_manifest', JSON.stringify(masterDatabaseManifest));
+        localStorage.setItem('fp_studio_active_key', activeSlotKey);
+        renderUserInterface();
+        displayToastNotification("Import pipeline initialized cleanly.");
+      } catch(err) {
+        alert("The parsed telemetry structure failed to map to a valid tracking schema configuration.");
+      }
+    };
+    textReader.readAsText(selectedFile);
+  }
+
+  function displayToastNotification(msg) {
+    const toastNode = document.createElement('div');
+    toastNode.className = 'toast';
+    toastNode.textContent = msg;
+    document.body.appendChild(toastNode);
+    setTimeout(() => toastNode.remove(), 2500);
+  }
+</script>
+</body>
+</html>

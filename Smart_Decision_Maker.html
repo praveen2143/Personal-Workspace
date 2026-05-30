@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clear Thinking & Better Decisions Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0c10;
+    --surface: #1f2833;
+    --surface2: #151b23;
+    --surface3: #2b3541;
+    --border: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.15);
+    --text: #c5c6c7;
+    --text-muted: #86c232;
+    --text-dim: #667eea;
+    --accent: #66fcf1;
+    --accent-dim: rgba(102, 252, 241, 0.1);
+    --accent-glow: rgba(102, 252, 241, 0.25);
+    
+    /* Decision Step Colors */
+    --stage-1: #ff7b54; /* Gathering Facts */
+    --stage-2: #ffb26b; /* Checking Your Gut */
+    --stage-3: #ffd56b; /* Spotting Mind Traps */
+    --stage-4: #93abd3; /* Weighing New Proof */
+    --stage-5: #66fcf1; /* Action Rules */
+    
+    --red: #ff4d4d;
+    --green: #2ec4b6;
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'Instrument Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--surface2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #0f0f0d;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    margin-left: 38px;
+  }
+
+  .sidebar-date {
+    padding: 14px 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #a3a3a3;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.04em;
+  }
+
+  .sidebar-nav { padding: 12px 12px; flex: 1; }
+
+  .nav-label {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: #555;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    color: #999;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+
+  .nav-item:hover { color: #fff; background: var(--surface); }
+  .nav-item.active {
+    color: #fff;
+    background: var(--surface3);
+    border-color: var(--border);
+  }
+
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  
+  .nav-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    background: var(--surface2);
+    padding: 1px 6px;
+    border-radius: 20px;
+  }
+
+  .sidebar-progress {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: #aaa;
+    font-family: var(--font-mono);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-bar-wrap {
+    height: 4px;
+    background: #111;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--stage-1), var(--accent));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  /* ── MAIN ── */
+  .main { overflow-y: auto; background: #12161c; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-title { font-family: var(--font-display); font-size: 18px; color: #fff; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: #ccc;
+    transition: all 0.15s;
+  }
+
+  .btn:hover { color: #fff; background: var(--surface3); }
+  .btn-primary { background: var(--accent); color: #0b0c10; border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { background: #4edcd3; color: #0b0c10; }
+  .btn-danger { border-color: rgba(255,77,77,0.3); color: #ff6666; }
+  .btn-danger:hover { background: rgba(255,77,77,0.15); color: #ff4d4d; }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+  .content-area { padding: 28px 32px; }
+
+  /* ── STATS GRID ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+  
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+
+  .stat-label { font-size: 11px; font-family: var(--font-mono); color: #777; text-transform: uppercase; margin-bottom: 8px; }
+  .stat-value { font-family: var(--font-display); font-size: 26px; color: #fff; line-height: 1; margin-bottom: 4px; }
+  .stat-sub { font-size: 11px; color: #999; }
+
+  /* ── PIPELINE ── */
+  .pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 28px; }
+  
+  .stage-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+  }
+
+  .stage-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; opacity: 0; transition: opacity 0.2s; }
+  .stage-card.current { border-color: var(--border-strong); background: var(--surface); }
+  .stage-card.current::before { opacity: 1; }
+
+  .s1::before { background: var(--stage-1); }
+  .s2::before { background: var(--stage-2); }
+  .s3::before { background: var(--stage-3); }
+  .s4::before { background: var(--stage-4); }
+  .s5::before { background: var(--stage-5); }
+
+  .stage-num { font-family: var(--font-mono); font-size: 10px; color: #555; margin-bottom: 6px; }
+  .stage-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .stage-desc { font-size: 11px; color: #888; line-height: 1.3; }
+  
+  .stage-badge {
+    display: inline-block; margin-top: 10px; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-family: var(--font-mono);
+  }
+
+  /* ── LAYOUT COMBINATIONS ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  /* ── CARDS ── */
+  .card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 12px; font-family: var(--font-mono); color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-body { padding: 16px 18px; }
+
+  /* ── FORMS ── */
+  textarea, input[type="text"], select {
+    width: 100%; background: #0f1319; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: #fff; font-family: var(--font-body); font-size: 13px; padding: 9px 12px; outline: none; transition: border-color 0.15s;
+  }
+  textarea:focus, input[type="text"]:focus, select:focus { border-color: var(--accent); }
+  textarea { min-height: 70px; resize: vertical; }
+  .field { margin-bottom: 14px; }
+  .field-label { font-size: 11px; font-family: var(--font-mono); color: #888; margin-bottom: 6px; display: block; }
+
+  /* ── LOGS & ITEMS ── */
+  .log-list { display: flex; flex-direction: column; gap: 8px; }
+  .log-entry {
+    background: #171d26; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .log-stage-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .log-content { flex: 1; }
+  .log-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .log-stage-tag { font-size: 10px; font-family: var(--font-mono); padding: 1px 7px; border-radius: 20px; background: var(--surface3); color: #ccc; }
+  .log-time { font-size: 10px; font-family: var(--font-mono); color: #555; }
+  .log-text { font-size: 13px; color: #e0e0e0; }
+  .log-delete { background: none; border: none; color: #555; cursor: pointer; font-size: 16px; }
+  .log-delete:hover { color: var(--red); }
+
+  /* ── INTERACTION ENTRIES ── */
+  .task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: #171d26; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; }
+  .task-check { width: 16px; height: 16px; border: 1.5px solid var(--border-strong); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .task-check.done { background: var(--green); border-color: var(--green); }
+  .task-check.done::after { content: '✓'; font-size: 10px; color: #000; font-weight: bold; }
+  .task-text { flex: 1; font-size: 13px; }
+  .task-text.done { text-decoration: line-through; color: #555; }
+
+  .prio-high { background: rgba(255,77,77,0.15); color: #ff6666; font-size: 10px; padding: 1px 6px; border-radius: 10px; font-family: var(--font-mono); }
+  .prio-med  { background: rgba(255,213,107,0.15); color: #ffd56b; font-size: 10px; padding: 1px 6px; border-radius: 10px; font-family: var(--font-mono); }
+  .prio-low  { background: rgba(46,196,182,0.15); color: #2ec4b6; font-size: 10px; padding: 1px 6px; border-radius: 10px; font-family: var(--font-mono); }
+
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .insight-item { background: #171d26; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; position: relative; }
+  .insight-tag { font-size: 10px; font-family: var(--font-mono); color: var(--accent); margin-bottom: 6px; }
+  .insight-text { font-size: 13px; }
+
+  .empty { text-align: center; padding: 24px; color: #444; font-size: 12px; font-family: var(--font-mono); }
+  .system-callout { font-family: var(--font-display); font-size: 18px; font-style: italic; padding: 16px; background: var(--accent-dim); border: 1px solid var(--accent-glow); border-radius: var(--radius); margin-bottom: 16px; }
+
+  /* ── PROFILE SLOTS ── */
+  .profile-row { display: flex; align-items: center; justify-content: space-between; background: #171d26; border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 8px; }
+  .profile-row.active { border-color: var(--accent); background: var(--surface3); }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 4px; background: #0f1319; padding: 4px; border-radius: var(--radius-sm); margin-bottom: 16px; width: fit-content; }
+  .tab { padding: 6px 14px; font-size: 12px; color: #888; cursor: pointer; border-radius: 4px; border: none; background: none; }
+  .tab.active { background: var(--surface3); color: #fff; }
+
+  /* ── MODALS ── */
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--surface2); border: 1px solid var(--border-strong); border-radius: var(--radius); width: 460px; max-width: 90vw; }
+  .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-body { padding: 20px; }
+  .modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+  .modal-close { background: none; border: none; color: #888; cursor: pointer; font-size: 20px; }
+
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface3); border: 1px solid var(--border-strong); padding: 10px 16px; border-radius: var(--radius-sm); font-size: 13px; z-index: 200; pointer-events: none; }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+  .section-head h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: #fff; }
+  .section-head span { font-size: 11px; font-family: var(--font-mono); color: #555; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-mark">
+        <div class="logo-icon">💡</div>
+        <div class="logo-text">Smart Decision Maker</div>
+      </div>
+      <div class="logo-sub">Clear Thinking Toolkit</div>
+    </div>
+    <div class="sidebar-date" id="sidebarDate">—</div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <div class="nav-item active" data-section="overview" onclick="showSection('overview',this)">
+        <div class="nav-dot" style="background:var(--accent)"></div>Dashboard Overview
+      </div>
+      <div class="nav-item" data-section="system-model" onclick="showSection('system-model',this)">
+        <div class="nav-dot" style="background:var(--stage-1)"></div>The Big Picture
+      </div>
+      <div class="nav-item" data-section="workspace" onclick="showSection('workspace',this)">
+        <div class="nav-dot" style="background:var(--stage-3)"></div>Step-by-Step Worksheet
+      </div>
+      <div class="nav-item" data-section="biases" onclick="showSection('biases',this)">
+        <div class="nav-dot" style="background:var(--stage-4)"></div>Mind Traps Spotted
+      </div>
+      <div class="nav-item" data-section="countermeasures" onclick="showSection('countermeasures',this)">
+        <div class="nav-dot" style="background:var(--stage-5)"></div>Fixes & Safety Checks
+        <span class="nav-count" id="taskCountBadge">0</span>
+      </div>
+      <div class="nav-item" data-section="telemetry" onclick="showSection('telemetry',this)">
+        <div class="nav-dot" style="background:#fff"></div>Thought Journal
+        <span class="nav-count" id="logCountBadge">0</span>
+      </div>
+      <div class="nav-item" data-section="slots" onclick="showSection('slots',this)">
+        <div class="nav-dot" style="background:var(--green)"></div>Saved Topics
+      </div>
+    </nav>
+    <div class="sidebar-progress">
+      <div class="progress-label"><span>Thinking Progress</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+      <div style="font-size:10px;color:#555;font-family:var(--font-mono)" id="progressSub">0 of 5 steps completed</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard Overview</div>
+      <div class="topbar-actions">
+        <span style="font-family:var(--font-mono); font-size:11px; color:#aaa; background:var(--surface3); padding: 4px 8px; border-radius:4px; border:1px solid var(--border);" id="currentSlotIndicator">Topic: Default</span>
+        <button class="btn" onclick="openModal('logModal')">+ Add Journal Entry</button>
+        <button class="btn" onclick="openModal('taskModal')">+ Add Safety Check</button>
+        <button class="btn btn-primary" onclick="saveData()">Save Changes ↗</button>
+      </div>
+    </div>
+
+    <!-- OVERVIEW SECTION -->
+    <div class="section active" id="section-overview">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Decision Overview</h2>
+          <span id="overviewDate">—</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Current Step</div>
+            <div class="stat-value" id="statStage">—</div>
+            <div class="stat-sub" id="statStageName">Not Started</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Journal Entries</div>
+            <div class="stat-value" id="statLogs">0</div>
+            <div class="stat-sub">Total Thoughts Written</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Safety Fixes</div>
+            <div class="stat-value" id="statTasks">0</div>
+            <div class="stat-sub" id="statTasksSub">0 Left to Do</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Mind Traps Found</div>
+            <div class="stat-value" id="statInsights">0</div>
+            <div class="stat-sub">Biases and Blunders</div>
+          </div>
+        </div>
+
+        <!-- PIPELINE DECK -->
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header">
+            <div class="card-title">The 5 Steps to Clear Thinking</div>
+            <div style="font-size:11px;color:#555;font-family:var(--font-mono)">Click a step to view or edit your progress</div>
+          </div>
+          <div class="card-body">
+            <div class="pipeline">
+              <div class="stage-card s1" id="sc-1" onclick="setCurrentStage(1)">
+                <div class="stage-num">01</div>
+                <div class="stage-name" style="color:var(--stage-1)">Gathering Facts</div>
+                <div class="stage-desc">Look at the layout, risks, and missing clues around you</div>
+                <span class="stage-badge" style="background:rgba(255,123,84,0.1);color:var(--stage-1)" id="sb-1">idle</span>
+              </div>
+              <div class="stage-card s2" id="sc-2" onclick="setCurrentStage(2)">
+                <div class="stage-num">02</div>
+                <div class="stage-name" style="color:var(--stage-2)">Checking Your Gut</div>
+                <div class="stage-desc">Write down your initial assumptions or guesses</div>
+                <span class="stage-badge" style="background:rgba(255,178,107,0.1);color:var(--stage-2)" id="sb-2">idle</span>
+              </div>
+              <div class="stage-card s3" id="sc-3" onclick="setCurrentStage(3)">
+                <div class="stage-num">03</div>
+                <div class="stage-name" style="color:var(--stage-3)">Spotting Mind Traps</div>
+                <div class="stage-desc">Test if wishful thinking or stubbornness is blinding you</div>
+                <span class="stage-badge" style="background:rgba(255,213,107,0.1);color:var(--stage-3)" id="sb-3">idle</span>
+              </div>
+              <div class="stage-card s4" id="sc-4" onclick="setCurrentStage(4)">
+                <div class="stage-num">04</div>
+                <div class="stage-name" style="color:var(--stage-4)">Weighing New Proof</div>
+                <div class="stage-desc">Carefully shift your opinions as new details emerge</div>
+                <span class="stage-badge" style="background:rgba(147,171,211,0.1);color:var(--stage-4)" id="sb-4">idle</span>
+              </div>
+              <div class="stage-card s5" id="sc-5" onclick="setCurrentStage(5)">
+                <div class="stage-num">05</div>
+                <div class="stage-name" style="color:var(--stage-5)">Action Rules</div>
+                <div class="stage-desc">Set strict lines in the sand to decide without emotion</div>
+                <span class="stage-badge" style="background:rgba(102,252,241,0.1);color:var(--stage-5)" id="sb-5">idle</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Journal Thoughts</div></div>
+            <div class="card-body" id="recentLogList"><div class="empty">No thoughts logged yet</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">High Priority Safety Fixes</div></div>
+            <div class="card-body" id="recentTaskList"><div class="empty">No active safety fixes listed</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYSTEM MODEL BOUNDARY SECTIONS -->
+    <div class="section" id="section-system-model">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Setting the Scene</h2>
+          <span>Define the situation and the wildcards you are facing</span>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">The Big Picture details</div></div>
+              <div class="card-body">
+                <div class="field">
+                  <label class="field-label">What decision or problem are you trying to solve?</label>
+                  <input type="text" id="sysName" placeholder="e.g., Deciding to launch a new product, or picking a home to buy">
+                </div>
+                <div class="field">
+                  <label class="field-label">Wildcards & Things Out of Your Control</label>
+                  <textarea id="sysVariables" placeholder="List the random elements, market shifts, or unpredictable events that could derail things..."></textarea>
+                </div>
+                <div class="field">
+                  <label class="field-label">The Long-Term Average (What usually happens?)</label>
+                  <textarea id="sysBaseRates" placeholder="What are the normal success rates or historical odds for this kind of situation in general?"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="saveSystemModel()" style="width:100%">Lock In Details</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-header"><div class="card-title">Your Core Goal</div></div>
+              <div class="card-body">
+                <div id="hypothesisCallout" class="system-callout" style="display:none;"></div>
+                <div class="field">
+                  <label class="field-label">State Your Main Assumption or Theory simply</label>
+                  <textarea id="hypoInput" placeholder="What is your main belief here? (e.g., 'I believe this project will be profitable because...')"></textarea>
+                </div>
+                <button class="btn" onclick="setHypothesis()" style="width:100%">Save Core Goal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIPELINE EXECUTION WORKSPACE -->
+    <div class="section" id="section-workspace">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Step-by-Step Work Area</h2>
+          <span>Walk through the problem without letting bias call the shots</span>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab active" onclick="switchStageTab(1,this)">1. Gathering Facts</button>
+          <button class="tab" onclick="switchStageTab(2,this)">2. Checking Your Gut</button>
+          <button class="tab" onclick="switchStageTab(3,this)">3. Spotting Mind Traps</button>
+          <button class="tab" onclick="switchStageTab(4,this)">4. Weighing Proof</button>
+          <button class="tab" onclick="switchStageTab(5,this)">5. Action Rules</button>
+        </div>
+
+        <!-- STAGE 1 WORKSPACE -->
+        <div id="stageTab-1">
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Good Information vs. Distractions</div></div>
+              <div class="card-body">
+                <div class="field"><label class="field-label">Real Clues / Reliable Facts</label>
+                  <input type="text" id="s1-signal" placeholder="e.g., Actual customer signups, verified bank records"></div>
+                <div class="field"><label class="field-label">Distractions / Guesswork / Noise</label>
+                  <textarea id="s1-noise" placeholder="Rumors, single social media comments, or emotional opinions that cloud the facts"></textarea></div>
+                <button class="btn" onclick="addSignalElement()" style="width:100%">Add to List</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Your Current Map of Information</div></div>
+              <div class="card-body" id="signalContainer"><div class="empty">No items added yet.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 2 WORKSPACE -->
+        <div id="stageTab-2" style="display:none">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Your Initial Hunch</div></div>
+            <div class="card-body">
+              <div class="field"><label class="field-label">What does your intuition say before looking at any fresh data?</label>
+                <textarea id="s2-priors" placeholder="Write down your baseline opinion. Are you leaning toward a 'Yes' or a 'No' right now?"></textarea></div>
+              <div class="field"><label class="field-label">Are you relying too much on recent memories?</label>
+                <textarea id="s2-weights" placeholder="Are you thinking something is likely just because you saw a story about it recently? Check your memory source."></textarea></div>
+              <button class="btn btn-primary" onclick="savePriors()" style="width:100%">Save Hunch Status</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 3 WORKSPACE -->
+        <div id="stageTab-3" style="display:none">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Mind Trap Audit</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="timer-controls">
+                  <button class="btn" onclick="startTimer()" style="font-size:10px;padding:3px 8px">Start 5-Min Worry Session</button>
+                  <button class="btn" onclick="stopTimer()" style="font-size:10px;padding:3px 8px">■</button>
+                  <span id="timerDisplay" style="font-family:var(--font-mono);color:var(--accent);font-size:12px;margin-left:5px">5:00</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;gap:8px;margin-bottom:12px">
+                <input type="text" id="s3-bias" placeholder="How might you be fooling yourself right here?" style="flex:1">
+                <select id="s3-class" style="width:170px">
+                  <option>Seeking Comfort (Confirmation)</option>
+                  <option>Recency Illusion (Availability)</option>
+                  <option>Ignoring Normal Odds (Base-Rate)</option>
+                  <option>Too Confident (Overconfidence)</option>
+                  <option>Refusing to Quit (Sunk Cost)</option>
+                </select>
+                <button class="btn btn-primary" onclick="addBiasFromWorkspace()">Flag This Trap</button>
+              </div>
+              <div id="workspaceBiasList"><div class="empty">No mind traps flagged yet. Start the 5-minute timer to look closely for hidden errors!</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 4 WORKSPACE -->
+        <div id="stageTab-4" style="display:none">
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Changing Your Mind Safely</div></div>
+              <div class="card-body">
+                <div class="field"><label class="field-label">New Fresh Information Just Received</label>
+                  <input type="text" id="s4-evidence" placeholder="What just happened or came to light?"></div>
+                <div class="field"><label class="field-label">How powerful or unique is this new information?</label>
+                  <textarea id="s4-likelihood" placeholder="Does this change the story completely, or is it just a minor detail? Is it a rare clue or normal behavior?"></textarea></div>
+                <button class="btn btn-primary" onclick="addBayesLog()" style="width:100%">Log This Update</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">History of Your Changed Perspectives</div></div>
+              <div class="card-body" id="bayesLogContainer"><div class="empty">No perspective updates made yet.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 5 WORKSPACE -->
+        <div id="stageTab-5" style="display:none">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Your Safe Action Blueprint</div></div>
+            <div class="card-body">
+              <div class="field"><label class="field-label">Pre-Made Decisions (Rules to prevent panic changes)</label>
+                <textarea id="s5-rules" placeholder="Establish strict 'If-Then' rules ahead of time. (e.g., 'If the cost goes over X, we stop immediately, no exceptions.')"></textarea></div>
+              <div class="field"><label class="field-label">Emergency Tripwires</label>
+                <textarea id="s5-circuits" placeholder="What specific bad news or warning sign will make you walk away or change course on the spot?"></textarea></div>
+              <button class="btn btn-primary" onclick="savePolicy()" style="width:100%">Activate Safe Action Rules</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COGNITIVE BIASES AUDITED INDEX -->
+    <div class="section" id="section-biases">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>The Mind Trap Directory</h2>
+          <span>A clear list of the mental mistakes we're trying to prevent</span>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header"><div class="card-title">File a New Mind Trap Warning</div></div>
+          <div class="card-body">
+            <div style="display:flex;gap:10px;">
+              <input type="text" id="biasInput" placeholder="Describe the mistake you or your team might be making here..." style="flex:1">
+              <select id="biasType" style="width:180px">
+                <option value="Confirmation Bias">Only Seeing What You Agree With</option>
+                <option value="Availability Heuristic">Sticking To Easy-to-Remember Stories</option>
+                <option value="Base-Rate Neglect">Forgetting the Usual Average Odds</option>
+                <option value="Clustering Illusion">Seeing Patterns in Total Randomness</option>
+                <option value="Gamblers Anomaly">Expecting Luck to Change on Its Own</option>
+              </select>
+              <button class="btn btn-primary" onclick="addBiasDirect()">Log Mind Trap</button>
+            </div>
+          </div>
+        </div>
+        <div class="insight-grid" id="biasMatrixGrid"></div>
+      </div>
+    </div>
+
+    <!-- DEBIASING COUNTERMEASURES / TASKS -->
+    <div class="section" id="section-countermeasures">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Safety Checks & Fallback Options</h2>
+          <span id="countermeasureStats">—</span>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><div class="card-title">Add a Safety Action Item</div></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 140px 140px auto;gap:10px;align-items:end">
+              <div class="field" style="margin:0">
+                <label class="field-label">What practical step will reduce your blind spots?</label>
+                <input type="text" id="taskInput" placeholder="e.g., Ask an outsider for a brutally honest opinion" onkeydown="if(event.key==='Enter')addTask()">
+              </div>
+              <div class="field" style="margin:0">
+                <label class="field-label">Belongs to Step</label>
+                <select id="taskStage">
+                  <option value="General">General</option>
+                  <option value="Facts Gathering">Facts Gathering</option>
+                  <option value="Gut Check">Gut Check</option>
+                  <option value="Mind Traps">Mind Traps</option>
+                  <option value="Proof Weighing">Proof Weighing</option>
+                  <option value="Action Rules">Action Rules</option>
+                </select>
+              </div>
+              <div class="field" style="margin:0">
+                <label class="field-label">Urgency Level</label>
+                <select id="taskPriority">
+                  <option value="high">High Danger</option>
+                  <option value="med">Medium Danger</option>
+                  <option value="low">Low Danger</option>
+                </select>
+              </div>
+              <div>
+                <button class="btn btn-primary" onclick="addTask()" style="height:36px">Add Task</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Your Safety Check To-Do List</div>
+            <div style="display:flex;gap:6px">
+              <button class="btn" onclick="filterTasks('all')" id="tf-all" style="font-size:10px;padding:3px 8px">All</button>
+              <button class="btn" onclick="filterTasks('open')" id="tf-open" style="font-size:10px;padding:3px 8px">To Do</button>
+              <button class="btn" onclick="filterTasks('done')" id="tf-done" style="font-size:10px;padding:3px 8px">Completed</button>
+            </div>
+          </div>
+          <div class="card-body" id="taskList"><div class="empty">No safety actions are listed. You're clear!</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELEMETRY JOURNAL SECTION -->
+    <div class="section" id="section-telemetry">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Thought Journal</h2>
+          <span>A chronological diary of doubts, thoughts, and shifts</span>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><div class="card-title">Write a New Entry</div></div>
+          <div class="card-body">
+            <div class="field">
+              <textarea id="logInputSection" placeholder="Write down anomalies, strange data, hunches, or worries that pop up while working on this decision..." style="min-height:90px"></textarea>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="display:flex;gap:8px;align-items:center">
+                <span class="field-label" style="margin:0">Category Label:</span>
+                <select id="logStageSection" style="width:150px">
+                  <option value="General Check">General Note</option>
+                  <option value="Environment Map">Fact Gathering</option>
+                  <option value="Prior Formulation">Gut Feeling Check</option>
+                  <option value="Bias Event">Mind Trap Encounter</option>
+                  <option value="Dynamic Reshift">Opinion Shift</option>
+                  <option value="Policy Execution">Rule Triggered</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="addLogFromSection()">Add to Journal</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Your Journal Stream</div></div>
+          <div class="card-body" id="fullLogList"><div class="empty">Your journal is empty. Write your thoughts above!</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYSTEM MEMORY MANAGEMENT -->
+    <div class="section" id="section-slots">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Saved Topics & Data Storage</h2>
+          <span>Manage multiple different decisions, or download your data backups</span>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Different Decision Topics</div></div>
+            <div class="card-body">
+              <div style="display:flex; gap:8px; margin-bottom:16px;">
+                <input type="text" id="newSlotName" placeholder="e.g., Hiring Project Manager, New Car Decision" style="flex:1;">
+                <button class="btn btn-primary" onclick="createNewSlot()">Create Topic</button>
+              </div>
+              <div id="slotsContainer"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Clear Data & File Backups</div></div>
+            <div class="card-body">
+              <div class="field">
+                <label class="field-label" style="color:var(--red); font-weight:600;">Wipe Active Workspace</label>
+                <p style="font-size:12px; color:#777; margin-bottom:10px;">This empties out the current topic fields entirely. Other saved topics are safe.</p>
+                <button class="btn btn-danger" onclick="confirmResetCurrent()">Reset Current Topic</button>
+                <button class="btn btn-danger" style="margin-left:6px; background: rgba(255,77,77,0.2)" onclick="confirmResetAllSlots()">Delete Everything Everywhere</button>
+              </div>
+              <hr style="border:none;border-top:1px solid var(--border);margin:20px 0;">
+              <div class="field">
+                <label class="field-label">Import / Export Backup Files</label>
+                <p style="font-size:12px; color:#777; margin-bottom:10px;">Save your thinking dashboards as a single readable backup file onto your computer, or open an old one back up.</p>
+                <div style="display:flex; gap:8px;">
+                  <button class="btn" onclick="exportDataAll()" style="flex:1;">Download Backup File 📥</button>
+                  <button class="btn" onclick="document.getElementById('importFileInput').click();" style="flex:1;">Upload Saved File 📤</button>
+                </div>
+                <input type="file" id="importFileInput" style="display:none;" accept=".json" onchange="importDataAll(event)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- LOG DIALOG MODAL -->
+<div class="modal-backdrop" id="logModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Write a Quick Thought</div>
+      <button class="modal-close" onclick="closeModal('logModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">What's on your mind?</label>
+        <textarea id="modalLogInput" placeholder="Type quick notes, worries, or hints..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Which step does this relate to?</label>
+        <select id="modalLogStage">
+          <option value="General Check">General Note</option>
+          <option value="Environment Map">1. Fact Gathering</option>
+          <option value="Prior Formulation">2. Gut Feeling Check</option>
+          <option value="Bias Event">3. Mind Trap Spotted</option>
+          <option value="Dynamic Reshift">4. Opinion Shift</option>
+          <option value="Policy Execution">5. Action Rule Trigger</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('logModal')">Discard</button>
+      <button class="btn btn-primary" onclick="submitModalLog()">Log Thought</button>
+    </div>
+  </div>
+</div>
+
+<!-- TASK DIALOG MODAL -->
+<div class="modal-backdrop" id="taskModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Create a Safety Step</div>
+      <button class="modal-close" onclick="closeModal('taskModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">What safety action do you need to complete?</label>
+        <input type="text" id="modalTaskInput" placeholder="Define a clear, actionable task...">
+      </div>
+      <div class="field">
+        <label class="field-label">Which segment?</label>
+        <select id="modalTaskStage">
+          <option value="General">General</option>
+          <option value="Facts Gathering">Facts Gathering</option>
+          <option value="Gut Check">Gut Check</option>
+          <option value="Mind Traps">Mind Traps</option>
+          <option value="Proof Weighing">Proof Weighing</option>
+          <option value="Action Rules">Action Rules</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Danger Level if Ignored</label>
+        <select id="modalTaskPriority">
+          <option value="high">High Danger</option>
+          <option value="med">Medium Danger</option>
+          <option value="low">Low Danger</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('taskModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitModalTask()">Save Task</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── ARCHITECTURE STATE SCHEMATICS ──
+  function getEmptyState() {
+    return {
+      currentStage: 0,
+      systemProperties: { name: '', variables: '', baseRates: '', hypothesis: '' },
+      signalElements: [],
+      priorsModel: { priors: '', weights: '' },
+      workspaceBiases: [],
+      bayesLogs: [],
+      policyModel: { rules: '', circuits: '' },
+      tasks: [],
+      logs: [],
+      biasesRegistry: []
+    };
+  }
+
+  let currentSlot = "Default";
+  let slotsData = { "Default": getEmptyState() };
+  let data = slotsData[currentSlot];
+
+  let taskFilter = 'all';
+  let timerInterval = null;
+  let timerSeconds = 300;
+
+  // ── APP BOOT COMPILER ──
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('sidebarDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    document.getElementById('overviewDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    loadAllFromStorage();
+    renderAll();
+  });
+
+  function loadAllFromStorage() {
+    try {
+      const storedSlots = localStorage.getItem('prob_systems_slots_manifest');
+      const storedActiveSlot = localStorage.getItem('prob_systems_active_slot_id');
+      if (storedSlots) slotsData = JSON.parse(storedSlots);
+      if (storedActiveSlot && slotsData[storedActiveSlot]) currentSlot = storedActiveSlot;
+      data = slotsData[currentSlot];
+    } catch(e) {
+      console.error("Storage lookup failed. Booting clean temporary session.", e);
+    }
+  }
+
+  function syncToLocalStorage() {
+    slotsData[currentSlot] = data;
+    localStorage.setItem('prob_systems_slots_manifest', JSON.stringify(slotsData));
+    localStorage.setItem('prob_systems_active_slot_id', currentSlot);
+    document.getElementById('currentSlotIndicator').textContent = "Topic: " + currentSlot;
+  }
+
+  function saveData() {
+    syncToLocalStorage();
+    renderAll();
+    toast('Your session modifications have been safely recorded.');
+  }
+
+  // ── VIEW DISPATCHER ROUTING ──
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    const target = document.getElementById('section-' + id);
+    if(target) target.classList.add('active');
+    if(btn) btn.classList.add('active');
+    
+    const headerTitle = id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    document.getElementById('topbarTitle').textContent = headerTitle === "System Model" ? "The Big Picture" : headerTitle;
+    renderAll();
+  }
+
+  // ── PIPELINE STATE STAGES TRACKER ──
+  const stageNames = ["Not Started", "Gathering Facts", "Checking Your Gut", "Spotting Mind Traps", "Weighing New Proof", "Action Rules"];
+  
+  function setCurrentStage(idx) {
+    data.currentStage = idx;
+    renderAll();
+    toast(`Workspace step changed: ${stageNames[idx]}`);
+  }
+
+  function switchStageTab(idx, btn) {
+    for(let i=1; i<=5; i++){
+      const el = document.getElementById('stageTab-'+i);
+      if(el) el.style.display = (i === idx) ? 'block' : 'none';
+    }
+    if(btn) {
+      btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+
+  // ── PROGRESS CALCULATION ──
+  function calculateSidebarProgress() {
+    let checkedVectors = 0;
+    if (data.signalElements && data.signalElements.length > 0) checkedVectors++;
+    if (data.priorsModel && (data.priorsModel.priors || data.priorsModel.weights)) checkedVectors++;
+    if (data.workspaceBiases && data.workspaceBiases.length > 0) checkedVectors++;
+    if (data.bayesLogs && data.bayesLogs.length > 0) checkedVectors++;
+    if (data.policyModel && (data.policyModel.rules || data.policyModel.circuits)) checkedVectors++;
+
+    const pct = Math.round((checkedVectors / 5) * 100);
+    document.getElementById('progressBar').style.width = `${pct}%`;
+    document.getElementById('progressPct').textContent = `${pct}%`;
+    document.getElementById('progressSub').textContent = `${checkedVectors} of 5 worksheet slots filled`;
+  }
+
+  // ── RENDERING DISPATCH PANEL ──
+  function renderAll() {
+    document.getElementById('taskCountBadge').textContent = data.tasks.filter(t => !t.done).length;
+    document.getElementById('logCountBadge').textContent = data.logs.length;
+    
+    document.getElementById('statStage').textContent = data.currentStage === 0 ? '—' : `0${data.currentStage}`;
+    document.getElementById('statStageName').textContent = stageNames[data.currentStage];
+    document.getElementById('statLogs').textContent = data.logs.length;
+    
+    document.getElementById('statTasks').textContent = data.tasks.filter(t => !t.done).length;
+    document.getElementById('statTasksSub').textContent = `${data.tasks.filter(t => t.done).length} completed tasks`;
+    document.getElementById('statInsights').textContent = data.biasesRegistry.length;
+
+    for(let i=1; i<=5; i++) {
+      const el = document.getElementById(`sc-${i}`);
+      const bg = document.getElementById(`sb-${i}`);
+      if(el) {
+        if(data.currentStage === i) {
+          el.classList.add('current');
+          if(bg) bg.textContent = "working";
+        } else {
+          el.classList.remove('current');
+          if(bg) bg.textContent = "idle";
+        }
+      }
+    }
+
+    document.getElementById('sysName').value = data.systemProperties.name || '';
+    document.getElementById('sysVariables').value = data.systemProperties.variables || '';
+    document.getElementById('sysBaseRates').value = data.systemProperties.baseRates || '';
+    document.getElementById('hypoInput').value = data.systemProperties.hypothesis || '';
+    
+    const hypoDisplay = document.getElementById('hypothesisCallout');
+    if(data.systemProperties.hypothesis) {
+      hypoDisplay.textContent = `📝 Main Goal Statement: ${data.systemProperties.hypothesis}`;
+      hypoDisplay.style.display = 'block';
+    } else {
+      hypoDisplay.style.display = 'none';
+    }
+
+    document.getElementById('s2-priors').value = data.priorsModel.priors || '';
+    document.getElementById('s2-weights').value = data.priorsModel.weights || '';
+    document.getElementById('s5-rules').value = data.policyModel.rules || '';
+    document.getElementById('s5-circuits').value = data.policyModel.circuits || '';
+
+    renderSignalElements();
+    renderWorkspaceBiases();
+    renderBayesLogs();
+    renderBiasesRegistry();
+    renderTasks();
+    renderLogs();
+    renderSlotsView();
+    calculateSidebarProgress();
+  }
+
+  // ── ITEM RENDERING LOOPS ──
+  function renderSignalElements() {
+    const container = document.getElementById('signalContainer');
+    if(!container) return;
+    if(!data.signalElements.length) { container.innerHTML = '<div class="empty">No informational details cataloged yet.</div>'; return; }
+    container.innerHTML = data.signalElements.map(s => `
+      <div class="log-entry">
+        <div class="log-content">
+          <div class="log-meta"><span class="log-stage-tag" style="color:var(--stage-1)">Verified Fact: ${s.signal}</span></div>
+          <div class="log-text">Unreliable/Noise Risk: ${s.noise}</div>
+        </div>
+        <button class="log-delete" onclick="deleteItem('signalElements', ${s.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderWorkspaceBiases() {
+    const container = document.getElementById('workspaceBiasList');
+    if(!container) return;
+    if(!data.workspaceBiases.length) { container.innerHTML = '<div class="empty">No mind traps cataloged in this area yet.</div>'; return; }
+    container.innerHTML = data.workspaceBiases.map(b => `
+      <div class="task-item">
+        <span class="prio-high">${b.classification}</span>
+        <div class="task-text">${b.text}</div>
+        <button class="log-delete" onclick="deleteItem('workspaceBiases', ${b.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderBayesLogs() {
+    const container = document.getElementById('bayesLogContainer');
+    if(!container) return;
+    if(!data.bayesLogs.length) { container.innerHTML = '<div class="empty">No evidence evaluation history logged yet.</div>'; return; }
+    container.innerHTML = data.bayesLogs.map(b => `
+      <div class="log-entry">
+        <div class="log-content">
+          <div class="log-meta"><span class="log-stage-tag" style="color:var(--stage-4)">New Detail: ${b.evidence}</span></div>
+          <div class="log-text">Impact Severity: <em>${b.likelihood}</em></div>
+        </div>
+        <button class="log-delete" onclick="deleteItem('bayesLogs', ${b.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderBiasesRegistry() {
+    const grid = document.getElementById('biasMatrixGrid');
+    if(!grid) return;
+    if(!data.biasesRegistry.length) { grid.innerHTML = '<div class="empty" style="grid-column: span 2">No global mind traps filed under this topic.</div>'; return; }
+    grid.innerHTML = data.biasesRegistry.map(b => `
+      <div class="insight-item">
+        <div class="insight-tag">// RECOGNIZED VULNERABILITY: ${b.type}</div>
+        <div class="insight-text">${b.text}</div>
+        <button class="log-delete" style="position:absolute;top:8px;right:8px" onclick="deleteItem('biasesRegistry', ${b.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderTasks() {
+    const list = document.getElementById('taskList');
+    const recentList = document.getElementById('recentTaskList');
+    if(!list) return;
+
+    let filtered = data.tasks;
+    if(taskFilter === 'open') filtered = data.tasks.filter(t => !t.done);
+    if(taskFilter === 'done') filtered = data.tasks.filter(t => t.done);
+
+    document.getElementById('tf-all').className = taskFilter === 'all' ? 'btn active' : 'btn';
+    document.getElementById('tf-open').className = taskFilter === 'open' ? 'btn active' : 'btn';
+    document.getElementById('tf-done').className = taskFilter === 'done' ? 'btn active' : 'btn';
+
+    document.getElementById('countermeasureStats').textContent = `${data.tasks.filter(t=>!t.done).length} Pending Safety Tasks`;
+
+    const mappedHTML = (arr) => arr.map(t => `
+      <div class="task-item">
+        <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask(${t.id})"></div>
+        <div class="task-text ${t.done ? 'done' : ''}">${t.text}</div>
+        <span class="log-stage-tag">${t.stage}</span>
+        <span class="prio-${t.priority === 'high' ? 'high' : t.priority === 'med' ? 'med' : 'low'}">${t.priority}</span>
+        <button class="log-delete" onclick="deleteItem('tasks', ${t.id})">×</button>
+      </div>
+    `).join('');
+
+    list.innerHTML = filtered.length ? mappedHTML(filtered) : '<div class="empty">No tasks matched your filter choice</div>';
+    if(recentList) {
+      const pending = data.tasks.filter(t => !t.done).slice(0, 4);
+      recentList.innerHTML = pending.length ? mappedHTML(pending) : '<div class="empty">No urgent safety checks remain unfinished.</div>';
+    }
+  }
+
+  function renderLogs() {
+    const list = document.getElementById('fullLogList');
+    const recentList = document.getElementById('recentLogList');
+    if(!list) return;
+
+    const sortedLogs = [...data.logs].sort((a,b) => b.id - a.id);
+    const mappedHTML = (arr) => arr.map(l => `
+      <div class="log-entry">
+        <div class="log-stage-dot" style="background:var(--accent)"></div>
+        <div class="log-content">
+          <div class="log-meta">
+            <span class="log-stage-tag">${l.stage}</span>
+            <span class="log-time">${l.time}</span>
+          </div>
+          <div class="log-text">${l.text}</div>
+        </div>
+        <button class="log-delete" onclick="deleteItem('logs', ${l.id})">×</button>
+      </div>
+    `).join('');
+
+    list.innerHTML = sortedLogs.length ? mappedHTML(sortedLogs) : '<div class="empty">No personal journal entries written yet.</div>';
+    if(recentList) recentList.innerHTML = sortedLogs.length ? mappedHTML(sortedLogs.slice(0, 3)) : '<div class="empty">Journal stream is clean.</div>';
+  }
+
+  // ── CORE INTERACTIVE OPERATIONS ──
+  function saveSystemModel() {
+    data.systemProperties.name = document.getElementById('sysName').value;
+    data.systemProperties.variables = document.getElementById('sysVariables').value;
+    data.systemProperties.baseRates = document.getElementById('sysBaseRates').value;
+    syncToLocalStorage(); toast("Core context attributes saved."); renderAll();
+  }
+
+  function setHypothesis() {
+    data.systemProperties.hypothesis = document.getElementById('hypoInput').value;
+    syncToLocalStorage(); toast("Primary goals updated."); renderAll();
+  }
+
+  function addSignalElement() {
+    const sig = document.getElementById('s1-signal');
+    const noi = document.getElementById('s1-noise');
+    if(!sig.value.trim()) return;
+    data.signalElements.push({ id: Date.now(), signal: sig.value, noise: noi.value || 'None noted' });
+    sig.value = ''; noi.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function savePriors() {
+    data.priorsModel.priors = document.getElementById('s2-priors').value;
+    data.priorsModel.weights = document.getElementById('s2-weights').value;
+    syncToLocalStorage(); toast("Hunch assumptions compiled."); renderAll();
+  }
+
+  function addBiasFromWorkspace() {
+    const txt = document.getElementById('s3-bias');
+    const cls = document.getElementById('s3-class');
+    if(!txt.value.trim()) return;
+    data.workspaceBiases.push({ id: Date.now(), text: txt.value, classification: cls.value });
+    txt.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function addBayesLog() {
+    const ev = document.getElementById('s4-evidence');
+    const lk = document.getElementById('s4-likelihood');
+    if(!ev.value.trim()) return;
+    data.bayesLogs.push({ id: Date.now(), evidence: ev.value, likelihood: lk.value });
+    ev.value = ''; lk.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function savePolicy() {
+    data.policyModel.rules = document.getElementById('s5-rules').value;
+    data.policyModel.circuits = document.getElementById('s5-circuits').value;
+    syncToLocalStorage(); toast("Pre-set execution steps are live."); renderAll();
+  }
+
+  function addBiasDirect() {
+    const txt = document.getElementById('biasInput');
+    const ty = document.getElementById('biasType');
+    if(!txt.value.trim()) return;
+    data.biasesRegistry.push({ id: Date.now(), text: txt.value, type: ty.value });
+    txt.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function addTask() {
+    const inp = document.getElementById('taskInput');
+    const stg = document.getElementById('taskStage');
+    const pri = document.getElementById('taskPriority');
+    if(!inp.value.trim()) return;
+    data.tasks.push({ id: Date.now(), text: inp.value, stage: stg.value, priority: pri.value, done: false });
+    inp.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function toggleTask(id) {
+    const t = data.tasks.find(x => x.id === id);
+    if(t) { t.done = !t.done; syncToLocalStorage(); renderAll(); }
+  }
+
+  function filterTasks(f) { taskFilter = f; renderTasks(); }
+
+  function addLogFromSection() {
+    const txt = document.getElementById('logInputSection');
+    const stg = document.getElementById('logStageSection');
+    if(!txt.value.trim()) return;
+    data.logs.push({ id: Date.now(), text: txt.value, stage: stg.value, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+    txt.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function submitModalLog() {
+    const text = document.getElementById('modalLogInput').value;
+    const stage = document.getElementById('modalLogStage').value;
+    if(!text.trim()) return;
+    data.logs.push({ id: Date.now(), text: text, stage: stage, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+    document.getElementById('modalLogInput').value = '';
+    closeModal('logModal'); syncToLocalStorage(); renderAll();
+  }
+
+  function submitModalTask() {
+    const text = document.getElementById('modalTaskInput').value;
+    const stage = document.getElementById('modalTaskStage').value;
+    const priority = document.getElementById('modalTaskPriority').value;
+    if(!text.trim()) return;
+    data.tasks.push({ id: Date.now(), text: text, stage: stage, priority: priority, done: false });
+    document.getElementById('modalTaskInput').value = '';
+    closeModal('taskModal'); syncToLocalStorage(); renderAll();
+  }
+
+  function deleteItem(arrayKey, id) {
+    data[arrayKey] = data[arrayKey].filter(item => item.id !== id);
+    syncToLocalStorage(); renderAll();
+  }
+
+  // ── TOPIC MANAGEMENT ──
+  function renderSlotsView() {
+    const el = document.getElementById('slotsContainer');
+    if (!el) return;
+    const entries = Object.keys(slotsData);
+    el.innerHTML = entries.map(name => {
+      const active = name === currentSlot;
+      return `
+        <div class="profile-row ${active ? 'active' : ''}">
+          <div style="font-family:var(--font-mono);font-size:13px">${name} ${active ? '<span style="color:var(--accent);font-size:11px;margin-left:6px;">(OPEN)</span>' : ''}</div>
+          <div style="display:flex;gap:4px">
+            ${!active ? `<button class="btn" style="padding:2px 8px;font-size:11px" onclick="switchSlot('${name}')">Open</button>` : ''}
+            <button class="btn btn-danger" style="padding:2px 8px;font-size:11px" onclick="deleteSlot('${name}')" ${entries.length === 1 ? 'disabled style="opacity:0.3"' : ''}>Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function createNewSlot() {
+    const inp = document.getElementById('newSlotName');
+    const val = inp.value.trim();
+    if(!val || slotsData[val]) return;
+    slotsData[val] = getEmptyState();
+    inp.value = ''; currentSlot = val; data = slotsData[currentSlot];
+    syncToLocalStorage(); renderAll(); toast(`New topic profile generated: ${val}`);
+  }
+
+  function switchSlot(name) {
+    if(!slotsData[name]) return;
+    slotsData[currentSlot] = data;
+    currentSlot = name; data = slotsData[currentSlot];
+    syncToLocalStorage(); renderAll(); toast(`Switched to topic: ${name}`);
+  }
+
+  function deleteSlot(name) {
+    if(Object.keys(slotsData).length <= 1 || currentSlot === name) return;
+    delete slotsData[name]; syncToLocalStorage(); renderAll();
+  }
+
+  function confirmResetCurrent() {
+    if(!confirm("Are you sure you want to completely erase the active fields inside this single topic?")) return;
+    data = getEmptyState(); syncToLocalStorage(); renderAll();
+  }
+
+  // ── BACKUP CONTROLS ──
+  function confirmResetAllSlots() {
+    if(!confirm("Warning! This deletes every single saved topic and clears out all data storage permanently. Proceed?")) return;
+    localStorage.clear(); currentSlot = "Default"; slotsData = { "Default": getEmptyState() }; data = slotsData[currentSlot];
+    renderAll();
+  }
+
+  function exportDataAll() {
+    slotsData[currentSlot] = data;
+    const blob = new Blob([JSON.stringify(slotsData, null, 2)], { type: "application/json" });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `clear-thinking-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }
+
+  function importDataAll(event) {
+    const file = event.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        slotsData = parsed; currentSlot = Object.keys(parsed)[0]; data = slotsData[currentSlot];
+        syncToLocalStorage(); renderAll(); toast("Save file loaded cleanly.");
+      } catch(err) { alert("The uploaded file format did not match a readable decision matrix configuration file."); }
+    };
+    reader.readAsText(file);
+  }
+
+  // ── CONTROL MODALS UTILITY ──
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-backdrop').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  });
+
+  // ── SPRINT BLITZ SESSIONS TIMER ──
+  function startTimer() {
+    if(timerInterval) return;
+    timerInterval = setInterval(() => {
+      if(timerSeconds <= 0) { clearInterval(timerInterval); timerInterval = null; toast("Worry session complete! Log down what you found."); return; }
+      timerSeconds--;
+      const m = Math.floor(timerSeconds / 60); const s = timerSeconds % 60;
+      document.getElementById('timerDisplay').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+    }, 1000);
+  }
+  function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
+
+  function toast(msg) {
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+    document.body.appendChild(t); setTimeout(() => t.remove(), 2500);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unified Executive Mastery Workspace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --workspace-bg: #07080b;
+      --navbar-bg: #0e1118;
+      --nav-border: #1a202c;
+      --tab-text: #8fa0cc;
+      --tab-text-active: #ffffff;
+      --tab-hover-bg: #161b26;
+      --accent-glow: #2dd4bf;
+      --font-nav: 'Instrument Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      background: var(--workspace-bg);
+      color: #ffffff;
+      font-family: var(--font-nav);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── UNIFIED MASTER TOP HEADER/TAB BAR ── */
+    .master-navbar {
+      background: var(--navbar-bg);
+      border-bottom: 1px solid var(--nav-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 56px;
+      user-select: none;
+      z-index: 1000;
+    }
+
+    .workspace-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 24px;
+      height: 24px;
+      background: radial-gradient(circle, #e8ff47 0%, #2dd4bf 100%);
+      border-radius: 6px;
+      box-shadow: 0 0 12px rgba(45, 212, 191, 0.3);
+    }
+
+    .brand-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(120deg, #ffffff, #8fa0cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tabs-container {
+      display: flex;
+      height: 100%;
+      gap: 4px;
+      padding-top: 6px;
+    }
+
+    .workspace-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 18px;
+      height: 100%;
+      border-radius: 8px 8px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      color: var(--tab-text);
+      font-family: var(--font-nav);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .workspace-tab:hover {
+      background: var(--tab-hover-bg);
+      color: var(--tab-text-active);
+    }
+
+    .workspace-tab.active {
+      background: var(--workspace-bg);
+      color: var(--tab-text-active);
+      border-color: var(--nav-border);
+      font-weight: 600;
+    }
+
+    .workspace-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #9d7ff4, var(--accent-glow));
+    }
+
+    .tab-index {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      opacity: 0.5;
+    }
+
+    .workspace-status {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #627199;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: #34d399;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #34d399;
+    }
+
+    /* ── MAIN SANDBOX DISPLAY VIEWPORTS ── */
+    .workspace-viewport-wrapper {
+      flex: 1;
+      position: relative;
+      background: var(--workspace-bg);
+    }
+
+    .workspace-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.15s ease-in-out;
+      pointer-events: none;
+    }
+
+    .workspace-frame.active {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="master-navbar">
+    <div class="workspace-brand">
+      <div class="brand-icon"></div>
+      <span class="brand-title">Core Operating Studio</span>
+    </div>
+
+    <div class="tabs-container" id="masterTabs">
+      <div class="workspace-tab active" onclick="switchWorkspace(0)">
+        <span class="tab-index">01</span>
+        <span class="tab-label">Design Thinking</span>
+      </div>
+      <div class="workspace-tab" onclick="switchWorkspace(1)">
+        <span class="tab-index">02</span>
+        <span class="tab-label">Execution Framework</span>
+      </div>
+      <div class="workspace-tab" onclick="switchWorkspace(2)">
+        <span class="tab-index">03</span>
+        <span class="tab-label">First Principles</span>
+      </div>
+      <div class="workspace-tab" onclick="switchWorkspace(3)">
+        <span class="tab-index">04</span>
+        <span class="tab-label">Decision Matrix</span>
+      </div>
+      <div class="workspace-tab" onclick="switchWorkspace(4)">
+        <span class="tab-index">05</span>
+        <span class="tab-label">Systems Thinking</span>
+      </div>
+    </div>
+
+    <div class="workspace-status">
+      <div class="status-dot"></div>
+      <span>All Systems Active</span>
+    </div>
+  </nav>
+
+  <main class="workspace-viewport-wrapper" id="viewportContainer">
+    <iframe class="workspace-frame active" src="Design-Thinking-Tracker.html"></iframe>
+    <iframe class="workspace-frame" src="Execution_Tracker.html"></iframe>
+    <iframe class="workspace-frame" src="First_Principles_Workspace.html"></iframe>
+    <iframe class="workspace-frame" src="Smart_Decision_Maker.html"></iframe>
+    <iframe class="workspace-frame" src="System_Thinking_Workspace.html"></iframe>
+  </main>
+
+  <script>
+    function switchWorkspace(index) {
+      // 1. Clear active state from all tab elements and apply to selected tab
+      const tabs = document.querySelectorAll('.workspace-tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      if(tabs[index]) {
+        tabs[index].classList.add('active');
+      }
+
+      // 2. Hide all iframes safely and make the targeted indexed iframe visible
+      const frames = document.querySelectorAll('.workspace-frame');
+      frames.forEach((frame, idx) => {
+        if (idx === index) {
+          frame.classList.add('active');
+          
+          // 3. Optional: Trigger safe internal rendering routine updates if supported by the app
+          try {
+            if (frame.contentWindow) {
+              if (typeof frame.contentWindow.renderAll === 'function') {
+                frame.contentWindow.renderAll();
+              } else if (typeof frame.contentWindow.renderUserInterface === 'function') {
+                frame.contentWindow.renderUserInterface();
+              } else if (typeof frame.contentWindow.engine?.refreshMetricsDashboard === 'function') {
+                frame.contentWindow.engine.refreshMetricsDashboard();
+              }
+            }
+          } catch (crossOriginError) {
+            // Silently catch if browser security strictness blocks iframe-to-iframe triggers locally
+            console.log("Cross-frame initialization update handled safely.");
+          }
+        } else {
+          frame.classList.remove('active');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

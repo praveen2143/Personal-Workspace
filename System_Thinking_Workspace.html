@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Systems Thinking Matrix — Everyday Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --surface: #111520;
+    --surface2: #171c2b;
+    --surface3: #1f263a;
+    --border: #242c42;
+    --border-strong: #313b59;
+    --text: #e5e9f5;
+    --text-muted: #627199;
+    --text-dim: #8fa0cc;
+    
+    /* Simplified System Colors Mapped inside Dashboard Layout */
+    --acc: #2dd4bf;       /* Smooth Teal Accent */
+    --acc-dim: rgba(45, 212, 191, 0.1);
+    --acc-glow: rgba(45, 212, 191, 0.25);
+
+    --gold: #fbbf24;
+    --gold-dim: rgba(251, 191, 36, 0.1);
+    --mint: #34d399;
+    --mint-dim: rgba(52, 211, 153, 0.1);
+    --rose: #f87171;
+    --rose-dim: rgba(248, 113, 113, 0.1);
+    
+    --radius: 12px;
+    --radius-sm: 6px;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Mono', monospace;
+    --font-serif: 'Instrument Serif', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Soft background texture effect */
+  body::after {
+    content:''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: .5;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .app { display: grid; grid-template-columns: 290px 1fr; min-height: 100vh; position: relative; z-index: 1; }
+
+  /* ── SIDEBAR LEFT NAVIGATION PANEL ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+  .logo-mark { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 28px; height: 28px; background: var(--acc-dim); border: 1px solid var(--acc);
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--acc); font-weight: 800; flex-shrink: 0;
+  }
+  .logo-text { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
+  .logo-text em { font-style: normal; color: var(--acc); }
+  .logo-sub { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+  .sidebar-date { padding: 12px 20px; font-size: 11px; color: var(--text-dim); border-bottom: 1px solid var(--border); letter-spacing: 0.02em; }
+  .sidebar-nav { padding: 12px; flex: 1; }
+  .nav-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px; margin: 14px 0 6px; }
+  
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 12px; color: var(--text-dim); transition: all 0.15s; border: 1px solid transparent;
+  }
+  .nav-item:hover { color: #fff; background: var(--surface2); }
+  .nav-item.active { color: #fff; background: var(--surface3); border-color: var(--border); }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .nav-count { margin-left: auto; font-size: 10px; color: var(--acc); background: var(--bg); padding: 1px 6px; border-radius: 10px; }
+
+  .sidebar-progress { padding: 14px 20px; border-top: 1px solid var(--border); background: var(--surface2); }
+  .progress-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .progress-bar-wrap { height: 4px; background: var(--bg); border-radius: 50px; overflow: hidden; margin-bottom: 4px; }
+  .progress-bar-fill { height: 100%; background: var(--acc); width: 0%; transition: width 0.4s ease; }
+
+  /* ── MAIN CONTENT LAYER DISPLAY ── */
+  .main { overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; padding: 16px 32px;
+    border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10;
+  }
+  .topbar-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: #fff; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  .btn {
+    padding: 6px 14px; border-radius: 50px; font-size: 11px; font-family: var(--font-body);
+    cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-dim); transition: all 0.15s;
+  }
+  .btn:hover { color: #fff; border-color: var(--border-strong); background: var(--surface2); }
+  .btn-primary { background: var(--acc); color: #05070a; border-color: var(--acc); font-weight: 600; }
+  .btn-primary:hover { background: #5ef1df; color: #05070a; box-shadow: 0 0 12px var(--acc-glow); }
+  .btn-danger { border-color: rgba(248,113,113,0.3); color: var(--rose); background: var(--rose-dim); }
+  .btn-danger:hover { background: rgba(248,113,113,0.2); }
+
+  /* ── WORKSPACE WINDOW PANELS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+  .content-area { padding: 28px 32px; max-width: 1100px; }
+  
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;}
+  .section-head h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .section-head span { font-size: 11px; color: var(--text-muted); }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .stat-value { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--acc); line-height: 1; }
+  .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  @media(max-width: 850px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── FORM LAYOUT CONFIGURATIONS ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+  .card-header { padding: 12px 18px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-body { padding: 16px 18px; }
+
+  .field { margin-bottom: 14px; }
+  .field label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 6px; letter-spacing: 0.05em; }
+  textarea, input[type="text"], select {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text); font-family: var(--font-body); font-size: 12px; padding: 8px 12px; outline: none; transition: all 0.15s;
+  }
+  textarea:focus, input[type="text"]:focus, select:focus { border-color: var(--acc); box-shadow: 0 0 0 3px var(--acc-dim); }
+  textarea { min-height: 60px; resize: vertical; }
+
+  /* ── SYSTEM ADAPTIVE BLOCKS ── */
+  .prompt-box { font-family: var(--font-serif); font-style: italic; font-size: 15px; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px; background: var(--surface2); padding: 12px; border-radius: var(--radius-sm); border-left: 2px solid var(--acc); }
+  
+  .dynamic-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform:none; } }
+  
+  .type-toggle {
+    flex-shrink: 0; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+    background: var(--surface3); color: var(--text-dim); font-size: 11px; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .type-toggle.v1 { background: var(--rose-dim); border-color: var(--rose); color: var(--rose); }
+  .type-toggle.v2 { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+  .type-toggle.v3 { background: var(--mint-dim); border-color: var(--mint); color: var(--mint); }
+  
+  .del-btn { background: none; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted); padding: 5px 10px; cursor: pointer; }
+  .del-btn:hover { border-color: var(--rose); color: var(--rose); }
+
+  .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .slider-input { flex: 1; -webkit-appearance: none; height: 4px; background: var(--border); border-radius: 2px; outline: none; }
+  .slider-input::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--acc); cursor: pointer; }
+  .slider-val { font-size: 11px; font-weight: bold; color: var(--acc); min-width: 50px; text-align: right; }
+
+  .empty { text-align: center; padding: 24px; color: var(--text-muted); font-size: 11px; font-style: italic; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--surface3); border: 1px solid var(--border-strong); padding: 8px 16px; border-radius: var(--radius-sm); font-size: 12px; z-index: 200; pointer-events: none; animation: toastIn 0.2s ease forwards; }
+  @keyframes toastIn { from { bottom: 10px; opacity: 0; } to { bottom: 24px; opacity: 1; } }
+
+  .slots-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 6px; }
+  .slots-row.active { border-color: var(--acc); background: var(--surface2); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-mark">
+        <div class="logo-icon">⚙</div>
+        <div class="logo-text">Systems<em>.</em>Map</div>
+      </div>
+      <div class="logo-sub">Clear Cause & Effect Tracking</div>
+    </div>
+    <div class="sidebar-date" id="sidebarDate">—</div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-label">Overview Hub</div>
+      <div class="nav-item active" id="nav-overview" onclick="switchSection('overview')">
+        📊 Situation Summary
+      </div>
+      <div class="nav-item" id="nav-profile" onclick="switchSection('profile')">
+        ✏️ 1. Name the Problem
+      </div>
+
+      <div class="nav-label">The Blueprint Blocks</div>
+      <div class="nav-item" id="nav-phase1" onclick="switchSection('phase1')">
+        <div class="nav-dot" style="background:var(--rose)"></div>2. Things Built Up
+      </div>
+      <div class="nav-item" id="nav-phase2" onclick="switchSection('phase2')">
+        <div class="nav-dot" style="background:var(--gold)"></div>3. Action Cycles
+      </div>
+      <div class="nav-item" id="nav-phase3" onclick="switchSection('phase3')">
+        <div class="nav-dot" style="background:var(--mint)"></div>4. Waiting Gaps
+      </div>
+      <div class="nav-item" id="nav-phase4" onclick="switchSection('phase4')">
+        <div class="nav-dot" style="background:var(--text)"></div>5. High-Impact Fixes
+      </div>
+
+      <div class="nav-label">Storage Vault</div>
+      <div class="nav-item" id="nav-storage" onclick="switchSection('storage')">
+        💾 Topic Memory Slots
+        <span class="nav-count" id="slotCountBadge">1</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-progress">
+      <div class="progress-label"><span>Map Completeness</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+      <div style="font-size:9px; color:var(--text-muted)" id="progressSub">0 of 4 sectors mapped</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Situation Summary</div>
+      <div class="topbar-actions">
+        <span style="font-size:11px; color:var(--acc); background:var(--surface2); padding: 4px 10px; border-radius:50px; border:1px solid var(--border);" id="currentSlotIndicator">Topic: Default Situation</span>
+        <button class="btn btn-primary" onclick="saveActiveState()">Save Changes ↗</button>
+      </div>
+    </div>
+
+    <div class="section active" id="section-overview">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Your Systems Architecture At A Glance</h2>
+          <span>Simplified diagnostics of how parts interact over time</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Things Accumulating</div>
+            <div class="stat-value" id="statStocks">0</div>
+            <div class="stat-sub">Waterlevels tracked</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Action Loops</div>
+            <div class="stat-value" id="statLoops">0</div>
+            <div class="stat-sub">Spirals & Balances</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Time Gaps Found</div>
+            <div class="stat-value" id="statDelays">0</div>
+            <div class="stat-sub">Hidden friction spots</div>
+          </div>
+          <div class="stat-card" style="border-color: rgba(45, 212, 191, 0.3)">
+            <div class="stat-label" style="color:var(--acc)">Fix Gravity</div>
+            <div class="stat-value" id="statLeverage">Easy</div>
+            <div class="stat-sub">Effort requirements</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">The Active Problem Statement</div></div>
+            <div class="card-body">
+              <p id="summaryProblem" style="font-family: var(--font-serif); font-size: 16px; font-style: italic; color: var(--text-dim);">No active context description found. Setup basic details in '1. Name the Problem'.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">High-Impact Strategic Plan</div></div>
+            <div class="card-body">
+              <p id="summaryFix" style="font-size: 12px; color: var(--text-dim);">Awaiting your leverage planning details inside section 5.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-profile">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>1. Define the Situation Boundary</h2>
+          <span>Clearly write down what you are looking into so you don't get lost in side details</span>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Context Boundaries</div></div>
+          <div class="card-body">
+            <div class="field">
+              <label>What specific issue or pattern are you trying to fix?</label>
+              <input type="text" id="f-title" placeholder="e.g., Team energy levels crash every Friday morning afternoon">
+            </div>
+            <div class="two-col">
+              <div class="field">
+                <label>Where is this happening?</label>
+                <input type="text" id="f-domain" placeholder="Workplace, Daily Habit, Finance...">
+              </div>
+              <div class="field">
+                <label>Urgency Level</label>
+                <select id="f-stakes">
+                  <option value="Minor">🟢 Minor Inconvenience</option>
+                  <option value="Annoying">🟡 Annoying / Constant Drain</option>
+                  <option value="Critical">🔴 Critical Infrastructure Fix Needed</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>What is the obvious quick fix people usually try that fails?</label>
+              <textarea id="f-consensus" placeholder="e.g., Forcing everyone to drink coffee or drink energy drinks (usually makes it worse long-term)."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-phase1">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>2. Things That Build Up or Drain Out</h2>
+          <span>Track reservoirs: items that collect like water levels in a bathtub</span>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Reservoirs Tracker List</div>
+            <button class="btn btn-primary" style="font-size: 10px; padding: 2px 10px;" onclick="addStockItem()">+ Add Item</button>
+          </div>
+          <div class="card-body">
+            <div class="prompt-box">Think about what increases or decreases over days. It could be physical cash, exhaustion, unread emails, or team trust.</div>
+            <div id="stocksContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-phase2">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>3. Action & Reaction Cycles</h2>
+          <span>Uncover self-reinforcing loops or automatic balancing forces</span>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">System Loop Registers</div>
+            <button class="btn" style="font-size: 10px; padding: 2px 10px; border-color:var(--gold); color:var(--gold);" onclick="addLoopItem()">+ Add Loop Cycle</button>
+          </div>
+          <div class="card-body">
+            <div class="prompt-box">Cycles can be "Runaway Spirals" (snowballing bigger and bigger out of control) or "Balancing Cycles" (forces that automatically steady things out).</div>
+            <div id="loopsContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-phase3">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>4. Waiting Gaps & Hidden Time Delays</h2>
+          <span>Find hidden lags where an action takes time before showing a visible effect</span>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Time Lag Diagnostics</div></div>
+          <div class="card-body">
+            <div class="prompt-box">Gaps create panic. For example: watering a plant today doesn't show growth for 5 days, causing people to over-water out of frustration.</div>
+            <div class="field">
+              <label>Where are actions disconnected from immediate results?</label>
+              <textarea id="f-delays" style="min-height: 100px;" placeholder="e.g., Hiring a new assistant takes 4 weeks to train, so our work overload doesn't drop instantly."></textarea>
+            </div>
+            <div class="field">
+              <label>Estimated System Reaction Lag Speed</label>
+              <div class="slider-container">
+                <input type="range" class="slider-input" id="f-lag-range" min="1" max="5" value="2" oninput="updateLagTextDisplay(this.value)">
+                <span class="slider-val" id="lagRangeValText">Days</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-phase4">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>5. High-Impact Structural Adjustments</h2>
+          <span>Where can you make a small shift that fundamentally rewrites how the system behaves?</span>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Solution Injection Strategy</div></div>
+          <div class="card-body">
+            <div class="field">
+              <label>The Root Pivot (Changes the actual layout of the cycle instead of patching symptoms)</label>
+              <textarea id="f-leverage" placeholder="Instead of working later, we move the weekly status sync report up to Wednesday..."></textarea>
+            </div>
+            <div class="field">
+              <label>Immediate Simple Trial Run</label>
+              <input type="text" id="f-trial" placeholder="What 1-week test can we run to check if this adjustment works?">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-storage">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Topic Space Control Deck</h2>
+          <span>Keep records of entirely different situations or backup your files offline</span>
+        </div>
+        
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Your Stored Topics</div></div>
+            <div class="card-body">
+              <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+                <input type="text" id="newSlotInput" placeholder="Name another situation...">
+                <button class="btn btn-primary" style="border-radius: var(--radius-sm)" onclick="createNewTopicSlot()">Create Slot</button>
+              </div>
+              <div id="slotsUIRenderer"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">File Imports & Deep Resets</div></div>
+            <div class="card-body">
+              <div class="field">
+                <label>Offline Storage Files</label>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Save a physical backup copy of your entire dashboard context locally.</p>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn" style="flex: 1;" onclick="exportStateToJSON()">Download File 📥</button>
+                  <button class="btn" style="flex: 1;" onclick="document.getElementById('hiddenFileInput').click()">Upload Backup 📤</button>
+                </div>
+                <input type="file" id="hiddenFileInput" style="display: none;" accept=".json" onchange="importStateFromJSON(event)">
+              </div>
+              <hr style="border: none; border-top: 1px solid var(--border); margin: 16px 0;">
+              <div class="field">
+                <label style="color: var(--rose);">Danger Threshold Actions</label>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn btn-danger" style="flex: 1;" onclick="purgeActiveTopic()">Reset This Topic Only</button>
+                  <button class="btn btn-danger" style="flex: 1; background: rgba(248,113,113,0.05)" onclick="purgeEverything()">Clear Absolute Everything</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ── DEFAULT DATA MAPPING SCHEMAS ──
+  function generateBlankSessionModel() {
+    return {
+      title: '',
+      domain: '',
+      stakes: 'Annoying',
+      consensus: '',
+      delaysText: '',
+      lagRange: 2,
+      leverageText: '',
+      trialText: '',
+      stocks: [
+        { id: 1, text: 'Energy Reservoirs / Motivation Level', status: 'v1' },
+        { id: 2, text: 'Backlog of Unchecked Tasks', status: 'v2' }
+      ],
+      loops: [
+        { id: 1, text: 'Panic rush to finish items causes late nights, crashing next day morning energy.', status: 'v1' }
+      ]
+    };
+  }
+
+  let activeSlotKey = "Default Situation";
+  let masterDatabaseManifest = { "Default Situation": generateBlankSessionModel() };
+  let liveSessionRef = masterDatabaseManifest[activeSlotKey];
+
+  // ── COMPILER INITIALIZATION LIFE CYCLES ──
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('sidebarDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    bootstrapLocalStorageEngine();
+    renderUserInterface();
+  });
+
+  function bootstrapLocalStorageEngine() {
+    try {
+      const storedData = localStorage.getItem('sm_systems_master_manifest');
+      const storedActiveKey = localStorage.getItem('sm_systems_active_key');
+      if (storedData) masterDatabaseManifest = JSON.parse(storedData);
+      if (storedActiveKey && masterDatabaseManifest[storedActiveKey]) activeSlotKey = storedActiveKey;
+      liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    } catch(err) {
+      console.warn("Storage profile error, launching fresh sandbox memory context.", err);
+    }
+  }
+
+  function saveActiveState() {
+    // Collect active input variables
+    liveSessionRef.title = document.getElementById('f-title').value;
+    liveSessionRef.domain = document.getElementById('f-domain').value;
+    liveSessionRef.stakes = document.getElementById('f-stakes').value;
+    liveSessionRef.consensus = document.getElementById('f-consensus').value;
+    liveSessionRef.delaysText = document.getElementById('f-delays').value;
+    liveSessionRef.lagRange = parseInt(document.getElementById('f-lag-range').value);
+    liveSessionRef.leverageText = document.getElementById('f-leverage').value;
+    liveSessionRef.trialText = document.getElementById('f-trial').value;
+
+    masterDatabaseManifest[activeSlotKey] = liveSessionRef;
+    localStorage.setItem('sm_systems_master_manifest', JSON.stringify(masterDatabaseManifest));
+    localStorage.setItem('sm_systems_active_key', activeSlotKey);
+    
+    renderUserInterface();
+    displayToastNotification('Changes safely synced to storage.');
+  }
+
+  // ── ROUTER DISPLAY CONTROLLER ──
+  function switchSection(targetSectionId) {
+    document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(navItem => navItem.classList.remove('active'));
+    
+    document.getElementById('section-' + targetSectionId).classList.add('active');
+    document.getElementById('nav-' + targetSectionId).classList.add('active');
+    
+    const viewHeaderTitles = {
+      'overview': 'Situation Summary', 'profile': '1. Define the Problem',
+      'phase1': '2. Accumulating Factors', 'phase2': '3. Cycle Interconnections',
+      'phase3': '4. Time Lag Analysis', 'phase4': '5. High-Impact Corrections',
+      'storage': 'Topic Memory Space Settings'
+    };
+    document.getElementById('topbarTitle').textContent = viewHeaderTitles[targetSectionId] || 'Workspace Section';
+  }
+
+  // ── OPERATIONAL ADDERS AND ACTIONS ──
+  function addStockItem() {
+    liveSessionRef.stocks.push({ id: Date.now(), text: '', status: 'v1' });
+    renderUserInterface();
+  }
+
+  function toggleStockStatus(itemId) {
+    const targetItem = liveSessionRef.stocks.find(item => item.id === itemId);
+    if (targetItem) {
+      const cycler = { 'v1': 'v2', 'v2': 'v3', 'v3': 'v1' };
+      targetItem.status = cycler[targetItem.status];
+      renderUserInterface();
+    }
+  }
+
+  function addLoopItem() {
+    liveSessionRef.loops.push({ id: Date.now(), text: '', status: 'v1' });
+    renderUserInterface();
+  }
+
+  function toggleLoopStatus(itemId) {
+    const targetItem = liveSessionRef.loops.find(item => item.id === itemId);
+    if (targetItem) {
+      const cycler = { 'v1': 'v2', 'v2': 'v1' };
+      targetItem.status = cycler[targetItem.status];
+      renderUserInterface();
+    }
+  }
+
+  function removeArrayElement(arrayKey, itemId) {
+    liveSessionRef[arrayKey] = liveSessionRef[arrayKey].filter(item => item.id !== itemId);
+    renderUserInterface();
+  }
+
+  function updateLagTextDisplay(val) {
+    const descriptors = { 1: "Minutes", 2: "Hours", 3: "Days", 4: "Weeks", 5: "Months / Years" };
+    document.getElementById('lagRangeValText').textContent = descriptors[val] || "Days";
+  }
+
+  // ── MASTER RENDER DESCRIPTOR PIPELINE ──
+  function renderUserInterface() {
+    document.getElementById('currentSlotIndicator').textContent = "Topic: " + activeSlotKey;
+    document.getElementById('slotCountBadge').textContent = Object.keys(masterDatabaseManifest).length;
+
+    // Load simple fields
+    document.getElementById('f-title').value = liveSessionRef.title || '';
+    document.getElementById('f-domain').value = liveSessionRef.domain || '';
+    document.getElementById('f-stakes').value = liveSessionRef.stakes || 'Annoying';
+    document.getElementById('f-consensus').value = liveSessionRef.consensus || '';
+    document.getElementById('f-delays').value = liveSessionRef.delaysText || '';
+    document.getElementById('f-lag-range').value = liveSessionRef.lagRange || 2;
+    updateLagTextDisplay(liveSessionRef.lagRange || 2);
+    document.getElementById('f-leverage').value = liveSessionRef.leverageText || '';
+    document.getElementById('f-trial').value = liveSessionRef.trialText || '';
+
+    // Render Stats Matrix Count Metrics
+    document.getElementById('statStocks').textContent = liveSessionRef.stocks.length;
+    document.getElementById('statLoops').textContent = liveSessionRef.loops.length;
+    document.getElementById('statDelays').textContent = liveSessionRef.delaysText ? "1 Found" : "0 Clean";
+    
+    const lagSpeeds = { 1: "Inst-Now", 2: "Trivial", 3: "Moderate", 4: "Deep Lag", 5: "Severe" };
+    document.getElementById('statLeverage').textContent = lagSpeeds[liveSessionRef.lagRange || 2];
+
+    document.getElementById('summaryProblem').textContent = liveSessionRef.title ? `“${liveSessionRef.title}”` : "No current topic description initialized yet.";
+    document.getElementById('summaryFix').textContent = liveSessionRef.leverageText ? liveSessionRef.leverageText : "Awaiting high impact pivot formulations inside section 5.";
+
+    renderStockInputs();
+    renderLoopInputs();
+    renderSlotEngineUI();
+    calculateProgressBarCompleteness();
+  }
+
+  function renderStockInputs() {
+    const container = document.getElementById('stocksContainer');
+    if (!liveSessionRef.stocks.length) { container.innerHTML = '<div class="empty">No storage items currently tracked.</div>'; return; }
+    
+    const labels = { 'v1': '🔺 HIGH LEVEL', 'v2': '📉 DRAINING OUT', 'v3': '⚖️ BALANCED' };
+    container.innerHTML = liveSessionRef.stocks.map(item => `
+      <div class="dynamic-row">
+        <input type="text" value="${item.text}" onchange="updateArrayTextValue('stocks', ${item.id}, this.value)" placeholder="e.g., Backlog of unfinished paperwork">
+        <button class="type-toggle ${item.status}" onclick="toggleStockStatus(${item.id})">${labels[item.status] || 'STATUS'}</button>
+        <button class="del-btn" onclick="removeArrayElement('stocks', ${item.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderLoopInputs() {
+    const container = document.getElementById('loopsContainer');
+    if (!liveSessionRef.loops.length) { container.innerHTML = '<div class="empty">No reaction cycles recorded yet.</div>'; return; }
+    
+    const labels = { 'v1': '🔄 RUNAWAY SPIRAL', 'v2': '⚖️ AUTOMATIC STEADY' };
+    container.innerHTML = liveSessionRef.loops.map(item => `
+      <div class="dynamic-row">
+        <input type="text" value="${item.text}" onchange="updateArrayTextValue('loops', ${item.id}, this.value)" placeholder="Action A causes response B which triggers more Action A...">
+        <button class="type-toggle ${item.status}" onclick="toggleLoopStatus(${item.id})">${labels[item.status] || 'TYPE'}</button>
+        <button class="del-btn" onclick="removeArrayElement('loops', ${item.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function updateArrayTextValue(arrayKey, id, textValue) {
+    const target = liveSessionRef[arrayKey].find(item => item.id === id);
+    if(target) target.text = textValue;
+  }
+
+  function calculateProgressBarCompleteness() {
+    let fieldsFilled = 0;
+    if (liveSessionRef.title) fieldsFilled++;
+    if (liveSessionRef.stocks.length > 0) fieldsFilled++;
+    if (liveSessionRef.loops.length > 0) fieldsFilled++;
+    if (liveSessionRef.leverageText) fieldsFilled++;
+
+    const scorePct = Math.round((fieldsFilled / 4) * 100);
+    document.getElementById('progressBar').style.width = scorePct + '%';
+    document.getElementById('progressPct').textContent = scorePct + '%';
+    document.getElementById('progressSub').textContent = `${fieldsFilled} of 4 sectors fully defined`;
+  }
+
+  // ── ARCHITECT MULTI-SLOT STORAGE ENGINES ──
+  function renderSlotEngineUI() {
+    const container = document.getElementById('slotsUIRenderer');
+    const systemKeys = Object.keys(masterDatabaseManifest);
+    
+    container.innerHTML = systemKeys.map(keyName => {
+      const isActive = keyName === activeSlotKey;
+      return `
+        <div class="slots-row ${isActive ? 'active' : ''}">
+          <div style="font-size: 12px; font-weight: bold; font-family: var(--font-display)">${keyName}</div>
+          <div style="display:flex; gap:4px">
+            ${!isActive ? `<button class="btn" style="padding:2px 8px; font-size:10px;" onclick="swapTopicProfileSlot('${keyName}')">Load</button>` : ''}
+            <button class="btn btn-danger" style="padding:2px 8px; font-size:10px;" onclick="deleteSpecificSlot('${keyName}')" ${systemKeys.length === 1 ? 'disabled style="opacity:0.2"' : ''}>Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function createNewTopicSlot() {
+    const input = document.getElementById('newSlotInput');
+    const txtValue = input.value.trim();
+    if(!txtValue || masterDatabaseManifest[txtValue]) return;
+    
+    masterDatabaseManifest[txtValue] = generateBlankSessionModel();
+    input.value = '';
+    activeSlotKey = txtValue;
+    liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    saveActiveState();
+  }
+
+  function swapTopicProfileSlot(targetKeyName) {
+    if(!masterDatabaseManifest[targetKeyName]) return;
+    activeSlotKey = targetKeyName;
+    liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    localStorage.setItem('sm_systems_active_key', activeSlotKey);
+    renderUserInterface();
+    displayToastNotification(`Swapped track space to: ${targetKeyName}`);
+  }
+
+  function deleteSpecificSlot(targetKeyName) {
+    if(Object.keys(masterDatabaseManifest).length <= 1 || activeSlotKey === targetKeyName) return;
+    delete masterDatabaseManifest[targetKeyName];
+    localStorage.setItem('sm_systems_master_manifest', JSON.stringify(masterDatabaseManifest));
+    renderUserInterface();
+  }
+
+  function purgeActiveTopic() {
+    if(!confirm("Clear everything inside this specific situation slot?")) return;
+    liveSessionRef = generateBlankSessionModel();
+    saveActiveState();
+  }
+
+  function purgeEverything() {
+    if(!confirm("Wipe out the entire memory cache across all situations? This cannot be undone.")) return;
+    localStorage.clear();
+    activeSlotKey = "Default Situation";
+    masterDatabaseManifest = { "Default Situation": generateBlankSessionModel() };
+    liveSessionRef = masterDatabaseManifest[activeSlotKey];
+    renderUserInterface();
+  }
+
+  // ── SNAPSHOT JSON FILE EXPORTS & IMPORTS ──
+  function exportStateToJSON() {
+    masterDatabaseManifest[activeSlotKey] = liveSessionRef;
+    const blob = new Blob([JSON.stringify(masterDatabaseManifest, null, 2)], { type: "application/json" });
+    const dummyUrl = document.createElement('a');
+    dummyUrl.href = URL.createObjectURL(blob);
+    dummyUrl.download = `systems-map-snapshot-${new Date().toISOString().slice(0,10)}.json`;
+    dummyUrl.click();
+  }
+
+  function importStateFromJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const parsedData = JSON.parse(e.target.result);
+        masterDatabaseManifest = parsedData;
+        activeSlotKey = Object.keys(parsedData)[0];
+        liveSessionRef = masterDatabaseManifest[activeSlotKey];
+        localStorage.setItem('sm_systems_master_manifest', JSON.stringify(masterDatabaseManifest));
+        localStorage.setItem('sm_systems_active_key', activeSlotKey);
+        renderUserInterface();
+        displayToastNotification("System backup data successfully injected!");
+      } catch(err) {
+        alert("The uploaded data structure is invalid or corrupt.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function displayToastNotification(msg) {
+    const element = document.createElement('div');
+    element.className = 'toast';
+    element.textContent = msg;
+    document.body.appendChild(element);
+    setTimeout(() => element.remove(), 2200);
+  }
+</script>
+</body>
+</html>

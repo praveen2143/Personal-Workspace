@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Thinking Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0d;
+    --surface: #161614;
+    --surface2: #1e1e1b;
+    --surface3: #252521;
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8e6df;
+    --text-muted: #7a7870;
+    --text-dim: #4a4845;
+    --accent: #d4a843;
+    --accent-dim: rgba(212,168,67,0.12);
+    --accent-glow: rgba(212,168,67,0.25);
+    --stage-1: #7c6ee0;
+    --stage-2: #3ab5a0;
+    --stage-3: #d4a843;
+    --stage-4: #d46b43;
+    --stage-5: #4a9fd4;
+    --red: #d44343;
+    --green: #5ab85a;
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'Instrument Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  /* ── LAYOUT ── */
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f0f0d;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 15px;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    margin-left: 38px;
+  }
+
+  .sidebar-date {
+    padding: 14px 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.04em;
+  }
+
+  .sidebar-nav { padding: 12px 12px; flex: 1; }
+
+  .nav-label {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active {
+    color: var(--text);
+    background: var(--surface3);
+    border-color: var(--border);
+  }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .nav-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--surface3);
+    padding: 1px 6px;
+    border-radius: 20px;
+  }
+
+  /* Progress in sidebar */
+  .sidebar-progress {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--surface3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #e8c068);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  /* ── MAIN ── */
+  .main { overflow-y: auto; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn:hover { color: var(--text); background: var(--surface3); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0f0f0d;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .btn-primary:hover { background: #e8c068; border-color: #e8c068; color: #0f0f0d; }
+  
+  .btn-danger {
+    border-color: rgba(212,67,67,0.3);
+    color: #d47070;
+  }
+  .btn-danger:hover { background: rgba(212,67,67,0.12); color: #e58585; }
+
+  /* ── CONTENT SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .content-area { padding: 28px 32px; }
+
+  /* ── OVERVIEW CARDS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--border-strong); }
+
+  .stat-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* ── STAGE PIPELINE ── */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .stage-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stage-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .stage-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .stage-card.current::before { opacity: 1; }
+  .stage-card.current { border-color: var(--border-strong); }
+
+  .s1::before { background: var(--stage-1); }
+  .s2::before { background: var(--stage-2); }
+  .s3::before { background: var(--stage-3); }
+  .s4::before { background: var(--stage-4); }
+  .s5::before { background: var(--stage-5); }
+
+  .stage-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .stage-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .stage-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .stage-badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-family: var(--font-mono);
+  }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .card-body { padding: 16px 18px; }
+
+  /* ── FORM ELEMENTS ── */
+  textarea, input[type="text"], select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    resize: vertical;
+  }
+
+  textarea:focus, input[type="text"]:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  textarea { min-height: 80px; line-height: 1.6; }
+
+  .field { margin-bottom: 14px; }
+  .field-label {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: block;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── LOG ENTRIES ── */
+  .log-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .log-entry {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .log-stage-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .log-content { flex: 1; }
+
+  .log-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .log-stage-tag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 1px 7px;
+    border-radius: 20px;
+    background: var(--surface3);
+    color: var(--text-muted);
+  }
+
+  .log-time {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+  }
+
+  .log-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .log-delete {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: color 0.15s;
+  }
+
+  .log-delete:hover { color: var(--red); }
+
+  /* ── TASKS ── */
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    animation: slideIn 0.2s ease;
+  }
+
+  .task-check {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 4px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+    transition: all 0.15s;
+  }
+
+  .task-check.done {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .task-check.done::after {
+    content: '✓';
+    font-size: 10px;
+    color: #0f0f0d;
+    font-weight: 700;
+  }
+
+  .task-text { flex: 1; font-size: 13px; color: var(--text); }
+  .task-text.done { text-decoration: line-through; color: var(--text-dim); }
+
+  .task-priority {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 1px 7px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  .prio-high { background: rgba(212,67,67,0.15); color: #d47070; }
+  .prio-med  { background: rgba(212,168,67,0.15); color: #d4a843; }
+  .prio-low  { background: rgba(90,184,90,0.12); color: #5ab85a; }
+
+  .task-stage-tag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 1px 7px;
+    border-radius: 20px;
+    background: var(--surface3);
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  /* ── INSIGHT CARDS ── */
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .insight-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    position: relative;
+    animation: slideIn 0.2s ease;
+  }
+
+  .insight-tag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .insight-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .insight-del {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: none; border: none;
+    color: var(--text-dim); cursor: pointer;
+    font-size: 14px;
+    transition: color 0.15s;
+  }
+  .insight-del:hover { color: var(--red); }
+
+  /* ── LIST ENGINE COMPACT STYLES FOR INSIGHTS / CORES ── */
+  .list-item-compact {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ── MANAGEMENT PANELS ── */
+  .profile-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+  }
+  .profile-row.active {
+    border-color: var(--accent);
+    background: var(--surface3);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  /* ── HMW ── */
+  .hmw-display {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--text);
+    font-style: italic;
+    line-height: 1.4;
+    padding: 20px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-glow);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+  }
+
+  /* ── TIMER ── */
+  .timer-display {
+    font-family: var(--font-mono);
+    font-size: 36px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .timer-controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface2);
+    padding: 3px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+
+  .tab {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+    border: none;
+    background: none;
+  }
+
+  .tab.active {
+    background: var(--surface3);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  /* ── WEEK HEATMAP ── */
+  .heatmap {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  .hm-cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: var(--surface3);
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 1px solid var(--border);
+  }
+
+  .hm-cell.l1 { background: rgba(212,168,67,0.25); }
+  .hm-cell.l2 { background: rgba(212,168,67,0.5); }
+  .hm-cell.l3 { background: rgba(212,168,67,0.75); }
+  .hm-cell.l4 { background: rgba(212,168,67,0.95); }
+
+  .hm-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+  .hm-day { font-size: 9px; font-family: var(--font-mono); color: var(--text-dim); text-align: center; }
+
+  /* ── MODAL ── */
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    width: 480px;
+    max-width: 90vw;
+    animation: modalIn 0.2s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.97) translateY(-8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .modal-title { font-family: var(--font-display); font-size: 16px; }
+  .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px; line-height: 1; }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 20px; }
+  .modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* ── SCORE ── */
+  .score-ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--surface3); stroke-width: 6; }
+  .ring-fill { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+
+  /* ── RESPONSIVE FIXES ── */
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .pipeline { grid-template-columns: 1fr; }
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--surface3);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text);
+    z-index: 200;
+    animation: toastIn 0.2s ease;
+    pointer-events: none;
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  select option { background: #1e1e1b; color: var(--text); }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .section-head h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+  }
+
+  .section-head span {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-mark">
+        <div class="logo-icon">DT</div>
+        <div class="logo-text">Design Thinking</div>
+      </div>
+      <div class="logo-sub">Daily Tracker</div>
+    </div>
+    <div class="sidebar-date" id="sidebarDate">—</div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navigate</div>
+      <div class="nav-item active" data-section="overview" onclick="showSection('overview',this)">
+        <div class="nav-dot" style="background:#d4a843"></div>
+        Overview
+      </div>
+      <div class="nav-item" data-section="project" onclick="showSection('project',this)">
+        <div class="nav-dot" style="background:#7c6ee0"></div>
+        Active Project
+      </div>
+      <div class="nav-item" data-section="stages" onclick="showSection('stages',this)">
+        <div class="nav-dot" style="background:#3ab5a0"></div>
+        Stage Work
+      </div>
+      <div class="nav-item" data-section="tasks" onclick="showSection('tasks',this)">
+        <div class="nav-dot" style="background:#d46b43"></div>
+        Tasks
+        <span class="nav-count" id="taskCountBadge">0</span>
+      </div>
+      <div class="nav-item" data-section="log" onclick="showSection('log',this)">
+        <div class="nav-dot" style="background:#4a9fd4"></div>
+        Daily Log
+        <span class="nav-count" id="logCountBadge">0</span>
+      </div>
+      <div class="nav-item" data-section="insights" onclick="showSection('insights',this)">
+        <div class="nav-dot" style="background:#d4a843"></div>
+        Insights
+      </div>
+      <div class="nav-item" data-section="data-center" onclick="showSection('data-center',this)">
+        <div class="nav-dot" style="background:#5ab85a"></div>
+        Data Backup & Slots
+      </div>
+    </nav>
+    <div class="sidebar-progress">
+      <div class="progress-label">
+        <span>Today's Progress</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono)" id="progressSub">0 of 5 stages active</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Overview</div>
+      <div class="topbar-actions">
+        <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); background:var(--surface2); padding: 4px 8px; border-radius:4px; border:1px solid var(--border);" id="currentSlotIndicator">Slot: Default</span>
+        <button class="btn" onclick="openModal('logModal')">+ Log Entry</button>
+        <button class="btn" onclick="openModal('taskModal')">+ Task</button>
+        <button class="btn btn-primary" onclick="saveData()">Save ↗</button>
+      </div>
+    </div>
+
+    <div class="section active" id="section-overview">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Good day, Thinker.</h2>
+          <span id="overviewDate">—</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Active Stage</div>
+            <div class="stat-value" id="statStage">—</div>
+            <div class="stat-sub" id="statStageName">Not started</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Log Entries</div>
+            <div class="stat-value" id="statLogs">0</div>
+            <div class="stat-sub">Total</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Tasks</div>
+            <div class="stat-value" id="statTasks">0</div>
+            <div class="stat-sub" id="statTasksSub">0 done</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Insights</div>
+            <div class="stat-value" id="statInsights">0</div>
+            <div class="stat-sub">Captured</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header">
+            <div class="card-title">Stage Pipeline</div>
+            <div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono)" id="pipelineStageLabel">Click a stage to activate</div>
+          </div>
+          <div class="card-body">
+            <div class="pipeline">
+              <div class="stage-card s1" id="sc-1" onclick="setCurrentStage(1)">
+                <div class="stage-num">01</div>
+                <div class="stage-name" style="color:var(--stage-1)">Empathize</div>
+                <div class="stage-desc">Understand users deeply</div>
+                <span class="stage-badge" style="background:rgba(124,110,224,0.12);color:var(--stage-1)" id="sb-1">idle</span>
+              </div>
+              <div class="stage-card s2" id="sc-2" onclick="setCurrentStage(2)">
+                <div class="stage-num">02</div>
+                <div class="stage-name" style="color:var(--stage-2)">Define</div>
+                <div class="stage-desc">Frame the right problem</div>
+                <span class="stage-badge" style="background:rgba(58,181,160,0.12);color:var(--stage-2)" id="sb-2">idle</span>
+              </div>
+              <div class="stage-card s3" id="sc-3" onclick="setCurrentStage(3)">
+                <div class="stage-num">03</div>
+                <div class="stage-name" style="color:var(--stage-3)">Ideate</div>
+                <div class="stage-desc">Generate many ideas</div>
+                <span class="stage-badge" style="background:rgba(212,168,67,0.12);color:var(--stage-3)" id="sb-3">idle</span>
+              </div>
+              <div class="stage-card s4" id="sc-4" onclick="setCurrentStage(4)">
+                <div class="stage-num">04</div>
+                <div class="stage-name" style="color:var(--stage-4)">Prototype</div>
+                <div class="stage-desc">Build fast to learn</div>
+                <span class="stage-badge" style="background:rgba(212,107,67,0.12);color:var(--stage-4)" id="sb-4">idle</span>
+              </div>
+              <div class="stage-card s5" id="sc-5" onclick="setCurrentStage(5)">
+                <div class="stage-num">05</div>
+                <div class="stage-name" style="color:var(--stage-5)">Test</div>
+                <div class="stage-desc">Listen & iterate</div>
+                <span class="stage-badge" style="background:rgba(74,159,212,0.12);color:var(--stage-5)" id="sb-5">idle</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Logs</div></div>
+            <div class="card-body" id="recentLogList">
+              <div class="empty">No entries yet</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Open Tasks</div></div>
+            <div class="card-body" id="recentTaskList">
+              <div class="empty">No tasks yet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-project">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Active Project</h2>
+          <span>Define what you're solving</span>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-header"><div class="card-title">Project Info</div></div>
+              <div class="card-body">
+                <div class="field">
+                  <label class="field-label">Project Name</label>
+                  <input type="text" id="projectName" placeholder="e.g. Improve morning routine">
+                </div>
+                <div class="field">
+                  <label class="field-label">Target User / Audience</label>
+                  <input type="text" id="projectUser" placeholder="e.g. Working parents with 2 kids">
+                </div>
+                <div class="field">
+                  <label class="field-label">Problem Space</label>
+                  <textarea id="projectProblem" placeholder="Describe the problem you're solving…"></textarea>
+                </div>
+                <div class="field">
+                  <label class="field-label">Success Criteria</label>
+                  <textarea id="projectSuccess" placeholder="How will you know this is solved?…" style="min-height:60px"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="saveProject()" style="width:100%">Save Project</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:16px">
+              <div class="card-header"><div class="card-title">How Might We…</div></div>
+              <div class="card-body">
+                <div id="hmwDisplay" class="hmw-display" style="display:none;margin-bottom:14px"></div>
+                <div class="field">
+                  <label class="field-label">HMW Statement</label>
+                  <textarea id="hmwInput" placeholder="How might we help [user] to [goal] so that [outcome]?"></textarea>
+                </div>
+                <button class="btn" onclick="setHMW()" style="width:100%">Set HMW Statement</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">POV Statement</div></div>
+              <div class="card-body">
+                <div class="field">
+                  <label class="field-label">User</label>
+                  <input type="text" id="povUser" placeholder="[specific user]">
+                </div>
+                <div class="field">
+                  <label class="field-label">Need</label>
+                  <input type="text" id="povNeed" placeholder="needs to [do something]">
+                </div>
+                <div class="field">
+                  <label class="field-label">Insight / Because</label>
+                  <input type="text" id="povInsight" placeholder="because [surprising insight]">
+                </div>
+                <div id="povDisplay" style="display:none;margin-top:10px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;color:var(--text)"></div>
+                <button class="btn" onclick="buildPOV()" style="width:100%;margin-top:10px">Build POV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-stages">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Stage Workspace</h2>
+          <span>Deep work for each phase</span>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" onclick="switchStageTab(1,this)">Empathize</button>
+          <button class="tab" onclick="switchStageTab(2,this)">Define</button>
+          <button class="tab" onclick="switchStageTab(3,this)">Ideate</button>
+          <button class="tab" onclick="switchStageTab(4,this)">Prototype</button>
+          <button class="tab" onclick="switchStageTab(5,this)">Test</button>
+        </div>
+
+        <div id="stageTab-1">
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Interview Notes</div></div>
+              <div class="card-body">
+                <div class="field"><label class="field-label">Person Interviewed</label>
+                  <input type="text" id="s1-person" placeholder="Name or role"></div>
+                <div class="field"><label class="field-label">Key Observation</label>
+                  <textarea id="s1-obs" placeholder="What did you see, hear, feel?"></textarea></div>
+                <div class="field"><label class="field-label">Quote</label>
+                  <input type="text" id="s1-quote" placeholder='"Exact words they said"'></div>
+                <button class="btn" onclick="addEmpathyNote()" style="width:100%">Add Note</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Empathy Notes</div></div>
+              <div class="card-body" id="empathyNotes">
+                <div class="empty">No notes yet</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="stageTab-2" style="display:none">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><div class="card-title">Pain Points & Patterns</div></div>
+            <div class="card-body">
+              <div class="two-col">
+                <div>
+                  <div class="field"><label class="field-label">Pain Point</label>
+                    <input type="text" id="s2-pain" placeholder="What frustrates the user?"></div>
+                  <button class="btn" onclick="addPain()" style="width:100%">Add Pain Point</button>
+                </div>
+                <div id="painList"><div class="empty">No pain points yet</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Core Problem Statement</div></div>
+            <div class="card-body">
+              <div class="field"><label class="field-label">Refined Problem</label>
+                <textarea id="s2-problem" placeholder="The real underlying problem is…"></textarea></div>
+              <div class="field"><label class="field-label">Root Cause</label>
+                <textarea id="s2-cause" placeholder="This happens because…" style="min-height:60px"></textarea></div>
+              <button class="btn btn-primary" onclick="saveProblem()" style="width:100%">Save Problem Statement</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="stageTab-3" style="display:none">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header">
+              <div class="card-title">Brainstorm Ideas</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono)" id="ideaCount">0 ideas</span>
+                <div class="timer-controls" style="margin:0;gap:6px">
+                  <button class="btn" onclick="startTimer()" style="font-size:11px;padding:4px 10px">▶</button>
+                  <button class="btn" onclick="stopTimer()" style="font-size:11px;padding:4px 10px">■</button>
+                  <span id="timerDisplay" style="font-family:var(--font-mono);font-size:12px;color:var(--accent)">8:00</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;gap:8px;margin-bottom:12px">
+                <input type="text" id="s3-idea" placeholder="Type an idea and press Enter" onkeydown="if(event.key==='Enter')addIdea()" style="flex:1">
+                <select id="s3-cat" style="width:140px">
+                  <option>Wild idea</option>
+                  <option>Practical</option>
+                  <option>Opposite</option>
+                  <option>Existing</option>
+                </select>
+                <button class="btn btn-primary" onclick="addIdea()">Add</button>
+              </div>
+              <div id="ideaList"><div class="empty">No ideas yet — quantity over quality!</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="stageTab-4" style="display:none">
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Prototype Log</div></div>
+              <div class="card-body">
+                <div class="field"><label class="field-label">Prototype Name</label>
+                  <input type="text" id="s4-name" placeholder="e.g. Paper sketch v1"></div>
+                <div class="field"><label class="field-label">What it tests</label>
+                  <input type="text" id="s4-tests" placeholder="The assumption being tested"></div>
+                <div class="field"><label class="field-label">Method / Format</label>
+                  <select id="s4-type">
+                    <option>Paper sketch</option>
+                    <option>Cardboard model</option>
+                    <option>Digital wireframe</option>
+                    <option>Role play</option>
+                    <option>Storyboard</option>
+                    <option>Working prototype</option>
+                  </select>
+                </div>
+                <div class="field"><label class="field-label">Time budget (mins)</label>
+                  <input type="text" id="s4-time" placeholder="e.g. 30"></div>
+                <button class="btn btn-primary" onclick="addPrototype()" style="width:100%">Log Prototype</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Prototypes Built</div></div>
+              <div class="card-body" id="protoList">
+                <div class="empty">No prototypes yet</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="stageTab-5" style="display:none">
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Test Session</div></div>
+              <div class="card-body">
+                <div class="field"><label class="field-label">Tester Name</label>
+                  <input type="text" id="s5-name" placeholder="Name or ID"></div>
+                <div class="field"><label class="field-label">What they struggled with</label>
+                  <textarea id="s5-struggle" placeholder="Observation without judgment…"></textarea></div>
+                <div class="field"><label class="field-label">Surprising quote</label>
+                  <input type="text" id="s5-quote" placeholder="What they actually said"></div>
+                <div class="field"><label class="field-label">Next iteration direction</label>
+                  <input type="text" id="s5-next" placeholder="What to change"></div>
+                <button class="btn btn-primary" onclick="addTest()" style="width:100%">Log Test</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Test Results</div></div>
+              <div class="card-body" id="testList">
+                <div class="empty">No test sessions yet</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section" id="section-tasks">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Tasks</h2>
+          <span id="taskStats">—</span>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><div class="card-title">Add Task</div></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 140px 140px auto;gap:10px;align-items:end">
+              <div class="field" style="margin:0">
+                <label class="field-label">Task</label>
+                <input type="text" id="taskInput" placeholder="What needs to be done?" onkeydown="if(event.key==='Enter')addTask()">
+              </div>
+              <div class="field" style="margin:0">
+                <label class="field-label">Stage</label>
+                <select id="taskStage">
+                  <option value="General">General</option>
+                  <option value="Empathize">Empathize</option>
+                  <option value="Define">Define</option>
+                  <option value="Ideate">Ideate</option>
+                  <option value="Prototype">Prototype</option>
+                  <option value="Test">Test</option>
+                </select>
+              </div>
+              <div class="field" style="margin:0">
+                <label class="field-label">Priority</label>
+                <select id="taskPriority">
+                  <option value="high">High</option>
+                  <option value="med">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">&nbsp;</label>
+                <button class="btn btn-primary" onclick="addTask()" style="height:36px">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Tasks</div>
+            <div style="display:flex;gap:6px">
+              <button class="btn" onclick="filterTasks('all')" id="tf-all" style="font-size:11px;padding:4px 10px">All</button>
+              <button class="btn" onclick="filterTasks('open')" id="tf-open" style="font-size:11px;padding:4px 10px">Open</button>
+              <button class="btn" onclick="filterTasks('done')" id="tf-done" style="font-size:11px;padding:4px 10px">Done</button>
+            </div>
+          </div>
+          <div class="card-body" id="taskList">
+            <div class="empty">No tasks yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-log">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Daily Log</h2>
+          <span>Stream of thought</span>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><div class="card-title">New Entry</div></div>
+          <div class="card-body">
+            <div class="field">
+              <textarea id="logInputSection" placeholder="What's happening? Ideas, breakthroughs, blocks…" style="min-height:100px"></textarea>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="display:flex;gap:8px;align-items:center">
+                <span class="field-label" style="margin:0">Tag Context:</span>
+                <select id="logStageSection" style="width:140px;padding:5px 10px">
+                  <option value="General">General</option>
+                  <option value="Empathize">Empathize</option>
+                  <option value="Define">Define</option>
+                  <option value="Ideate">Ideate</option>
+                  <option value="Prototype">Prototype</option>
+                  <option value="Test">Test</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="addLogFromSection()">Post Entry</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Log Feed</div></div>
+          <div class="card-body" id="fullLogList">
+            <div class="empty">No entries logged yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="section-insights">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Insights Grid</h2>
+          <span>Core discoveries worth keeping</span>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><div class="card-title">Capture Insight</div></div>
+          <div class="card-body">
+            <div style="display:flex;gap:10px">
+              <input type="text" id="insightInput" placeholder="A surprising or actionable truth you've learned…" style="flex:1">
+              <select id="insightType" style="width:160px">
+                <option value="User Need">User Need</option>
+                <option value="Friction Point">Friction Point</option>
+                <option value="Technical Aha!">Technical Aha!</option>
+                <option value="Pivot Trigger">Pivot Trigger</option>
+              </select>
+              <button class="btn btn-primary" onclick="addInsight()">Capture</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="insight-grid" id="insightGridArea"></div>
+      </div>
+    </div>
+
+    <div class="section" id="section-data-center">
+      <div class="content-area">
+        <div class="section-head">
+          <h2>Data Storage Control Center</h2>
+          <span>Manage multiple slots, resets, and imports/exports</span>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Saved Data Profiles & Slots</div>
+            </div>
+            <div class="card-body">
+              <div style="display:flex; gap:8px; margin-bottom:16px;">
+                <input type="text" id="newSlotName" placeholder="New slot name (e.g., Project Beta)" style="flex:1;">
+                <button class="btn btn-primary" onclick="createNewSlot()">Create Slot</button>
+              </div>
+              <div id="slotsContainer">
+                </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">System Actions & Resets</div>
+            </div>
+            <div class="card-body">
+              <div class="field">
+                <label class="field-label" style="color:var(--red); font-weight:600;">System Factory Reset</label>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Wipes the currently loaded workspace data entirely clean back to factory zero defaults.</p>
+                <button class="btn btn-danger" onclick="confirmResetCurrent()">Reset Current Active Data</button>
+                <button class="btn btn-danger" style="margin-left:6px; background: rgba(212,67,67,0.25)" onclick="confirmResetAllSlots()">Reset ALL Storage Slots</button>
+              </div>
+              
+              <hr class="divider">
+              
+              <div class="field">
+                <label class="field-label">File Export / Import Backup</label>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Download all your active backup slots as a JSON profile manifest file or reload them into this tracker.</p>
+                <div style="display:flex; gap:8px;">
+                  <button class="btn" onclick="exportDataAll()" style="flex:1;">Download Profile JSON 📥</button>
+                  <button class="btn" onclick="document.getElementById('importFileInput').click();" style="flex:1;">Upload JSON File 📤</button>
+                </div>
+                <input type="file" id="importFileInput" style="display:none;" accept=".json" onchange="importDataAll(event)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="modal-backdrop" id="logModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Log Entry</div>
+      <button class="modal-close" onclick="closeModal('logModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">What's happening?</label>
+        <textarea id="modalLogInput" placeholder="Thoughts, actions, notes…"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Stage Association</label>
+        <select id="modalLogStage">
+          <option value="General">General</option>
+          <option value="Empathize">Empathize</option>
+          <option value="Define">Define</option>
+          <option value="Ideate">Ideate</option>
+          <option value="Prototype">Prototype</option>
+          <option value="Test">Test</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('logModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitModalLog()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="taskModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Create Task</div>
+      <button class="modal-close" onclick="closeModal('taskModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">Task Description</label>
+        <input type="text" id="modalTaskInput" placeholder="What needs doing?">
+      </div>
+      <div class="field">
+        <label class="field-label">Design Thinking Stage</label>
+        <select id="modalTaskStage">
+          <option value="General">General</option>
+          <option value="Empathize">Empathize</option>
+          <option value="Define">Define</option>
+          <option value="Ideate">Ideate</option>
+          <option value="Prototype">Prototype</option>
+          <option value="Test">Test</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Priority</label>
+        <select id="modalTaskPriority">
+          <option value="high">High</option>
+          <option value="med">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('taskModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitModalTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CORE STRUCTS & DEFAULT FACTORY STATE ──
+  function getEmptyState() {
+    return {
+      currentStage: 0,
+      project: { name: '', user: '', problem: '', success: '', hmw: '', povUser: '', povNeed: '', povInsight: '' },
+      empathyNotes: [],
+      pains: [],
+      problemStatement: { refined: '', rootCause: '' },
+      ideas: [],
+      prototypes: [],
+      tests: [],
+      tasks: [],
+      logs: [],
+      insights: []
+    };
+  }
+
+  // Global Workspace Engine Configurations
+  let currentSlot = "Default";
+  let slotsData = { "Default": getEmptyState() };
+  let data = slotsData[currentSlot];
+
+  let taskFilter = 'all';
+  let timerInterval = null;
+  let timerSeconds = 480;
+
+  // ── INIT RUNNERS ──
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('sidebarDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    document.getElementById('overviewDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    loadAllFromStorage();
+    renderAll();
+  });
+
+  function loadAllFromStorage() {
+    try {
+      const storedSlots = localStorage.getItem('dt_tracker_slots_manifest');
+      const storedActiveSlot = localStorage.getItem('dt_tracker_active_slot_id');
+      
+      if (storedSlots) {
+        slotsData = JSON.parse(storedSlots);
+      }
+      if (storedActiveSlot && slotsData[storedActiveSlot]) {
+        currentSlot = storedActiveSlot;
+      } else {
+        currentSlot = Object.keys(slotsData)[0] || "Default";
+      }
+      data = slotsData[currentSlot];
+    } catch(e) {
+      console.error("Local storage sync error. Restoring volatile memory state defaults.", e);
+      slotsData = { "Default": getEmptyState() };
+      data = slotsData["Default"];
+    }
+  }
+
+  function syncToLocalStorage() {
+    slotsData[currentSlot] = data;
+    localStorage.setItem('dt_tracker_slots_manifest', JSON.stringify(slotsData));
+    localStorage.setItem('dt_tracker_active_slot_id', currentSlot);
+    document.getElementById('currentSlotIndicator').textContent = "Slot: " + currentSlot;
+  }
+
+  function saveData() {
+    syncToLocalStorage();
+    renderAll();
+    toast('Workspace saved successfully');
+  }
+
+  // ── DATA ENGINE SLOT FEATURES ──
+  function renderSlotsView() {
+    const el = document.getElementById('slotsContainer');
+    if (!el) return;
+    
+    const entries = Object.keys(slotsData);
+    el.innerHTML = entries.map(slotName => {
+      const isActive = slotName === currentSlot;
+      return `
+        <div class="profile-row ${isActive ? 'active' : ''}">
+          <div style="flex:1; font-family:var(--font-mono); font-size:13px; color:var(--text)">
+            ${slotName} ${isActive ? '<span style="color:var(--accent); font-size:11px; margin-left:6px;">(Active)</span>' : ''}
+          </div>
+          <div style="display:flex; gap:6px;">
+            ${!isActive ? `<button class="btn" style="padding:4px 8px; font-size:11px;" onclick="switchSlot('${slotName}')">Load</button>` : ''}
+            <button class="btn" style="padding:4px 8px; font-size:11px;" onclick="renameSlot('${slotName}')">Rename</button>
+            <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteSlot('${slotName}')" ${entries.length === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>Clear</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function createNewSlot() {
+    const input = document.getElementById('newSlotName');
+    const val = input.value.trim();
+    if(!val) { alert("Please provide a valid slot name."); return; }
+    if(slotsData[val]) { alert("A storage slot with this name already exists."); return; }
+    
+    slotsData[val] = getEmptyState();
+    input.value = '';
+    currentSlot = val;
+    data = slotsData[currentSlot];
+    
+    syncToLocalStorage();
+    renderAll();
+    toast(`Created and switched to slot: ${val}`);
+  }
+
+  function switchSlot(slotName) {
+    if(!slotsData[slotName]) return;
+    slotsData[currentSlot] = data; // Save active current status
+    currentSlot = slotName;
+    data = slotsData[currentSlot];
+    
+    syncToLocalStorage();
+    renderAll();
+    toast(`Loaded profile: ${slotName}`);
+  }
+
+  function renameSlot(slotName) {
+    if(!slotsData[slotName]) return;
+    const currentName = slotName;
+    const newName = prompt(`Enter a new profile name for '${currentName}':`, currentName);
+    if(!newName || !newName.trim() || newName.trim() === currentName) return;
+    
+    const finalizedName = newName.trim();
+    if(slotsData[finalizedName]) { alert("A slot with that name already exists."); return; }
+    
+    slotsData[finalizedName] = slotsData[currentName];
+    delete slotsData[currentName];
+    
+    if(currentSlot === currentName) {
+      currentSlot = finalizedName;
+    }
+    
+    syncToLocalStorage();
+    renderAll();
+    toast("Slot renamed successfully");
+  }
+
+  function deleteSlot(slotName) {
+    if(Object.keys(slotsData).length <= 1) {
+      alert("Cannot clear/delete the last remaining profile asset.");
+      return;
+    }
+    if(!confirm(`Are you absolutely sure you want to completely erase the slot profile "${slotName}"? All data inside it will be lost.`)) return;
+    
+    delete slotsData[slotName];
+    if(currentSlot === slotName) {
+      currentSlot = Object.keys(slotsData)[0];
+      data = slotsData[currentSlot];
+    }
+    
+    syncToLocalStorage();
+    renderAll();
+    toast("Erase operational profile cleared");
+  }
+
+  // ── CLEAR & RESET ENGINE ──
+  function confirmResetCurrent() {
+    if(!confirm("⚠️ WARNING: This will completely wipe all logs, entries, pipelines, and variables within the CURRENT ACTIVE profile slot. This operation cannot be undone. Proceed?")) return;
+    
+    data = getEmptyState();
+    syncToLocalStorage();
+    renderAll();
+    toast("Active workspace reset to clean defaults.");
+  }
+
+  function confirmResetAllSlots() {
+    if(!confirm("🚨 CRITICAL WARNING: This completely purges local storage and drops all active database profiles. It will revert the entire site configuration context back to factory defaults. Proceed?")) return;
+    
+    localStorage.removeItem('dt_tracker_slots_manifest');
+    localStorage.removeItem('dt_tracker_active_slot_id');
+    
+    currentSlot = "Default";
+    slotsData = { "Default": getEmptyState() };
+    data = slotsData[currentSlot];
+    
+    renderAll();
+    toast("System entirely reset to initial setup.");
+  }
+
+  function exportDataAll() {
+    slotsData[currentSlot] = data;
+    const fileContent = JSON.stringify(slotsData, null, 2);
+    const blob = new Blob([fileContent], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `design-thinking-tracker-export-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast("Manifest backup exported");
+  }
+
+  function importDataAll(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if(typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error("Invalid structure wrapper context.");
+        
+        // Validation check for primary node elements
+        const criticalKeys = Object.keys(parsed);
+        if(criticalKeys.length === 0) throw new Error("Manifest profile context list is empty.");
+        
+        slotsData = parsed;
+        currentSlot = criticalKeys[0];
+        data = slotsData[currentSlot];
+        
+        syncToLocalStorage();
+        renderAll();
+        toast("Profile manifest catalog uploaded");
+      } catch(err) {
+        alert("Failed to parse file. Make sure it's a valid Design Thinking Tracker JSON file. Error: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = ''; // clear out input selection elements
+  }
+
+
+  // ── VIEW ROUTING ENGINE ──
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    const target = document.getElementById('section-' + id);
+    if(target) target.classList.add('active');
+    if(btn) btn.classList.add('active');
+    
+    // Header string title assignments
+    const headerTitle = id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    document.getElementById('topbarTitle').textContent = headerTitle;
+    
+    renderAll();
+  }
+
+  // ── CORE PIPELINE STAGES ──
+  const stageNames = ["Not started", "Empathize", "Define", "Ideate", "Prototype", "Test"];
+  
+  function setCurrentStage(idx) {
+    data.currentStage = idx;
+    renderAll();
+    toast(`Activated Stage: ${stageNames[idx]}`);
+  }
+
+  function switchStageTab(idx, btn) {
+    for(let i=1; i<=5; i++){
+      const el = document.getElementById('stageTab-'+i);
+      if(el) el.style.display = (i === idx) ? 'block' : 'none';
+    }
+    if(btn) {
+      btn.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  }
+
+  // ── ACCOUNTABILITY & CALCULATION LOGIC ENGINE ──
+  function calculateSidebarProgress() {
+    let activeStagesCount = 0;
+    
+    // Check elements dynamically
+    if (data.empathyNotes && data.empathyNotes.length > 0) activeStagesCount++;
+    if (data.pains && data.pains.length > 0 || data.problemStatement.refined) activeStagesCount++;
+    if (data.ideas && data.ideas.length > 0) activeStagesCount++;
+    if (data.prototypes && data.prototypes.length > 0) activeStagesCount++;
+    if (data.tests && data.tests.length > 0) activeStagesCount++;
+
+    const pct = Math.round((activeStagesCount / 5) * 100);
+    
+    const progressFill = document.getElementById('progressBar');
+    const progressPctText = document.getElementById('progressPct');
+    const progressSubText = document.getElementById('progressSub');
+    
+    if (progressFill) progressFill.style.width = `${pct}%`;
+    if (progressPctText) progressPctText.textContent = `${pct}%`;
+    if (progressSubText) progressSubText.textContent = `${activeStagesCount} of 5 stages active`;
+  }
+
+  // ── RENDERING DISPATCHER ──
+  function renderAll() {
+    // 1. Sidebar count notifications
+    document.getElementById('taskCountBadge').textContent = data.tasks.filter(t => !t.done).length;
+    document.getElementById('logCountBadge').textContent = data.logs.length;
+    
+    // 2. Main statistics cards
+    document.getElementById('statStage').textContent = data.currentStage === 0 ? '—' : `0${data.currentStage}`;
+    document.getElementById('statStageName').textContent = stageNames[data.currentStage];
+    document.getElementById('statLogs').textContent = data.logs.length;
+    
+    const activeTasks = data.tasks.filter(t => !t.done).length;
+    const completedTasks = data.tasks.filter(t => t.done).length;
+    document.getElementById('statTasks').textContent = activeTasks;
+    document.getElementById('statTasksSub').textContent = `${completedTasks} done`;
+    document.getElementById('statInsights').textContent = data.insights.length;
+
+    // 3. Render subcomponents pipelines
+    for(let i=1; i<=5; i++) {
+      const el = document.getElementById(`sc-${i}`);
+      const bg = document.getElementById(`sb-${i}`);
+      if(el) {
+        if(data.currentStage === i) {
+          el.classList.add('current');
+          if(bg) bg.textContent = "active";
+        } else {
+          el.classList.remove('current');
+          if(bg) bg.textContent = "idle";
+        }
+      }
+    }
+
+    // Project metadata elements mapping arrays
+    document.getElementById('projectName').value = data.project.name || '';
+    document.getElementById('projectUser').value = data.project.user || '';
+    document.getElementById('projectProblem').value = data.project.problem || '';
+    document.getElementById('projectSuccess').value = data.project.success || '';
+    document.getElementById('hmwInput').value = data.project.hmw || '';
+    
+    const hmwDisplay = document.getElementById('hmwDisplay');
+    if(data.project.hmw) {
+      hmwDisplay.textContent = `“ ${data.project.hmw} ”`;
+      hmwDisplay.style.display = 'block';
+    } else {
+      hmwDisplay.style.display = 'none';
+    }
+
+    document.getElementById('povUser').value = data.project.povUser || '';
+    document.getElementById('povNeed').value = data.project.povNeed || '';
+    document.getElementById('povInsight').value = data.project.povInsight || '';
+    
+    const povDisplay = document.getElementById('povDisplay');
+    if(data.project.povUser || data.project.povNeed || data.project.povInsight) {
+      povDisplay.innerHTML = `<strong>POV Definition:</strong> We met a user archetype like <em>${data.project.povUser || '[...]'}</em> who needs a clear strategy to <em>${data.project.povNeed || '[...]'}</em> because we discovered that <em>${data.project.povInsight || '[...]'}</em>`;
+      povDisplay.style.display = 'block';
+    } else {
+      povDisplay.style.display = 'none';
+    }
+
+    // Workspace arrays loop binders
+    renderEmpathyNotes();
+    renderPains();
+    document.getElementById('s2-problem').value = data.problemStatement.refined || '';
+    document.getElementById('s2-cause').value = data.problemStatement.rootCause || '';
+    renderIdeas();
+    renderPrototypes();
+    renderTests();
+    renderTasks();
+    renderLogs();
+    renderInsights();
+    renderSlotsView();
+    calculateSidebarProgress();
+  }
+
+  // ── SUB-COMPONENT DOM PRINTER RENDERS ──
+  function renderEmpathyNotes() {
+    const container = document.getElementById('empathyNotes');
+    if(!container) return;
+    if(!data.empathyNotes || !data.empathyNotes.length) { container.innerHTML = '<div class="empty">No notes yet</div>'; return; }
+    container.innerHTML = data.empathyNotes.map(n => `
+      <div class="log-entry">
+        <div class="log-content">
+          <div class="log-meta"><span class="log-stage-tag">${n.person}</span></div>
+          <div class="log-text">${n.observation}</div>
+          ${n.quote ? `<div class="log-text" style="font-style:italic; color:var(--text-muted); margin-top:4px;">"${n.quote}"</div>` : ''}
+        </div>
+        <button class="log-delete" onclick="deleteItem('empathyNotes', ${n.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderPains() {
+    const container = document.getElementById('painList');
+    if(!container) return;
+    if(!data.pains || !data.pains.length) { container.innerHTML = '<div class="empty">No explicit pain patterns logged.</div>'; return; }
+    container.innerHTML = data.pains.map(p => `
+      <div class="list-item-compact">
+        <span style="font-size:13px; color:var(--text)">• ${p.text}</span>
+        <button class="log-delete" onclick="deleteItem('pains', ${p.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderIdeas() {
+    const container = document.getElementById('ideaList');
+    if(!container) return;
+    if(document.getElementById('ideaCount')) document.getElementById('ideaCount').textContent = `${data.ideas.length} ideas`;
+    if(!data.ideas || !data.ideas.length) { container.innerHTML = '<div class="empty">No ideas cataloged yet — focus on wild numbers!</div>'; return; }
+    container.innerHTML = data.ideas.map(id => `
+      <div class="log-entry">
+        <div class="log-content">
+          <div class="log-meta"><span class="log-stage-tag" style="color:var(--stage-3); border:1px solid rgba(212,168,67,0.2)">${id.category}</span></div>
+          <div class="log-text">${id.text}</div>
+        </div>
+        <button class="log-delete" onclick="deleteItem('ideas', ${id.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderPrototypes() {
+    const container = document.getElementById('protoList');
+    if(!container) return;
+    if(!data.prototypes || !data.prototypes.length) { container.innerHTML = '<div class="empty">No working mockups tracked yet</div>'; return; }
+    container.innerHTML = data.prototypes.map(p => `
+      <div class="log-entry">
+        <div class="log-content">
+          <div class="log-meta"><strong style="color:var(--stage-4); font-size:13px;">${p.name}</strong> <span class="log-stage-tag">${p.type}</span></div>
+          <div class="log-text" style="font-size:12px; color:var(--text-muted);">Assumptions testing: ${p.tests}</div>
+          <div class="log-time" style="margin-top:4px;">Allocated Budget Cycle: ${p.time} mins</div>
+        </div>
+        <button class="log-delete" onclick="deleteItem('prototypes', ${p.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderTests() {
+    const container = document.getElementById('testList');
+    if(!container) return;
+    if(!data.tests || !data.tests.length) { container.innerHTML = '<div class="empty">No testing sessions mapped out yet</div>'; return; }
+    container.innerHTML = data.tests.map(t => `
+      <div class="log-entry">
+        <div class="log-content">
+          <div class="log-meta"><span class="log-stage-tag" style="color:var(--stage-5)">Tester: ${t.name}</span></div>
+          <div class="log-text"><strong>Friction vectors:</strong> ${t.struggle}</div>
+          ${t.quote ? `<div class="log-text" style="font-style:italic; color:var(--text-muted)">"${t.quote}"</div>` : ''}
+          <div class="log-text" style="color:var(--accent); font-size:12px; margin-top:4px;">↳ Iteration vectors: ${t.next}</div>
+        </div>
+        <button class="log-delete" onclick="deleteItem('tests', ${t.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function renderTasks() {
+    const list = document.getElementById('taskList');
+    const recentList = document.getElementById('recentTaskList');
+    if(!list) return;
+
+    let filtered = data.tasks;
+    if(taskFilter === 'open') filtered = data.tasks.filter(t => !t.done);
+    if(taskFilter === 'done') filtered = data.tasks.filter(t => t.done);
+
+    document.getElementById('tf-all').className = taskFilter === 'all' ? 'btn active' : 'btn';
+    document.getElementById('tf-open').className = taskFilter === 'open' ? 'btn active' : 'btn';
+    document.getElementById('tf-done').className = taskFilter === 'done' ? 'btn active' : 'btn';
+
+    document.getElementById('taskStats').textContent = `${data.tasks.filter(t=>!t.done).length} Remaining Tasks`;
+
+    const mappedHTML = (arr) => arr.map(t => `
+      <div class="task-item">
+        <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTask(${t.id})"></div>
+        <div class="task-text ${t.done ? 'done' : ''}">${t.text}</div>
+        <span class="task-stage-tag">${t.stage}</span>
+        <span class="task-priority prio-${t.priority}">${t.priority}</span>
+        <button class="log-delete" onclick="deleteItem('tasks', ${t.id})">×</button>
+      </div>
+    `).join('');
+
+    list.innerHTML = filtered.length ? mappedHTML(filtered) : '<div class="empty">No tasks match filter rulesets</div>';
+    
+    if(recentList) {
+      const openOnly = data.tasks.filter(t => !t.done).slice(0, 5);
+      recentList.innerHTML = openOnly.length ? mappedHTML(openOnly) : '<div class="empty">No open items remaining</div>';
+    }
+  }
+
+  function renderLogs() {
+    const list = document.getElementById('fullLogList');
+    const recentList = document.getElementById('recentLogList');
+    if(!list) return;
+
+    const sortedLogs = [...data.logs].sort((a,b) => b.id - a.id);
+    const mappedHTML = (arr) => arr.map(l => `
+      <div class="log-entry">
+        <div class="log-stage-dot" style="background:var(--stage-${getStageColorIndex(l.stage)})"></div>
+        <div class="log-content">
+          <div class="log-meta">
+            <span class="log-stage-tag">${l.stage}</span>
+            <span class="log-time">${l.time}</span>
+          </div>
+          <div class="log-text">${l.text}</div>
+        </div>
+        <button class="log-delete" onclick="deleteItem('logs', ${l.id})">×</button>
+      </div>
+    `).join('');
+
+    list.innerHTML = sortedLogs.length ? mappedHTML(sortedLogs) : '<div class="empty">Log timeline empty.</div>';
+    if(recentList) {
+      recentList.innerHTML = sortedLogs.length ? mappedHTML(sortedLogs.slice(0, 3)) : '<div class="empty">Log timeline empty.</div>';
+    }
+  }
+
+  function renderInsights() {
+    const grid = document.getElementById('insightGridArea');
+    if(!grid) return;
+    if(!data.insights || !data.insights.length) { grid.innerHTML = '<div class="empty" style="grid-column: span 2">No structured insights documented yet</div>'; return; }
+    grid.innerHTML = data.insights.map(ins => `
+      <div class="insight-item">
+        <div class="insight-tag" style="color:var(--accent)">// ${ins.type}</div>
+        <div class="insight-text">${ins.text}</div>
+        <button class="insight-del" onclick="deleteItem('insights', ${ins.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  function getStageColorIndex(stg) {
+    const idx = stageNames.indexOf(stg);
+    return idx <= 0 ? '3' : idx; 
+  }
+
+  // ── OPERATIONS ADDERS AND INTERACTIVE ACTION ROUTINES ──
+  function saveProject() {
+    data.project.name = document.getElementById('projectName').value;
+    data.project.user = document.getElementById('projectUser').value;
+    data.project.problem = document.getElementById('projectProblem').value;
+    data.project.success = document.getElementById('projectSuccess').value;
+    syncToLocalStorage();
+    toast("Project info saved");
+    renderAll();
+  }
+
+  function setHMW() {
+    data.project.hmw = document.getElementById('hmwInput').value;
+    syncToLocalStorage();
+    toast("HMW statement configured");
+    renderAll();
+  }
+
+  function buildPOV() {
+    data.project.povUser = document.getElementById('povUser').value;
+    data.project.povNeed = document.getElementById('povNeed').value;
+    data.project.povInsight = document.getElementById('povInsight').value;
+    syncToLocalStorage();
+    toast("Point Of View compiled");
+    renderAll();
+  }
+
+  function addEmpathyNote() {
+    const p = document.getElementById('s1-person');
+    const o = document.getElementById('s1-obs');
+    const q = document.getElementById('s1-quote');
+    if(!o.value.trim()) return;
+    data.empathyNotes.push({ id: Date.now(), person: p.value || 'Anonymous', observation: o.value, quote: q.value });
+    p.value=''; o.value=''; q.value='';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function addPain() {
+    const inp = document.getElementById('s2-pain');
+    if(!inp.value.trim()) return;
+    data.pains.push({ id: Date.now(), text: inp.value });
+    inp.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function saveProblem() {
+    data.problemStatement.refined = document.getElementById('s2-problem').value;
+    data.problemStatement.rootCause = document.getElementById('s2-cause').value;
+    syncToLocalStorage();
+    toast("Core space problem configuration finalized");
+    renderAll();
+  }
+
+  function addIdea() {
+    const txt = document.getElementById('s3-idea');
+    const cat = document.getElementById('s3-cat');
+    if(!txt.value.trim()) return;
+    data.ideas.push({ id: Date.now(), text: txt.value, category: cat.value });
+    txt.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function addPrototype() {
+    const n = document.getElementById('s4-name');
+    const t = document.getElementById('s4-tests');
+    const ty = document.getElementById('s4-type');
+    const tm = document.getElementById('s4-time');
+    if(!n.value.trim()) return;
+    data.prototypes.push({ id: Date.now(), name: n.value, tests: t.value || 'General checks', type: ty.value, time: tm.value || '60' });
+    n.value=''; t.value=''; tm.value='';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function addTest() {
+    const n = document.getElementById('s5-name');
+    const s = document.getElementById('s5-struggle');
+    const q = document.getElementById('s5-quote');
+    const nx = document.getElementById('s5-next');
+    if(!n.value.trim()) return;
+    data.tests.push({ id: Date.now(), name: n.value, struggle: s.value, quote: q.value, next: nx.value });
+    n.value=''; s.value=''; q.value=''; nx.value='';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function addTask() {
+    const inp = document.getElementById('taskInput');
+    const stg = document.getElementById('taskStage');
+    const pri = document.getElementById('taskPriority');
+    if(!inp.value.trim()) return;
+    data.tasks.push({ id: Date.now(), text: inp.value, stage: stg.value, priority: pri.value, done: false });
+    inp.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function toggleTask(id) {
+    const task = data.tasks.find(t => t.id === id);
+    if(task) { task.done = !task.done; syncToLocalStorage(); renderAll(); }
+  }
+
+  function filterTasks(f) { taskFilter = f; renderTasks(); }
+
+  function addLogFromSection() {
+    const txt = document.getElementById('logInputSection');
+    const stg = document.getElementById('logStageSection');
+    if(!txt.value.trim()) return;
+    data.logs.push({ id: Date.now(), text: txt.value, stage: stg.value, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+    txt.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  function addInsight() {
+    const txt = document.getElementById('insightInput');
+    const ty = document.getElementById('insightType');
+    if(!txt.value.trim()) return;
+    data.insights.push({ id: Date.now(), text: txt.value, type: ty.value });
+    txt.value = '';
+    syncToLocalStorage(); renderAll();
+  }
+
+  // ── MODAL UTILITIES SUBMITS ──
+  function submitModalLog() {
+    const text = document.getElementById('modalLogInput').value;
+    const stage = document.getElementById('modalLogStage').value;
+    if(!text.trim()) return;
+    data.logs.push({ id: Date.now(), text: text, stage: stage, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+    document.getElementById('modalLogInput').value = '';
+    closeModal('logModal');
+    syncToLocalStorage(); renderAll();
+  }
+
+  function submitModalTask() {
+    const text = document.getElementById('modalTaskInput').value;
+    const stage = document.getElementById('modalTaskStage').value;
+    const priority = document.getElementById('modalTaskPriority').value;
+    if(!text.trim()) return;
+    data.tasks.push({ id: Date.now(), text: text, stage: stage, priority: priority, done: false });
+    document.getElementById('modalTaskInput').value = '';
+    closeModal('taskModal');
+    syncToLocalStorage(); renderAll();
+  }
+
+  function deleteItem(arrayKey, id) {
+    data[arrayKey] = data[arrayKey].filter(item => item.id !== id);
+    syncToLocalStorage(); renderAll();
+  }
+
+  // ── INTERACTIVE MODALS WINDOW HANDLERS ──
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-backdrop').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  });
+
+  // ── STAGE 3 BRAINSTORM TIMER UTILITIES ──
+  function startTimer() {
+    if(timerInterval) return;
+    timerInterval = setInterval(() => {
+      if(timerSeconds <= 0) { stopTimer(); toast("Brainstorm sprint finished!"); return; }
+      timerSeconds--;
+      updateTimerDisplay();
+    }, 1000);
+  }
+  function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
+  function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60); const s = timerSeconds % 60;
+    document.getElementById('timerDisplay').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+  }
+
+  // ── NOTIFICATION TRANSIENT SYSTEM ──
+  function toast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+  }
+</script>
+</body>
+</html>

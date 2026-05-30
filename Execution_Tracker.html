@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Execution Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08080e;
+  --s1: #101018;
+  --s2: #161620;
+  --s3: #1e1e2a;
+  --border: #252530;
+  --border2: #303040;
+  --acc: #e8ff47;
+  --acc2: #ff4f5e;
+  --acc3: #47c8ff;
+  --acc4: #b47fff;
+  --green: #3dffa0;
+  --text: #ededf5;
+  --dim: #8888a0;
+  --muted: #404055;
+  --r: 10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px;}
+
+/* ── VIEWS ── */
+#view-setup{display:flex;}
+#view-dashboard{display:none;}
+
+/* ══════════════════════════════
+   SETUP WIZARD
+══════════════════════════════ */
+.setup-wrap{width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px 80px;}
+
+.setup-logo{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.25em;color:var(--muted);margin-bottom:56px;align-self:flex-start;margin-left:max(0px,calc(50% - 380px));}
+
+.setup-steps{display:flex;gap:6px;margin-bottom:48px;}
+.step-dot{width:28px;height:4px;border-radius:2px;background:var(--muted);transition:all .3s;}
+.step-dot.active{background:var(--acc);width:48px;}
+.step-dot.done{background:var(--border2);}
+
+.setup-card{width:100%;max-width:760px;background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:40px;animation:slideUp .4s ease;}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+.setup-step{display:none;}
+.setup-step.active{display:block;}
+
+.setup-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;}
+.setup-heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,52px);line-height:.95;margin-bottom:8px;color:var(--text);}
+.setup-sub{font-size:13px;color:var(--dim);margin-bottom:32px;line-height:1.6;}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:20px;}
+.field label{display:block;font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;}
+.field input,.field textarea,.field select{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;resize:vertical;}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(232,255,71,.08);}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);}
+.field select option{background:var(--s2);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* ADD-ITEM LISTS */
+.add-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.add-list-item{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
+.ali-grip{color:var(--muted);font-size:12px;cursor:grab;flex-shrink:0;}
+.ali-text{flex:1;font-size:14px;color:var(--text);}
+.ali-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);flex-shrink:0;}
+.ali-del{width:22px;height:22px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;border-radius:4px;flex-shrink:0;transition:color .2s,background .2s;}
+.ali-del:hover{color:var(--acc2);background:rgba(255,79,94,.1);}
+
+.add-row{display:flex;gap:8px;}
+.add-row input{flex:1;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.add-row input:focus{border-color:var(--acc);}
+.add-row input::placeholder{color:var(--muted);}
+.add-btn{background:var(--s3);border:1px solid var(--border2);border-radius:8px;padding:10px 16px;color:var(--acc);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.add-btn:hover{background:rgba(232,255,71,.08);border-color:var(--acc);}
+
+/* SPRINT BUILDER */
+.sprint-builder{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.sprint-item{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.sprint-item-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.sprint-week-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.1em;flex:1;}
+.sprint-item-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sprint-item-fields input{background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;width:100%;}
+.sprint-item-fields input:focus{border-color:var(--acc);}
+.sprint-item-fields input::placeholder{color:var(--muted);}
+
+/* NAV BUTTONS */
+.setup-nav{display:flex;justify-content:space-between;align-items:center;margin-top:36px;padding-top:24px;border-top:1px solid var(--border);}
+.btn-prev{background:none;border:1px solid var(--border2);border-radius:8px;padding:12px 24px;color:var(--dim);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.btn-prev:hover{border-color:var(--dim);color:var(--text);}
+.btn-next{background:var(--acc);border:none;border-radius:8px;padding:12px 28px;color:#000;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;font-weight:500;cursor:pointer;transition:opacity .2s;}
+.btn-next:hover{opacity:.88;}
+.btn-launch{background:linear-gradient(135deg,var(--acc),#a8ff3e);border:none;border-radius:8px;padding:14px 36px;color:#000;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.1em;cursor:pointer;transition:opacity .2s,transform .1s;box-shadow:0 4px 32px rgba(232,255,71,.25);}
+.btn-launch:hover{opacity:.9;transform:translateY(-1px);}
+.step-counter{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+
+/* ══════════════════════════════
+   DASHBOARD
+══════════════════════════════ */
+.dash-wrap{width:100%;min-height:100vh;}
+
+/* TOP NAV */
+.dash-nav{display:flex;align-items:center;gap:16px;padding:16px 28px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;background:rgba(8,8,14,.92);backdrop-filter:blur(12px);}
+.dash-nav-logo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.2em;color:var(--dim);flex-shrink:0;}
+.dash-mission-pill{font-size:13px;font-weight:500;color:var(--text);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dash-deadline{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc2);flex-shrink:0;}
+.dash-edit-btn{background:none;border:1px solid var(--border2);border-radius:6px;padding:6px 12px;color:var(--dim);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.dash-edit-btn:hover{border-color:var(--acc);color:var(--acc);}
+
+/* HERO */
+.dash-hero{padding:36px 28px 28px;border-bottom:1px solid var(--border);}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,7vw,80px);line-height:.9;letter-spacing:.02em;}
+.hero-title .acc{color:var(--acc);}
+.hero-meta{display:flex;flex-direction:column;gap:12px;align-items:flex-end;}
+.hero-mit{background:rgba(232,255,71,.08);border:1px solid rgba(232,255,71,.2);border-radius:8px;padding:10px 16px;text-align:right;}
+.hero-mit-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--acc);letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;}
+.hero-mit-val{font-size:13px;color:var(--text);font-weight:500;}
+.hero-days{text-align:right;}
+.hero-days-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--acc2);line-height:1;}
+.hero-days-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.1em;}
+
+/* MAIN GRID */
+.dash-content{max-width:1100px;margin:0 auto;padding:28px;display:grid;grid-template-columns:1fr 340px;gap:20px;}
+
+/* SECTION CARD */
+.dash-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.dash-card-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
+.dch-icon{font-size:16px;flex-shrink:0;}
+.dch-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.04em;flex:1;}
+.dch-badge{font-family:'DM Mono',monospace;font-size:9px;padding:3px 9px;border-radius:3px;letter-spacing:.06em;}
+.badge-acc{background:rgba(232,255,71,.1);color:var(--acc);border:1px solid rgba(232,255,71,.2);}
+.badge-red{background:rgba(255,79,94,.1);color:var(--acc2);border:1px solid rgba(255,79,94,.2);}
+.badge-blue{background:rgba(71,200,255,.1);color:var(--acc3);border:1px solid rgba(71,200,255,.2);}
+.badge-purple{background:rgba(180,127,255,.1);color:var(--acc4);border:1px solid rgba(180,127,255,.2);}
+.badge-green{background:rgba(61,255,160,.1);color:var(--green);border:1px solid rgba(61,255,160,.2);}
+.dash-card-body{padding:20px;}
+
+/* TODAY WIDGET */
+.today-card{background:linear-gradient(135deg,rgba(232,255,71,.07),rgba(71,200,255,.04));border:1px solid rgba(232,255,71,.15);border-radius:var(--r);}
+.today-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(232,255,71,.1);}
+.today-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.04em;color:var(--acc);}
+.today-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);}
+.today-body{padding:16px 20px;}
+.priority-slot{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px;transition:border-color .2s;}
+.priority-slot:hover{border-color:var(--border2);}
+.p-rank{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--muted);width:18px;flex-shrink:0;}
+.p-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;}
+.p-input::placeholder{color:var(--muted);}
+.p-check{width:20px;height:20px;border:2px solid var(--border2);border-radius:4px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.p-check:hover{border-color:var(--green);}
+.p-check.done{background:var(--green);border-color:var(--green);}
+.p-check.done::after{content:'✓';font-size:11px;color:#000;font-weight:700;}
+.p-input.struck{text-decoration:line-through;color:var(--muted);}
+.today-save{margin-top:12px;width:100%;background:rgba(232,255,71,.08);border:1px solid rgba(232,255,71,.2);border-radius:6px;padding:9px;color:var(--acc);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;}
+.today-save:hover{background:rgba(232,255,71,.15);}
+
+/* TOMORROW MIT */
+.tomorrow-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;}
+.tmr-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--blue,#47c8ff);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+.tmr-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.tmr-input:focus{border-color:var(--acc3);}
+.tmr-input::placeholder{color:var(--muted);}
+.tmr-save{margin-top:8px;background:none;border:1px solid var(--border2);border-radius:6px;padding:7px 14px;color:var(--dim);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.tmr-save:hover{border-color:var(--acc3);color:var(--acc3);}
+
+/* MILESTONES */
+.milestone-group{margin-bottom:20px;}
+.mg-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.mg-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.milestone-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all .2s;user-select:none;}
+.milestone-row:hover{border-color:var(--border2);}
+.milestone-row.checked{border-color:rgba(61,255,160,.2);background:rgba(61,255,160,.04);}
+.m-check{width:20px;height:20px;border:2px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.milestone-row.checked .m-check{background:var(--green);border-color:var(--green);}
+.milestone-row.checked .m-check::after{content:'✓';font-size:10px;color:#000;font-weight:700;}
+.m-text{flex:1;font-size:13px;line-height:1.4;}
+.milestone-row.checked .m-text{text-decoration:line-through;color:var(--muted);}
+.m-deadline{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);flex-shrink:0;}
+.milestone-row.checked .m-deadline{color:var(--green);}
+.m-progress{height:2px;background:var(--border);border-radius:1px;margin-top:2px;}
+.m-progress-fill{height:100%;background:var(--green);border-radius:1px;transition:width .4s ease;}
+
+/* SPRINTS */
+.sprint-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--s2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;transition:all .2s;}
+.sprint-row:hover{border-color:var(--border2);}
+.sprint-row.done{border-color:rgba(61,255,160,.15);}
+.sr-check{width:18px;height:18px;border:2px solid var(--border2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.sr-check:hover{border-color:var(--green);}
+.sprint-row.done .sr-check{background:var(--green);border-color:var(--green);}
+.sprint-row.done .sr-check::after{content:'✓';font-size:9px;color:#000;font-weight:700;}
+.sr-date{font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);flex-shrink:0;min-width:60px;}
+.sr-task{flex:1;font-size:13px;}
+.sprint-row.done .sr-task{text-decoration:line-through;color:var(--muted);}
+.sr-tag{font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border-radius:3px;flex-shrink:0;}
+
+/* WEEKLY REVIEW */
+.review-q{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;}
+.rq-q{font-size:13px;color:var(--dim);margin-bottom:8px;line-height:1.5;}
+.rq-q strong{color:var(--text);}
+.rq-ans{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;resize:none;outline:none;min-height:54px;transition:border-color .2s;}
+.rq-ans:focus{border-color:var(--acc4);}
+.rq-ans::placeholder{color:var(--muted);}
+.review-save{width:100%;background:rgba(180,127,255,.08);border:1px solid rgba(180,127,255,.2);border-radius:6px;padding:10px;color:var(--acc4);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;cursor:pointer;transition:all .2s;margin-top:4px;}
+.review-save:hover{background:rgba(180,127,255,.15);}
+
+/* PROGRESS OVERVIEW */
+.prog-item{margin-bottom:16px;}
+.prog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.prog-name{font-size:12px;color:var(--dim);}
+.prog-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--acc);}
+.prog-bar{height:5px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s ease;}
+.fill-acc{background:linear-gradient(90deg,var(--acc),#a8ff3e);}
+.fill-blue{background:linear-gradient(90deg,var(--acc3),#47ffcc);}
+.fill-purple{background:linear-gradient(90deg,var(--acc4),#ff7fff);}
+
+/* BLOCKER LOG */
+.blocker-input-row{display:flex;gap:8px;margin-bottom:10px;}
+.blocker-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.blocker-input:focus{border-color:var(--acc2);}
+.blocker-input::placeholder{color:var(--muted);}
+.blocker-add{background:rgba(255,79,94,.08);border:1px solid rgba(255,79,94,.2);border-radius:8px;padding:9px 14px;color:var(--acc2);font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.blocker-add:hover{background:rgba(255,79,94,.15);}
+.blocker-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--s2);border:1px solid rgba(255,79,94,.1);border-radius:8px;margin-bottom:6px;}
+.bi-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);flex-shrink:0;margin-top:2px;white-space:nowrap;}
+.bi-text{flex:1;font-size:12px;color:var(--dim);line-height:1.5;}
+.bi-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;flex-shrink:0;transition:color .2s;padding:0 2px;}
+.bi-del:hover{color:var(--acc2);}
+
+/* DAILY LOOP REFERENCE */
+.loop-ref{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.loop-block{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:14px;position:relative;overflow:hidden;}
+.loop-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.lb-morning::before{background:var(--acc);}
+.lb-work::before{background:var(--acc2);}
+.lb-evening::before{background:var(--acc3);}
+.lb-icon{font-size:18px;margin-bottom:6px;}
+.lb-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.03em;margin-bottom:8px;}
+.lb-items{display:flex;flex-direction:column;gap:5px;}
+.lb-item{font-size:11px;color:var(--dim);display:flex;gap:6px;line-height:1.4;}
+.lb-item::before{content:'→';color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;flex-shrink:0;}
+
+/* RIGHT SIDEBAR */
+.sidebar{display:flex;flex-direction:column;gap:16px;}
+
+/* MIT BANNER */
+.mit-banner{background:var(--acc);color:#000;border-radius:var(--r);padding:16px 20px;animation:pulse-glow 3s ease-in-out infinite;}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(232,255,71,.3);}50%{box-shadow:0 0 0 10px rgba(232,255,71,0);}}
+.mit-label{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;opacity:.6;margin-bottom:4px;}
+.mit-val{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;line-height:1.1;}
+
+/* PHASE RULE */
+.phase-rule{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.phase-rule-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);user-select:none;}
+.prh-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.prh-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.04em;flex:1;}
+.prh-arrow{color:var(--muted);font-size:12px;transition:transform .3s;}
+.phase-rule.open .prh-arrow{transform:rotate(180deg);}
+.phase-rule-body{display:none;padding:14px 16px;}
+.phase-rule.open .phase-rule-body{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* SETTINGS MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:16px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;padding:32px;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;margin-bottom:24px;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--border);border-radius:6px;width:32px;height:32px;color:var(--dim);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{border-color:var(--acc2);color:var(--acc2);}
+.modal{position:relative;}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:32px 20px;color:var(--muted);}
+.empty-icon{font-size:28px;margin-bottom:8px;}
+.empty-text{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;}
+
+/* TRACKER MANAGER */
+.tm-slots{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.tm-slot{display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;transition:all .2s;}
+.tm-slot:hover{border-color:var(--border2);}
+.tm-slot.active-slot{border-color:rgba(232,255,71,.4);background:rgba(232,255,71,.05);}
+.tm-slot-name{flex:1;font-size:13px;color:var(--text);}
+.tm-slot-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);}
+.tm-slot-active-badge{font-family:'DM Mono',monospace;font-size:9px;color:var(--acc);background:rgba(232,255,71,.1);border:1px solid rgba(232,255,71,.2);border-radius:3px;padding:2px 7px;}
+.tm-slot-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0 3px;transition:color .2s;}
+.tm-slot-del:hover{color:var(--acc2);}
+.tm-divider{height:1px;background:var(--border);margin:16px 0;}
+.tm-new-row{display:flex;gap:8px;margin-bottom:10px;}
+.tm-new-input{flex:1;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.tm-new-input:focus{border-color:var(--acc);}
+.tm-new-input::placeholder{color:var(--muted);}
+.tm-action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.btn-export{background:rgba(71,200,255,.08);border:1px solid rgba(71,200,255,.25);border-radius:8px;padding:10px 16px;color:var(--acc3);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.btn-export:hover{background:rgba(71,200,255,.15);}
+.btn-import-label{background:rgba(180,127,255,.08);border:1px solid rgba(180,127,255,.25);border-radius:8px;padding:10px 16px;color:var(--acc4);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;cursor:pointer;transition:all .2s;display:inline-block;}
+.btn-import-label:hover{background:rgba(180,127,255,.15);}
+#import-file-input{display:none;}
+.active-tracker-pill{font-family:'DM Mono',monospace;font-size:9px;color:var(--acc);background:rgba(232,255,71,.08);border:1px solid rgba(232,255,71,.15);border-radius:4px;padding:3px 8px;letter-spacing:.08em;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.active-tracker-pill:hover{background:rgba(232,255,71,.15);}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+  .dash-content{grid-template-columns:1fr;}
+  .sidebar{order:-1;}
+  .loop-ref{grid-template-columns:1fr;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-meta{align-items:flex-start;flex-direction:row;flex-wrap:wrap;}
+  .field-row{grid-template-columns:1fr;}
+  .field-row3{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:500px){
+  .setup-card{padding:24px 16px;}
+  .dash-content{padding:16px;}
+  .dash-nav{padding:12px 16px;}
+  .field-row3{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     SETUP WIZARD
+══════════════════════════════ -->
+<div id="view-setup">
+<div class="setup-wrap">
+  <div class="setup-logo">⬡ EXECUTION FRAMEWORK</div>
+
+  <div class="setup-steps" id="stepDots"></div>
+
+  <div class="setup-card">
+
+    <!-- STEP 1: MISSION -->
+    <div class="setup-step active" data-step="1">
+      <div class="setup-eyebrow">Step 1 of 6 — Foundation</div>
+      <div class="setup-heading">DEFINE YOUR<br><span style="color:var(--acc)">MISSION</span></div>
+      <div class="setup-sub">What is the single outcome that makes everything worth it? Be specific. Vague missions produce vague results.</div>
+
+      <div class="field">
+        <label>Mission Statement</label>
+        <textarea id="f-mission" rows="2" placeholder="e.g. Start earning more than 20 LPA by landing a senior engineering role…"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Success Metric (the number / outcome)</label>
+          <input id="f-success-metric" type="text" placeholder="e.g. 20 LPA, 10k MRR, 5kg lost…">
+        </div>
+        <div class="field">
+          <label>Deadline</label>
+          <input id="f-deadline" type="date">
+        </div>
+      </div>
+      <div class="field">
+        <label>Most Important Thing (MIT) — What protects your progress?</label>
+        <input id="f-mit" type="text" placeholder="e.g. Protecting what I have · Staying disciplined daily…">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Doing it for</label>
+          <input id="f-for" type="text" placeholder="Myself, my family…">
+        </div>
+        <div class="field">
+          <label>Scope Boundary</label>
+          <input id="f-scope" type="text" placeholder="e.g. Only discipline & deterministic path">
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: MILESTONES -->
+    <div class="setup-step" data-step="2">
+      <div class="setup-eyebrow">Step 2 of 6 — Checkpoints</div>
+      <div class="setup-heading">IRREVERSIBLE<br><span style="color:var(--acc)">MILESTONES</span></div>
+      <div class="setup-sub">Add the big checkpoints that are irreversible once achieved. Each milestone should be binary — done or not done.</div>
+
+      <div class="add-list" id="milestone-list"></div>
+      <div class="add-row">
+        <input id="ms-input" type="text" placeholder="Milestone name…">
+        <input id="ms-date" type="date" style="max-width:140px;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+        <button class="add-btn" onclick="addMilestone()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: TASKS -->
+    <div class="setup-step" data-step="3">
+      <div class="setup-eyebrow">Step 3 of 6 — Key Tasks</div>
+      <div class="setup-heading">WHAT YOU<br><span style="color:var(--acc)">MUST DO</span></div>
+      <div class="setup-sub">List the key recurring or one-time tasks that directly move you toward your mission. You can add more later.</div>
+
+      <div class="add-list" id="task-list"></div>
+      <div class="add-row">
+        <input id="task-input" type="text" placeholder="Task / skill / activity…">
+        <select id="task-cat" style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;max-width:120px;">
+          <option value="learning">Learning</option>
+          <option value="building">Building</option>
+          <option value="applying">Applying</option>
+          <option value="other">Other</option>
+        </select>
+        <button class="add-btn" onclick="addTask()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: WEEKLY SPRINTS -->
+    <div class="setup-step" data-step="4">
+      <div class="setup-eyebrow">Step 4 of 6 — Schedule</div>
+      <div class="setup-heading">WEEKLY<br><span style="color:var(--acc)">SPRINTS</span></div>
+      <div class="setup-sub">Define your sprint schedule. Each entry is a week-end date with a specific deliverable for that week.</div>
+
+      <div class="sprint-builder" id="sprint-list"></div>
+      <button class="add-btn" onclick="addSprint()" style="width:100%;text-align:center;padding:12px;">+ Add Sprint Week</button>
+    </div>
+
+    <!-- STEP 5: DAILY LOOP -->
+    <div class="setup-step" data-step="5">
+      <div class="setup-eyebrow">Step 5 of 6 — Daily Engine</div>
+      <div class="setup-heading">YOUR DAILY<br><span style="color:var(--acc)">LOOP</span></div>
+      <div class="setup-sub">Customize the three daily sessions. These appear as your reference card every day.</div>
+
+      <div class="field">
+        <label>🌅 Morning Session — Title</label>
+        <input id="dl-m-title" type="text" value="Morning Session — 10 min" placeholder="Morning Session…">
+      </div>
+      <div class="field">
+        <label>Morning Actions (one per line)</label>
+        <textarea id="dl-m-actions" rows="3" placeholder="Pick 3 priorities for today&#10;Identify the MIT&#10;Block time in calendar for MIT"></textarea>
+      </div>
+      <div class="field">
+        <label>🔥 Work Session — Title</label>
+        <input id="dl-w-title" type="text" value="Work Session" placeholder="Work Session…">
+      </div>
+      <div class="field">
+        <label>Work Actions (one per line)</label>
+        <textarea id="dl-w-actions" rows="3" placeholder="90-min deep work block&#10;One task only — no context switching&#10;Protect the first 2 hours"></textarea>
+      </div>
+      <div class="field">
+        <label>🌙 Evening Review — Title</label>
+        <input id="dl-e-title" type="text" value="Evening Review" placeholder="Evening Review…">
+      </div>
+      <div class="field">
+        <label>Evening Actions (one per line)</label>
+        <textarea id="dl-e-actions" rows="3" placeholder="What got done today?&#10;What was blocked?&#10;Set tomorrow's MIT"></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 6: WEEKLY REVIEW -->
+    <div class="setup-step" data-step="6">
+      <div class="setup-eyebrow">Step 6 of 6 — Review Cadence</div>
+      <div class="setup-heading">WEEKLY<br><span style="color:var(--acc)">REVIEW</span></div>
+      <div class="setup-sub">Set your weekly review questions. These keep you honest every Sunday (or your chosen review day).</div>
+
+      <div class="field">
+        <label>Review Day</label>
+        <select id="review-day">
+          <option value="Sunday">Sunday</option>
+          <option value="Monday">Monday</option>
+          <option value="Saturday">Saturday</option>
+          <option value="Friday">Friday</option>
+        </select>
+      </div>
+
+      <div class="add-list" id="review-q-list"></div>
+      <div class="add-row">
+        <input id="rq-input" type="text" placeholder="Add a weekly review question…">
+        <button class="add-btn" onclick="addReviewQ()">+ Add</button>
+      </div>
+
+      <div style="margin-top:24px;background:var(--s2);border:1px solid rgba(232,255,71,.15);border-radius:8px;padding:16px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.12em;margin-bottom:8px;">ALL READY TO LAUNCH</div>
+        <div style="font-size:13px;color:var(--dim);line-height:1.6;">Your execution framework will be saved locally. You can edit any section from the dashboard at any time.</div>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <div class="setup-nav">
+      <button class="btn-prev" id="btnPrev" onclick="prevStep()" style="visibility:hidden">← Back</button>
+      <span class="step-counter" id="stepCounter">1 / 6</span>
+      <button class="btn-next" id="btnNext" onclick="nextStep()">Continue →</button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     DASHBOARD
+══════════════════════════════ -->
+<div id="view-dashboard">
+<div class="dash-wrap">
+
+  <!-- NAV -->
+  <div class="dash-nav">
+    <div class="dash-nav-logo">⬡ EXEC</div>
+    <div class="dash-mission-pill" id="d-mission-pill">—</div>
+    <div class="dash-deadline" id="d-deadline-nav">—</div>
+    <span class="active-tracker-pill" id="active-tracker-pill" onclick="openTrackerManager()" title="Manage trackers">—</span>
+    <button class="dash-edit-btn" onclick="openEdit()">Edit Plan</button>
+    <button class="dash-edit-btn" onclick="openTrackerManager()" style="border-color:rgba(71,200,255,.3);color:var(--acc3);">Trackers</button>
+    <button class="dash-edit-btn" onclick="resetAll()" style="border-color:rgba(255,79,94,.3);color:var(--acc2);">Reset</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="dash-hero">
+    <div class="hero-inner">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.14em;margin-bottom:8px;text-transform:uppercase;">Mission</div>
+        <div class="hero-title" id="d-hero-title">—</div>
+        <div style="margin-top:12px;font-size:13px;color:var(--dim);max-width:560px;" id="d-hero-sub">—</div>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-mit">
+          <div class="hero-mit-label">MIT</div>
+          <div class="hero-mit-val" id="d-mit-val">—</div>
+        </div>
+        <div class="hero-days">
+          <div class="hero-days-num" id="d-days-num">—</div>
+          <div class="hero-days-label">DAYS LEFT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="dash-content">
+    <div class="main-col" style="display:flex;flex-direction:column;gap:20px;">
+
+      <!-- TODAY -->
+      <div class="today-card">
+        <div class="today-head">
+          <div class="today-title">⚡ TODAY'S 3 PRIORITIES</div>
+          <div class="today-date" id="d-today-date">—</div>
+        </div>
+        <div class="today-body">
+          <div class="priority-slot"><span class="p-rank">1</span><input class="p-input" id="tp1" placeholder="MIT — what makes today a win…"><div class="p-check" onclick="togglePCheck(this,0)"></div></div>
+          <div class="priority-slot"><span class="p-rank">2</span><input class="p-input" id="tp2" placeholder="Priority 2…"><div class="p-check" onclick="togglePCheck(this,1)"></div></div>
+          <div class="priority-slot"><span class="p-rank">3</span><input class="p-input" id="tp3" placeholder="Priority 3…"><div class="p-check" onclick="togglePCheck(this,2)"></div></div>
+          <button class="today-save" onclick="saveTodayPriorities()">SAVE PRIORITIES</button>
+        </div>
+      </div>
+
+      <!-- MILESTONES -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">🏁</span>
+          <span class="dch-title">MILESTONES</span>
+          <span class="dch-badge badge-green" id="ms-progress-badge">0/0</span>
+        </div>
+        <div class="dash-card-body">
+          <div id="d-milestones"><div class="empty"><div class="empty-icon">🏁</div><div class="empty-text">No milestones added yet</div></div></div>
+        </div>
+      </div>
+
+      <!-- SPRINTS -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">⚙️</span>
+          <span class="dch-title">WEEKLY SPRINTS</span>
+          <span class="dch-badge badge-blue" id="sp-progress-badge">0/0</span>
+        </div>
+        <div class="dash-card-body">
+          <div id="d-sprints"><div class="empty"><div class="empty-icon">📅</div><div class="empty-text">No sprints scheduled</div></div></div>
+        </div>
+      </div>
+
+      <!-- TASKS -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">✅</span>
+          <span class="dch-title">KEY TASKS</span>
+          <span class="dch-badge badge-acc" id="task-progress-badge">0/0</span>
+        </div>
+        <div class="dash-card-body">
+          <div id="d-tasks"><div class="empty"><div class="empty-icon">✅</div><div class="empty-text">No tasks added</div></div></div>
+        </div>
+      </div>
+
+      <!-- BLOCKER LOG -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">🚧</span>
+          <span class="dch-title">BLOCKER LOG</span>
+          <span class="dch-badge badge-red" id="blocker-count">0</span>
+        </div>
+        <div class="dash-card-body">
+          <div class="blocker-input-row">
+            <input class="blocker-input" id="blocker-input" placeholder="What's blocking you right now?…" onkeydown="if(event.key==='Enter')addBlocker()">
+            <button class="blocker-add" onclick="addBlocker()">Log it</button>
+          </div>
+          <div id="d-blockers"></div>
+        </div>
+      </div>
+
+      <!-- WEEKLY REVIEW -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">📋</span>
+          <span class="dch-title">WEEKLY REVIEW</span>
+          <span class="dch-badge badge-purple" id="d-review-day">Sunday</span>
+        </div>
+        <div class="dash-card-body">
+          <div id="d-review-qs"></div>
+          <button class="review-save" onclick="saveReview()">SAVE REVIEW NOTES</button>
+        </div>
+      </div>
+
+      <!-- DAILY LOOP REFERENCE -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">🔄</span>
+          <span class="dch-title">DAILY LOOP REFERENCE</span>
+        </div>
+        <div class="dash-card-body">
+          <div class="loop-ref" id="d-loop-ref"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <!-- MIT BANNER -->
+      <div class="mit-banner">
+        <div class="mit-label">Most Important Thing</div>
+        <div class="mit-val" id="d-mit-banner">—</div>
+      </div>
+
+      <!-- TOMORROW MIT -->
+      <div class="tomorrow-card">
+        <div class="tmr-label">🌙 Tomorrow's MIT</div>
+        <input class="tmr-input" id="tmr-mit" placeholder="Set tomorrow's MIT before sleep…">
+        <button class="tmr-save" onclick="saveTmrMit()">Save</button>
+      </div>
+
+      <!-- PROGRESS OVERVIEW -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">📊</span>
+          <span class="dch-title">PROGRESS</span>
+        </div>
+        <div class="dash-card-body">
+          <div id="d-progress-bars"></div>
+        </div>
+      </div>
+
+      <!-- CLARIFY SUMMARY -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dch-icon">🎯</span>
+          <span class="dch-title">CLARIFY</span>
+        </div>
+        <div class="dash-card-body" id="d-clarify-summary" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+
+      <!-- PHASE RULES -->
+      <div id="d-phase-rules" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeEdit()">✕</button>
+    <div class="modal-title">EDIT PLAN</div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="field"><label>Mission Statement</label><textarea id="e-mission" rows="2"></textarea></div>
+      <div class="field-row">
+        <div class="field"><label>Success Metric</label><input id="e-success-metric" type="text"></div>
+        <div class="field"><label>Deadline</label><input id="e-deadline" type="date"></div>
+      </div>
+      <div class="field"><label>MIT</label><input id="e-mit" type="text"></div>
+      <div class="field-row">
+        <div class="field"><label>Doing it for</label><input id="e-for" type="text"></div>
+        <div class="field"><label>Scope</label><input id="e-scope" type="text"></div>
+      </div>
+
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;padding-top:8px;border-top:1px solid var(--border);">Add More Milestones</div>
+      <div class="add-list" id="e-ms-list"></div>
+      <div class="add-row">
+        <input id="e-ms-input" type="text" placeholder="New milestone…">
+        <input id="e-ms-date" type="date" style="max-width:130px;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+        <button class="add-btn" onclick="addMilestoneEdit()">+ Add</button>
+      </div>
+
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;padding-top:8px;border-top:1px solid var(--border);">Add More Sprints</div>
+      <div class="sprint-builder" id="e-sprint-list"></div>
+      <button class="add-btn" onclick="addSprintEdit()" style="width:100%;text-align:center;padding:10px;">+ Add Sprint Week</button>
+
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;padding-top:8px;border-top:1px solid var(--border);">Add More Tasks</div>
+      <div class="add-list" id="e-task-list"></div>
+      <div class="add-row">
+        <input id="e-task-input" type="text" placeholder="New task…">
+        <button class="add-btn" onclick="addTaskEdit()">+ Add</button>
+      </div>
+
+    </div>
+    <div style="display:flex;gap:10px;margin-top:24px;padding-top:16px;border-top:1px solid var(--border);">
+      <button onclick="saveEdit()" style="flex:1;background:var(--acc);border:none;border-radius:8px;padding:13px;color:#000;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.08em;cursor:pointer;">SAVE CHANGES</button>
+      <button onclick="closeEdit()" style="background:none;border:1px solid var(--border2);border-radius:8px;padding:13px 20px;color:var(--dim);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER MANAGER MODAL -->
+<div class="modal-overlay" id="tracker-manager-modal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeTrackerManager()">✕</button>
+    <div class="modal-title">TRACKERS</div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;">Saved Trackers</div>
+    <div class="tm-slots" id="tm-slots-list"></div>
+
+    <div class="tm-divider"></div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;">Save Current As New Tracker</div>
+    <div class="tm-new-row">
+      <input class="tm-new-input" id="tm-new-name" placeholder="e.g. May 2026, Q2 Sprint, Side Project…" onkeydown="if(event.key==='Enter')saveCurrentSlot()">
+      <button class="add-btn" onclick="saveCurrentSlot()">Save Slot</button>
+    </div>
+
+    <div class="tm-divider"></div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;">Export / Import</div>
+    <div class="tm-action-row">
+      <button class="btn-export" onclick="exportCurrentJSON()">⬇ Export Current as JSON</button>
+      <label class="btn-import-label" for="import-file-input">⬆ Import JSON File</label>
+      <input type="file" id="import-file-input" accept=".json" onchange="importJSONFile(event)">
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6;">Exported files are saved to your Downloads folder. Import any previously exported tracker JSON to restore it as a new slot.</div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════
+// STATE
+// ════════════════════════════════
+const KEY = 'execFramework_v2';
+let state = {
+  mission:'', successMetric:'', deadline:'', mit:'', doingItFor:'', scope:'',
+  milestones:[], tasks:[], sprints:[], reviewQuestions:[], reviewDay:'Sunday',
+  dailyLoop:{
+    morning:{title:'Morning Session — 10 min', actions:['Pick 3 priorities for today','Identify the MIT','Block time in calendar for MIT']},
+    work:{title:'Work Session', actions:['90-min deep work block','One task only — no context switching','Protect the first 2 hours']},
+    evening:{title:'Evening Review', actions:['What got done today?','What was blocked?',"Set tomorrow's MIT"]}
+  },
+  todayPriorities:['','',''],
+  todayChecks:[false,false,false],
+  tomorrowMit:'',
+  blockers:[],
+  reviewAnswers:{},
+  milestoneChecks:{},
+  sprintChecks:{},
+  taskChecks:{}
+};
+
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){} }
+function load(){ try{ const d=localStorage.getItem(KEY); if(d)state=JSON.parse(d); }catch(e){} }
+
+// ════════════════════════════════
+// TRACKER MANAGER — MULTI-SLOT
+// ════════════════════════════════
+const SLOTS_KEY = 'execFramework_slots_v1';
+const ACTIVE_SLOT_KEY = 'execFramework_activeSlot_v1';
+
+function getSlots(){ try{ return JSON.parse(localStorage.getItem(SLOTS_KEY)||'[]'); }catch(e){ return []; } }
+function setSlots(slots){ localStorage.setItem(SLOTS_KEY, JSON.stringify(slots)); }
+function getActiveSlot(){ return localStorage.getItem(ACTIVE_SLOT_KEY)||''; }
+function setActiveSlot(name){ localStorage.setItem(ACTIVE_SLOT_KEY, name); }
+
+function saveCurrentSlot(){
+  const name = document.getElementById('tm-new-name').value.trim();
+  if(!name){ alert('Please enter a name for this tracker.'); return; }
+  const slots = getSlots();
+  const existing = slots.findIndex(s=>s.name===name);
+  const entry = { name, savedAt: new Date().toISOString(), data: JSON.parse(JSON.stringify(state)) };
+  if(existing>=0) slots[existing]=entry;
+  else slots.push(entry);
+  setSlots(slots);
+  setActiveSlot(name);
+  document.getElementById('tm-new-name').value='';
+  updateActiveTrackerPill();
+  renderTrackerSlots();
+}
+
+function loadSlot(name){
+  const slots = getSlots();
+  const slot = slots.find(s=>s.name===name);
+  if(!slot) return;
+  if(!confirm(`Switch to tracker "${name}"? Any unsaved changes to the current tracker will be lost.`)) return;
+  state = JSON.parse(JSON.stringify(slot.data));
+  save();
+  setActiveSlot(name);
+  updateActiveTrackerPill();
+  buildDashboard();
+  closeTrackerManager();
+}
+
+function deleteSlot(name){
+  if(!confirm(`Delete tracker "${name}"? This cannot be undone.`)) return;
+  let slots = getSlots();
+  slots = slots.filter(s=>s.name!==name);
+  setSlots(slots);
+  if(getActiveSlot()===name){ setActiveSlot(''); updateActiveTrackerPill(); }
+  renderTrackerSlots();
+}
+
+function renderTrackerSlots(){
+  const slots = getSlots();
+  const active = getActiveSlot();
+  const el = document.getElementById('tm-slots-list');
+  if(!slots.length){
+    el.innerHTML=`<div class="empty"><div class="empty-text">No saved trackers yet — save the current one above</div></div>`;
+    return;
+  }
+  el.innerHTML = slots.map(s=>{
+    const dt = new Date(s.savedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const isActive = s.name===active;
+    return `<div class="tm-slot${isActive?' active-slot':''}" onclick="loadSlot('${esc(s.name)}')">
+      <span class="tm-slot-name">${esc(s.name)}</span>
+      <span class="tm-slot-date">${dt}</span>
+      ${isActive?`<span class="tm-slot-active-badge">ACTIVE</span>`:''}
+      <button class="tm-slot-del" onclick="event.stopPropagation();deleteSlot('${esc(s.name)}')" title="Delete">×</button>
+    </div>`;
+  }).join('');
+}
+
+function updateActiveTrackerPill(){
+  const name = getActiveSlot();
+  const pill = document.getElementById('active-tracker-pill');
+  if(pill) pill.textContent = name || 'Unnamed';
+}
+
+function openTrackerManager(){
+  renderTrackerSlots();
+  document.getElementById('tracker-manager-modal').classList.add('open');
+}
+function closeTrackerManager(){
+  document.getElementById('tracker-manager-modal').classList.remove('open');
+}
+
+function exportCurrentJSON(){
+  const name = getActiveSlot() || 'tracker';
+  const safe = name.replace(/[^a-z0-9_\- ]/gi,'_');
+  const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`${safe}.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSONFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const imported = JSON.parse(e.target.result);
+      // Derive a slot name from the filename
+      const nameFromFile = file.name.replace(/\.json$/i,'').replace(/_/g,' ');
+      const slotName = prompt('Name this imported tracker:', nameFromFile) || nameFromFile;
+      const slots = getSlots();
+      const existing = slots.findIndex(s=>s.name===slotName);
+      const entry = { name:slotName, savedAt: new Date().toISOString(), data: imported };
+      if(existing>=0) slots[existing]=entry;
+      else slots.push(entry);
+      setSlots(slots);
+      if(confirm(`Tracker "${slotName}" imported. Load it now?`)){
+        state = JSON.parse(JSON.stringify(imported));
+        save();
+        setActiveSlot(slotName);
+        updateActiveTrackerPill();
+        buildDashboard();
+        closeTrackerManager();
+      } else {
+        renderTrackerSlots();
+      }
+    }catch(err){ alert('Invalid JSON file. Please export a tracker from this app first.'); }
+  };
+  reader.readAsText(file);
+  event.target.value=''; // reset so same file can be re-imported
+}
+
+// ════════════════════════════════
+// SETUP WIZARD
+// ════════════════════════════════
+let currentStep = 1;
+const TOTAL_STEPS = 6;
+
+function renderDots(){
+  const wrap = document.getElementById('stepDots');
+  wrap.innerHTML = '';
+  for(let i=1;i<=TOTAL_STEPS;i++){
+    const d=document.createElement('div');
+    d.className='step-dot'+(i===currentStep?' active':i<currentStep?' done':'');
+    wrap.appendChild(d);
+  }
+}
+
+function showStep(n){
+  document.querySelectorAll('.setup-step').forEach(s=>s.classList.remove('active'));
+  document.querySelector(`.setup-step[data-step="${n}"]`).classList.add('active');
+  document.getElementById('btnPrev').style.visibility = n===1?'hidden':'visible';
+  document.getElementById('btnNext').textContent = n===TOTAL_STEPS?'🚀 Launch Dashboard':'Continue →';
+  document.getElementById('btnNext').className = n===TOTAL_STEPS?'btn-launch':'btn-next';
+  document.getElementById('stepCounter').textContent = `${n} / ${TOTAL_STEPS}`;
+  renderDots();
+}
+
+function nextStep(){
+  if(currentStep===TOTAL_STEPS){ launchDashboard(); return; }
+  gatherStep(currentStep);
+  currentStep++;
+  showStep(currentStep);
+}
+
+function prevStep(){
+  if(currentStep===1)return;
+  currentStep--;
+  showStep(currentStep);
+}
+
+function gatherStep(n){
+  if(n===1){
+    state.mission=v('f-mission');state.successMetric=v('f-success-metric');
+    state.deadline=v('f-deadline');state.mit=v('f-mit');
+    state.doingItFor=v('f-for');state.scope=v('f-scope');
+  }
+  if(n===5){
+    state.dailyLoop.morning.title=v('dl-m-title');
+    state.dailyLoop.morning.actions=v('dl-m-actions').split('\n').filter(Boolean);
+    state.dailyLoop.work.title=v('dl-w-title');
+    state.dailyLoop.work.actions=v('dl-w-actions').split('\n').filter(Boolean);
+    state.dailyLoop.evening.title=v('dl-e-title');
+    state.dailyLoop.evening.actions=v('dl-e-actions').split('\n').filter(Boolean);
+  }
+  if(n===6){ state.reviewDay=v('review-day'); }
+}
+
+function v(id){ return document.getElementById(id)?.value?.trim()||''; }
+
+// pre-fill defaults in step 5
+document.getElementById('dl-m-actions').value='Pick 3 priorities for today\nIdentify the MIT\nBlock time in calendar for MIT';
+document.getElementById('dl-w-actions').value='90-min deep work block\nOne task only — no context switching\nProtect the first 2 hours';
+document.getElementById('dl-e-actions').value="What got done today?\nWhat was blocked?\nSet tomorrow's MIT";
+
+// DEFAULT REVIEW QUESTIONS
+const DEFAULT_RQS=['Did last week hit all 3 daily priorities?','What is still blocking progress?','Am I working on the right thing, or is there deviation?','What needs to stop?'];
+DEFAULT_RQS.forEach(q=>{state.reviewQuestions.push(q); renderReviewQList();});
+
+// MILESTONE LIST
+function addMilestone(){
+  const t=document.getElementById('ms-input').value.trim();
+  const dt=document.getElementById('ms-date').value;
+  if(!t)return;
+  state.milestones.push({id:uid(),text:t,date:dt,done:false});
+  document.getElementById('ms-input').value='';
+  document.getElementById('ms-date').value='';
+  renderMsList();
+}
+function renderMsList(){
+  const el=document.getElementById('milestone-list');
+  el.innerHTML=state.milestones.map((m,i)=>`
+    <div class="add-list-item">
+      <span class="ali-grip">⠿</span>
+      <span class="ali-text">${esc(m.text)}</span>
+      ${m.date?`<span class="ali-sub">${fmtDate(m.date)}</span>`:''}
+      <button class="ali-del" onclick="removeMilestone(${i})">×</button>
+    </div>`).join('');
+}
+function removeMilestone(i){ state.milestones.splice(i,1); renderMsList(); }
+
+// TASK LIST
+function addTask(){
+  const t=document.getElementById('task-input').value.trim();
+  const cat=document.getElementById('task-cat').value;
+  if(!t)return;
+  state.tasks.push({id:uid(),text:t,cat,done:false});
+  document.getElementById('task-input').value='';
+  renderTaskList();
+}
+function renderTaskList(){
+  const el=document.getElementById('task-list');
+  el.innerHTML=state.tasks.map((t,i)=>`
+    <div class="add-list-item">
+      <span class="ali-grip">⠿</span>
+      <span class="ali-text">${esc(t.text)}</span>
+      <span class="ali-sub">${t.cat}</span>
+      <button class="ali-del" onclick="removeTask(${i})">×</button>
+    </div>`).join('');
+}
+function removeTask(i){ state.tasks.splice(i,1); renderTaskList(); }
+
+// SPRINT LIST
+let sprintCount=0;
+function addSprint(){
+  sprintCount++;
+  const item={id:uid(),week:sprintCount,date:'',task:'',track:''};
+  state.sprints.push(item);
+  renderSprintList('sprint-list',state.sprints);
+}
+function renderSprintList(listId, sprints){
+  const el=document.getElementById(listId);
+  el.innerHTML=sprints.map((s,i)=>`
+    <div class="sprint-item">
+      <div class="sprint-item-head">
+        <span class="sprint-week-label">WEEK ${s.week||i+1} · SPRINT</span>
+        <button class="ali-del" onclick="removeSprint('${listId}',${i})">×</button>
+      </div>
+      <div class="sprint-item-fields">
+        <input placeholder="Week-end date (e.g. May 24)" value="${esc(s.date)}" onchange="state.sprints[${i}].date=this.value">
+        <input placeholder="Track (e.g. Spring, DSA)" value="${esc(s.track)}" onchange="state.sprints[${i}].track=this.value">
+        <input placeholder="Deliverable for this week…" value="${esc(s.task)}" onchange="state.sprints[${i}].task=this.value" style="grid-column:1/-1;">
+      </div>
+    </div>`).join('');
+}
+function removeSprint(listId,i){ state.sprints.splice(i,1); renderSprintList(listId,state.sprints); }
+
+// REVIEW QUESTIONS
+function addReviewQ(){
+  const t=document.getElementById('rq-input').value.trim();
+  if(!t)return;
+  state.reviewQuestions.push(t);
+  document.getElementById('rq-input').value='';
+  renderReviewQList();
+}
+function renderReviewQList(){
+  const el=document.getElementById('review-q-list');
+  if(!el)return;
+  el.innerHTML=state.reviewQuestions.map((q,i)=>`
+    <div class="add-list-item">
+      <span class="ali-grip">⠿</span>
+      <span class="ali-text">${esc(q)}</span>
+      <button class="ali-del" onclick="removeRQ(${i})">×</button>
+    </div>`).join('');
+}
+function removeRQ(i){ state.reviewQuestions.splice(i,1); renderReviewQList(); }
+
+// ════════════════════════════════
+// LAUNCH
+// ════════════════════════════════
+function launchDashboard(){
+  gatherStep(currentStep);
+  save();
+  buildDashboard();
+  document.getElementById('view-setup').style.display='none';
+  document.getElementById('view-dashboard').style.display='block';
+}
+
+// ════════════════════════════════
+// DASHBOARD BUILDER
+// ════════════════════════════════
+function buildDashboard(){
+  // NAV
+  document.getElementById('d-mission-pill').textContent = state.successMetric||state.mission||'Set your mission';
+  document.getElementById('d-deadline-nav').textContent = state.deadline?`Deadline: ${fmtDate(state.deadline)}`:'No deadline set';
+
+  // HERO
+  const metric = state.successMetric||'Mission';
+  document.getElementById('d-hero-title').innerHTML = `<span class="acc">${esc(metric)}</span>`;
+  document.getElementById('d-hero-sub').textContent = state.mission;
+  document.getElementById('d-mit-val').textContent = state.mit||'—';
+  document.getElementById('d-mit-banner').textContent = state.mit||'—';
+
+  // DAYS LEFT
+  if(state.deadline){
+    const diff=Math.ceil((new Date(state.deadline)-new Date())/(1000*60*60*24));
+    document.getElementById('d-days-num').textContent = diff>0?diff:'0';
+  } else { document.getElementById('d-days-num').textContent='∞'; }
+
+  // TODAY DATE
+  document.getElementById('d-today-date').textContent = new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+  // LOAD TODAY PRIORITIES
+  if(state.todayPriorities){
+    ['tp1','tp2','tp3'].forEach((id,i)=>{ document.getElementById(id).value=state.todayPriorities[i]||''; });
+    const checks=document.querySelectorAll('.p-check');
+    state.todayChecks.forEach((v,i)=>{ if(v){checks[i].classList.add('done');document.querySelectorAll('.p-input')[i].classList.add('struck');} });
+  }
+
+  // TOMORROW MIT
+  if(state.tomorrowMit) document.getElementById('tmr-mit').value=state.tomorrowMit;
+
+  // MILESTONES
+  renderDashMilestones();
+
+  // SPRINTS
+  renderDashSprints();
+
+  // TASKS
+  renderDashTasks();
+
+  // BLOCKERS
+  renderDashBlockers();
+
+  // REVIEW
+  renderDashReview();
+
+  // LOOP REFERENCE
+  renderDashLoop();
+
+  // PROGRESS BARS
+  renderProgressBars();
+
+  // CLARIFY SUMMARY
+  renderClarifySummary();
+}
+
+function renderDashMilestones(){
+  const el=document.getElementById('d-milestones');
+  if(!state.milestones.length){el.innerHTML='<div class="empty"><div class="empty-icon">🏁</div><div class="empty-text">No milestones added</div></div>';return;}
+  const done=state.milestones.filter(m=>state.milestoneChecks[m.id]).length;
+  document.getElementById('ms-progress-badge').textContent=`${done}/${state.milestones.length}`;
+  el.innerHTML=state.milestones.map(m=>{
+    const checked=!!state.milestoneChecks[m.id];
+    return `<div class="milestone-row${checked?' checked':''}" onclick="toggleMilestoneCheck('${m.id}')">
+      <div class="m-check"></div>
+      <div style="flex:1">
+        <div class="m-text">${esc(m.text)}</div>
+      </div>
+      ${m.date?`<div class="m-deadline">${fmtDate(m.date)}</div>`:''}
+    </div>`;
+  }).join('');
+  renderProgressBars();
+}
+
+function toggleMilestoneCheck(id){
+  state.milestoneChecks[id]=!state.milestoneChecks[id];
+  save(); renderDashMilestones();
+}
+
+function renderDashSprints(){
+  const el=document.getElementById('d-sprints');
+  if(!state.sprints.length){el.innerHTML='<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">No sprints scheduled</div></div>';return;}
+  const done=state.sprints.filter(s=>state.sprintChecks[s.id]).length;
+  document.getElementById('sp-progress-badge').textContent=`${done}/${state.sprints.length}`;
+  el.innerHTML=state.sprints.map(s=>{
+    const checked=!!state.sprintChecks[s.id];
+    const tagColor=s.track?tagColorFor(s.track):'badge-blue';
+    return `<div class="sprint-row${checked?' done':''}">
+      <div class="sr-check" onclick="toggleSprintCheck('${s.id}')"></div>
+      <div class="sr-date">${esc(s.date||'—')}</div>
+      <div class="sr-task">${esc(s.task||'—')}</div>
+      ${s.track?`<span class="sr-tag ${tagColor}">${esc(s.track)}</span>`:''}
+    </div>`;
+  }).join('');
+  renderProgressBars();
+}
+
+function toggleSprintCheck(id){
+  state.sprintChecks[id]=!state.sprintChecks[id];
+  save(); renderDashSprints();
+}
+
+function renderDashTasks(){
+  const el=document.getElementById('d-tasks');
+  if(!state.tasks.length){el.innerHTML='<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">No tasks added</div></div>';return;}
+  const done=state.tasks.filter(t=>state.taskChecks[t.id]).length;
+  document.getElementById('task-progress-badge').textContent=`${done}/${state.tasks.length}`;
+  el.innerHTML=state.tasks.map(t=>{
+    const checked=!!state.taskChecks[t.id];
+    return `<div class="milestone-row${checked?' checked':''}" onclick="toggleTaskCheck('${t.id}')">
+      <div class="m-check"></div>
+      <div class="m-text">${esc(t.text)}</div>
+      <span class="sr-tag badge-acc">${esc(t.cat)}</span>
+    </div>`;
+  }).join('');
+  renderProgressBars();
+}
+
+function toggleTaskCheck(id){
+  state.taskChecks[id]=!state.taskChecks[id];
+  save(); renderDashTasks();
+}
+
+function renderDashBlockers(){
+  const el=document.getElementById('d-blockers');
+  document.getElementById('blocker-count').textContent=state.blockers.length;
+  el.innerHTML=state.blockers.slice().reverse().map((b,ri)=>{
+    const i=state.blockers.length-1-ri;
+    return `<div class="blocker-item">
+      <div class="bi-date">${b.date}</div>
+      <div class="bi-text">${esc(b.text)}</div>
+      <button class="bi-del" onclick="removeBlocker(${i})">×</button>
+    </div>`;
+  }).join('');
+}
+
+function addBlocker(){
+  const t=document.getElementById('blocker-input').value.trim();
+  if(!t)return;
+  state.blockers.push({text:t,date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'})});
+  document.getElementById('blocker-input').value='';
+  save(); renderDashBlockers();
+}
+
+function removeBlocker(i){ state.blockers.splice(i,1); save(); renderDashBlockers(); }
+
+function renderDashReview(){
+  const el=document.getElementById('d-review-qs');
+  document.getElementById('d-review-day').textContent=state.reviewDay;
+  el.innerHTML=state.reviewQuestions.map((q,i)=>`
+    <div class="review-q">
+      <div class="rq-q"><strong>Q${i+1}.</strong> ${esc(q)}</div>
+      <textarea class="rq-ans" rows="2" placeholder="Your answer…" id="rqa-${i}">${esc(state.reviewAnswers[i]||'')}</textarea>
+    </div>`).join('');
+}
+
+function saveReview(){
+  state.reviewQuestions.forEach((_,i)=>{ state.reviewAnswers[i]=document.getElementById(`rqa-${i}`)?.value||''; });
+  save();
+  const btn=document.querySelector('.review-save');
+  btn.textContent='SAVED ✓'; setTimeout(()=>btn.textContent='SAVE REVIEW NOTES',1800);
+}
+
+function renderDashLoop(){
+  const el=document.getElementById('d-loop-ref');
+  const loop=state.dailyLoop;
+  el.innerHTML=[
+    {cls:'lb-morning',icon:'🌅',data:loop.morning},
+    {cls:'lb-work',icon:'🔥',data:loop.work},
+    {cls:'lb-evening',icon:'🌙',data:loop.evening}
+  ].map(({cls,icon,data})=>`
+    <div class="loop-block ${cls}">
+      <div class="lb-icon">${icon}</div>
+      <div class="lb-title">${esc(data.title)}</div>
+      <div class="lb-items">${(data.actions||[]).map(a=>`<div class="lb-item">${esc(a)}</div>`).join('')}</div>
+    </div>`).join('');
+}
+
+function renderProgressBars(){
+  const el=document.getElementById('d-progress-bars');
+  const bars=[];
+  if(state.milestones.length){
+    const d=state.milestones.filter(m=>state.milestoneChecks[m.id]).length;
+    bars.push({label:'Milestones',done:d,total:state.milestones.length,cls:'fill-acc'});
+  }
+  if(state.sprints.length){
+    const d=state.sprints.filter(s=>state.sprintChecks[s.id]).length;
+    bars.push({label:'Sprint Weeks',done:d,total:state.sprints.length,cls:'fill-blue'});
+  }
+  if(state.tasks.length){
+    const d=state.tasks.filter(t=>state.taskChecks[t.id]).length;
+    bars.push({label:'Key Tasks',done:d,total:state.tasks.length,cls:'fill-purple'});
+  }
+  if(!bars.length){el.innerHTML='<div style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted);text-align:center;padding:12px;">Add milestones & sprints to track progress</div>';return;}
+  el.innerHTML=bars.map(b=>`
+    <div class="prog-item">
+      <div class="prog-head"><span class="prog-name">${b.label}</span><span class="prog-val">${b.done}/${b.total}</span></div>
+      <div class="prog-bar"><div class="prog-fill ${b.cls}" style="width:${b.total?Math.round(b.done/b.total*100):0}%"></div></div>
+    </div>`).join('');
+}
+
+function renderClarifySummary(){
+  const el=document.getElementById('d-clarify-summary');
+  const items=[
+    {label:'Success',val:state.successMetric},
+    {label:'Deadline',val:state.deadline?fmtDate(state.deadline):'—'},
+    {label:'Doing it for',val:state.doingItFor},
+    {label:'Scope',val:state.scope},
+  ].filter(i=>i.val);
+  el.innerHTML=items.map(i=>`
+    <div style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;">${i.label}</div>
+      <div style="font-size:13px;color:var(--text);">${esc(i.val)}</div>
+    </div>`).join('');
+}
+
+// TODAY PRIORITIES
+function togglePCheck(el,i){
+  el.classList.toggle('done');
+  const inputs=document.querySelectorAll('.p-input');
+  inputs[i].classList.toggle('struck');
+  state.todayChecks[i]=el.classList.contains('done');
+  save();
+}
+
+function saveTodayPriorities(){
+  state.todayPriorities=['tp1','tp2','tp3'].map(id=>document.getElementById(id).value);
+  save();
+  const btn=document.querySelector('.today-save');
+  btn.textContent='SAVED ✓'; setTimeout(()=>btn.textContent='SAVE PRIORITIES',1600);
+}
+
+function saveTmrMit(){
+  state.tomorrowMit=document.getElementById('tmr-mit').value;
+  save();
+  const btn=document.querySelector('.tmr-save');
+  btn.textContent='Saved ✓'; setTimeout(()=>btn.textContent='Save',1400);
+}
+
+// ════════════════════════════════
+// EDIT MODAL
+// ════════════════════════════════
+function openEdit(){
+  document.getElementById('e-mission').value=state.mission;
+  document.getElementById('e-success-metric').value=state.successMetric;
+  document.getElementById('e-deadline').value=state.deadline;
+  document.getElementById('e-mit').value=state.mit;
+  document.getElementById('e-for').value=state.doingItFor;
+  document.getElementById('e-scope').value=state.scope;
+  renderEditMsList(); renderEditSprintList(); renderEditTaskList();
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEdit(){ document.getElementById('edit-modal').classList.remove('open'); }
+
+function saveEdit(){
+  state.mission=document.getElementById('e-mission').value.trim();
+  state.successMetric=document.getElementById('e-success-metric').value.trim();
+  state.deadline=document.getElementById('e-deadline').value;
+  state.mit=document.getElementById('e-mit').value.trim();
+  state.doingItFor=document.getElementById('e-for').value.trim();
+  state.scope=document.getElementById('e-scope').value.trim();
+  save(); closeEdit(); buildDashboard();
+}
+
+function addMilestoneEdit(){
+  const t=document.getElementById('e-ms-input').value.trim();
+  const dt=document.getElementById('e-ms-date').value;
+  if(!t)return;
+  state.milestones.push({id:uid(),text:t,date:dt});
+  document.getElementById('e-ms-input').value='';
+  document.getElementById('e-ms-date').value='';
+  renderEditMsList(); renderDashMilestones();
+}
+function renderEditMsList(){
+  const el=document.getElementById('e-ms-list');
+  el.innerHTML=state.milestones.map((m,i)=>`
+    <div class="add-list-item">
+      <span class="ali-text">${esc(m.text)}</span>
+      ${m.date?`<span class="ali-sub">${fmtDate(m.date)}</span>`:''}
+      <button class="ali-del" onclick="removeMilestoneEdit(${i})">×</button>
+    </div>`).join('');
+}
+function removeMilestoneEdit(i){ state.milestones.splice(i,1); renderEditMsList(); renderDashMilestones(); save(); }
+
+function addSprintEdit(){
+  const s={id:uid(),week:state.sprints.length+1,date:'',task:'',track:''};
+  state.sprints.push(s);
+  renderEditSprintList(); renderDashSprints();
+}
+function renderEditSprintList(){
+  const el=document.getElementById('e-sprint-list');
+  el.innerHTML=state.sprints.map((s,i)=>`
+    <div class="sprint-item">
+      <div class="sprint-item-head">
+        <span class="sprint-week-label">WEEK ${s.week||i+1}</span>
+        <button class="ali-del" onclick="removeSprintEdit(${i})">×</button>
+      </div>
+      <div class="sprint-item-fields">
+        <input placeholder="Week-end date" value="${esc(s.date)}" onchange="state.sprints[${i}].date=this.value;save();">
+        <input placeholder="Track" value="${esc(s.track)}" onchange="state.sprints[${i}].track=this.value;save();">
+        <input placeholder="Deliverable…" value="${esc(s.task)}" onchange="state.sprints[${i}].task=this.value;save();" style="grid-column:1/-1;">
+      </div>
+    </div>`).join('');
+}
+function removeSprintEdit(i){ state.sprints.splice(i,1); renderEditSprintList(); renderDashSprints(); save(); }
+
+function addTaskEdit(){
+  const t=document.getElementById('e-task-input').value.trim();
+  if(!t)return;
+  state.tasks.push({id:uid(),text:t,cat:'other'});
+  document.getElementById('e-task-input').value='';
+  renderEditTaskList(); renderDashTasks();
+}
+function renderEditTaskList(){
+  const el=document.getElementById('e-task-list');
+  el.innerHTML=state.tasks.map((t,i)=>`
+    <div class="add-list-item">
+      <span class="ali-text">${esc(t.text)}</span>
+      <span class="ali-sub">${t.cat}</span>
+      <button class="ali-del" onclick="removeTaskEdit(${i})">×</button>
+    </div>`).join('');
+}
+function removeTaskEdit(i){ state.tasks.splice(i,1); renderEditTaskList(); renderDashTasks(); save(); }
+
+// ════════════════════════════════
+// RESET
+// ════════════════════════════════
+function resetAll(){
+  if(!confirm('Reset the current tracker and start fresh? Your saved slots will not be affected.'))return;
+  localStorage.removeItem(KEY);
+  setActiveSlot('');
+  location.reload();
+}
+
+// ════════════════════════════════
+// UTILS
+// ════════════════════════════════
+function uid(){ return Math.random().toString(36).slice(2,9); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(d){
+  if(!d)return'';
+  try{ return new Date(d+'T12:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
+  catch(e){ return d; }
+}
+function tagColorFor(t){
+  const h=['badge-acc','badge-blue','badge-purple','badge-red','badge-green'];
+  let sum=0; for(let c of t) sum+=c.charCodeAt(0);
+  return h[sum%h.length];
+}
+
+// ════════════════════════════════
+// INIT
+// ════════════════════════════════
+load();
+if(state.mission){
+  buildDashboard();
+  updateActiveTrackerPill();
+  document.getElementById('view-setup').style.display='none';
+  document.getElementById('view-dashboard').style.display='block';
+} else {
+  renderDots();
+  showStep(1);
+  // pre-fill default review questions in list
+  renderReviewQList();
+}
+</script>
+</body>
+</html>
