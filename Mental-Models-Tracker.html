@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Models Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── EXACT SAME TOKENS AS DESIGN THINKING TRACKER ── */
+  :root {
+    --bg: #0f0f0d;
+    --surface: #161614;
+    --surface2: #1e1e1b;
+    --surface3: #252521;
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8e6df;
+    --text-muted: #7a7870;
+    --text-dim: #4a4845;
+    --accent: #d4a843;
+    --accent-dim: rgba(212,168,67,0.12);
+    --accent-glow: rgba(212,168,67,0.25);
+    --red: #d44343;
+    --green: #5ab85a;
+    --font-display: 'DM Serif Display', serif;
+    --font-body: 'Instrument Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius: 10px;
+    --radius-sm: 6px;
+    /* Model category colours */
+    --cat-clarity:   #7c6ee0;
+    --cat-decision:  #d4a843;
+    --cat-risk:      #4a9fd4;
+    --cat-psych:     #d46b43;
+    --cat-systems:   #3ab5a0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  /* ── LAYOUT ── */
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+
+  .sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+
+  .logo-mark { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+
+  .logo-icon {
+    width: 28px; height: 28px; background: var(--accent);
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: #0f0f0d; flex-shrink: 0;
+  }
+
+  .logo-text { font-family: var(--font-display); font-size: 15px; color: var(--text); letter-spacing: 0.01em; }
+  .logo-sub { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.05em; margin-left: 38px; }
+
+  .sidebar-date { padding: 14px 20px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); border-bottom: 1px solid var(--border); letter-spacing: 0.04em; }
+
+  .sidebar-nav { padding: 12px 12px; flex: 1; }
+
+  .nav-label { font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px; margin-bottom: 6px; margin-top: 14px; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    border-radius: var(--radius-sm); cursor: pointer; font-size: 13px;
+    color: var(--text-muted); transition: all 0.15s; border: 1px solid transparent;
+  }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--text); background: var(--surface3); border-color: var(--border); }
+
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .nav-count { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); background: var(--surface3); padding: 1px 6px; border-radius: 20px; }
+
+  .sidebar-progress { padding: 14px 20px; border-top: 1px solid var(--border); }
+
+  .progress-label { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 8px; display: flex; justify-content: space-between; }
+
+  .progress-bar-wrap { height: 3px; background: var(--surface3); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #e8c068); border-radius: 4px; transition: width 0.5s ease; }
+
+  /* ── MAIN ── */
+  .main { overflow-y: auto; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px; border-bottom: 1px solid var(--border);
+    background: var(--surface); position: sticky; top: 0; z-index: 10;
+  }
+  .topbar-title { font-family: var(--font-display); font-size: 18px; color: var(--text); }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 7px 14px; border-radius: var(--radius-sm); font-size: 12px;
+    font-family: var(--font-body); font-weight: 500; cursor: pointer;
+    border: 1px solid var(--border-strong); background: transparent;
+    color: var(--text-muted); transition: all 0.15s; letter-spacing: 0.01em;
+  }
+  .btn:hover { color: var(--text); background: var(--surface3); }
+  .btn-primary { background: var(--accent); color: #0f0f0d; border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { background: #e8c068; border-color: #e8c068; color: #0f0f0d; }
+  .btn-danger { border-color: rgba(212,67,67,0.3); color: #d47070; }
+  .btn-danger:hover { background: rgba(212,67,67,0.12); color: #e58585; }
+  .btn.active { background: var(--surface3); color: var(--text); border-color: var(--border-strong); }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+  .content-area { padding: 28px 32px; }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+  .section-head h2 { font-family: var(--font-display); font-size: 22px; font-weight: 400; }
+  .section-head span { font-size: 11px; font-family: var(--font-mono); color: var(--text-dim); }
+
+  /* ── STATS GRID ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; transition: border-color 0.2s; }
+  .stat-card:hover { border-color: var(--border-strong); }
+  .stat-label { font-size: 11px; font-family: var(--font-mono); color: var(--text-dim); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .stat-value { font-family: var(--font-display); font-size: 28px; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .stat-value.accent { color: var(--accent); }
+  .stat-sub { font-size: 11px; color: var(--text-muted); }
+
+  /* ── CATEGORY PIPELINE ── */
+  .pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 28px; }
+
+  .cat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .cat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0; transition: opacity 0.2s; }
+  .cat-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .cat-card.current::before { opacity: 1; }
+  .cat-card.current { border-color: var(--border-strong); }
+
+  .cc-clarity::before   { background: var(--cat-clarity); }
+  .cc-decision::before  { background: var(--cat-decision); }
+  .cc-risk::before      { background: var(--cat-risk); }
+  .cc-psych::before     { background: var(--cat-psych); }
+  .cc-systems::before   { background: var(--cat-systems); }
+
+  .cat-num { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-bottom: 8px; }
+  .cat-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .cat-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+  .cat-badge { display: inline-block; margin-top: 10px; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-family: var(--font-mono); }
+
+  /* ── TWO / THREE COL ── */
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  /* ── CARD ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 12px; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .card-body { padding: 16px 18px; }
+
+  /* ── FORM ELEMENTS ── */
+  textarea, input[type="text"], input[type="date"], select {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text); font-family: var(--font-body);
+    font-size: 13px; padding: 9px 12px; outline: none;
+    transition: border-color 0.15s; resize: vertical;
+  }
+  textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+  textarea { min-height: 80px; line-height: 1.6; }
+  select option { background: var(--surface2); color: var(--text); }
+
+  .field { margin-bottom: 14px; }
+  .field-label { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 6px; display: block; letter-spacing: 0.05em; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 2px; background: var(--surface2); padding: 3px; border-radius: var(--radius-sm); margin-bottom: 16px; width: fit-content; }
+  .tab { padding: 6px 14px; font-size: 12px; font-family: var(--font-body); color: var(--text-muted); cursor: pointer; border-radius: 4px; transition: all 0.15s; border: none; background: none; }
+  .tab.active { background: var(--surface3); color: var(--text); border: 1px solid var(--border); }
+
+  /* ── MODEL LIBRARY GRID ── */
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 20px; }
+
+  .model-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .model-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; opacity: 0.7; }
+  .model-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .model-card.selected { border-color: var(--accent); }
+  .model-card:hover .model-card-actions { opacity: 1; }
+
+  .model-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+  .model-icon { font-size: 20px; line-height: 1; margin-right: 8px; }
+  .model-name { font-weight: 600; font-size: 14px; color: var(--text); line-height: 1.3; }
+  .model-cat-tag { font-size: 10px; font-family: var(--font-mono); padding: 2px 7px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .model-summary { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+  .model-when { font-size: 11px; color: var(--text-dim); font-style: italic; }
+  .model-usage-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .model-usage-count { font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); }
+  .model-card-actions { opacity: 0; transition: opacity 0.15s; }
+
+  /* ── PRACTICE SESSION ── */
+  .model-selector-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+
+  .ms-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 12px; cursor: pointer; transition: all 0.15s; text-align: left;
+    border-left: 3px solid transparent;
+  }
+  .ms-card:hover { border-color: var(--border-strong); background: var(--surface3); }
+  .ms-card.selected { background: var(--surface3); }
+  .ms-card-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .ms-card-cat  { font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); }
+
+  /* ── PRACTICE STEPS ── */
+  .practice-step { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+  .practice-step-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .step-num-badge { font-size: 10px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 20px; background: var(--accent-dim); color: var(--accent); flex-shrink: 0; }
+  .step-prompt-text { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+  .practice-step-body { padding: 14px 16px; }
+
+  /* ── LOG / APPLICATIONS ── */
+  .log-entry {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start;
+    animation: slideIn 0.2s ease; margin-bottom: 8px;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .log-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .log-content { flex: 1; }
+  .log-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .log-tag { font-size: 10px; font-family: var(--font-mono); padding: 1px 7px; border-radius: 20px; background: var(--surface3); color: var(--text-muted); }
+  .log-time { font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); }
+  .log-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .log-delete { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 4px; border-radius: 4px; transition: color 0.15s; }
+  .log-delete:hover { color: var(--red); }
+
+  /* Application session cards */
+  .app-entry {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s;
+    animation: slideIn 0.2s ease;
+  }
+  .app-entry:hover { border-color: var(--border-strong); }
+  .app-entry-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+  .app-entry-title { font-weight: 600; font-size: 13px; color: var(--text); }
+  .app-entry-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+  .app-badge { font-size: 10px; font-family: var(--font-mono); padding: 1px 7px; border-radius: 20px; background: var(--accent-dim); color: var(--accent); }
+  .app-badge.cat { background: var(--surface3); color: var(--text-muted); }
+  .app-badge.eff-1, .app-badge.eff-2 { background: rgba(212,67,67,0.12); color: #d47070; }
+  .app-badge.eff-3 { background: rgba(212,168,67,0.12); color: var(--accent); }
+  .app-badge.eff-4, .app-badge.eff-5 { background: rgba(90,184,90,0.12); color: var(--green); }
+  .app-snippet { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+
+  /* ── TASKS ── */
+  .task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; animation: slideIn 0.2s ease; }
+  .task-check { width: 16px; height: 16px; border: 1.5px solid var(--border-strong); border-radius: 4px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 2px; transition: all 0.15s; }
+  .task-check.done { background: var(--green); border-color: var(--green); }
+  .task-check.done::after { content: '✓'; font-size: 10px; color: #0f0f0d; font-weight: 700; }
+  .task-text { flex: 1; font-size: 13px; color: var(--text); }
+  .task-text.done { text-decoration: line-through; color: var(--text-dim); }
+  .task-priority { font-size: 10px; font-family: var(--font-mono); padding: 1px 7px; border-radius: 20px; flex-shrink: 0; }
+  .prio-high { background: rgba(212,67,67,0.15); color: #d47070; }
+  .prio-med  { background: rgba(212,168,67,0.15); color: var(--accent); }
+  .prio-low  { background: rgba(90,184,90,0.12); color: var(--green); }
+  .task-model-tag { font-size: 10px; font-family: var(--font-mono); padding: 1px 7px; border-radius: 20px; background: var(--surface3); color: var(--text-muted); flex-shrink: 0; }
+
+  /* ── INSIGHT GRID ── */
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .insight-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; position: relative; animation: slideIn 0.2s ease; }
+  .insight-tag { font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 6px; }
+  .insight-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .insight-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; transition: color 0.15s; }
+  .insight-del:hover { color: var(--red); }
+
+  /* ── HEATMAP ── */
+  .heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 10px; }
+  .hm-cell { aspect-ratio: 1; border-radius: 3px; background: var(--surface3); cursor: pointer; transition: background 0.15s; border: 1px solid var(--border); }
+  .hm-cell.l1 { background: rgba(212,168,67,0.25); }
+  .hm-cell.l2 { background: rgba(212,168,67,0.5); }
+  .hm-cell.l3 { background: rgba(212,168,67,0.75); }
+  .hm-cell.l4 { background: rgba(212,168,67,0.95); }
+  .hm-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+  .hm-day { font-size: 9px; font-family: var(--font-mono); color: var(--text-dim); text-align: center; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* ── EMPTY ── */
+  .empty { text-align: center; padding: 32px 20px; color: var(--text-dim); font-size: 13px; font-family: var(--font-mono); }
+
+  /* ── SCORE STARS ── */
+  .star-row { display: flex; gap: 4px; margin-top: 4px; }
+  .star { font-size: 18px; cursor: pointer; color: var(--text-dim); transition: color 0.1s; line-height: 1; }
+  .star.lit { color: var(--accent); }
+
+  /* ── MASTERY RING ── */
+  .mastery-ring { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-bg  { fill: none; stroke: var(--surface3); stroke-width: 6; }
+  .ring-fill { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+  .ring-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+
+  /* ── MODAL ── */
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius); width: 520px; max-width: 90vw; max-height: 88vh; overflow-y: auto; animation: modalIn 0.2s ease; }
+  .modal.modal-lg { width: 680px; }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.97) translateY(-8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-family: var(--font-display); font-size: 16px; }
+  .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px; line-height: 1; }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 20px; }
+  .modal-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface3); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 10px 16px; font-size: 13px; color: var(--text); z-index: 200; animation: toastIn 0.2s ease; pointer-events: none; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── DETAIL BLOCK ── */
+  .detail-block { background: var(--surface2); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 8px; }
+  .detail-lbl { font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+  .detail-val { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .pipeline { grid-template-columns: 1fr; }
+    .model-selector-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- ═══════════════════════════
+  SIDEBAR
+═══════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-mark">
+      <div class="logo-icon">MM</div>
+      <div class="logo-text">Mental Models</div>
+    </div>
+    <div class="logo-sub">Daily Tracker</div>
+  </div>
+  <div class="sidebar-date" id="sidebarDate">—</div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-label">Navigate</div>
+    <div class="nav-item active" data-section="overview" onclick="showSection('overview',this)">
+      <div class="nav-dot" style="background:var(--accent)"></div>
+      Overview
+    </div>
+    <div class="nav-item" data-section="practice" onclick="showSection('practice',this)">
+      <div class="nav-dot" style="background:var(--cat-clarity)"></div>
+      Practice Session
+    </div>
+    <div class="nav-item" data-section="library" onclick="showSection('library',this)">
+      <div class="nav-dot" style="background:var(--cat-systems)"></div>
+      Model Library
+      <span class="nav-count">20</span>
+    </div>
+    <div class="nav-item" data-section="applications" onclick="showSection('applications',this)">
+      <div class="nav-dot" style="background:var(--cat-decision)"></div>
+      Applications
+      <span class="nav-count" id="navAppCount">0</span>
+    </div>
+    <div class="nav-item" data-section="tasks" onclick="showSection('tasks',this)">
+      <div class="nav-dot" style="background:var(--cat-psych)"></div>
+      Tasks
+      <span class="nav-count" id="navTaskCount">0</span>
+    </div>
+    <div class="nav-item" data-section="log" onclick="showSection('log',this)">
+      <div class="nav-dot" style="background:var(--cat-risk)"></div>
+      Daily Log
+      <span class="nav-count" id="navLogCount">0</span>
+    </div>
+    <div class="nav-item" data-section="insights" onclick="showSection('insights',this)">
+      <div class="nav-dot" style="background:var(--accent)"></div>
+      Insights
+    </div>
+    <div class="nav-item" data-section="data-center" onclick="showSection('data-center',this)">
+      <div class="nav-dot" style="background:var(--green)"></div>
+      Data & Backup
+    </div>
+  </nav>
+
+  <div class="sidebar-progress">
+    <div class="progress-label">
+      <span>Today's Progress</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono)" id="progressSub">0 models practiced today</div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════
+  MAIN
+═══════════════════════════ -->
+<main class="main">
+
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Overview</div>
+    <div class="topbar-actions">
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);background:var(--surface2);padding:4px 8px;border-radius:4px;border:1px solid var(--border)" id="streakIndicator">🔥 0 day streak</span>
+      <button class="btn" onclick="openModal('logModal')">+ Log Entry</button>
+      <button class="btn" onclick="openModal('taskModal')">+ Task</button>
+      <button class="btn btn-primary" onclick="showSection('practice', document.querySelector('[data-section=practice]'))">Practice Now</button>
+    </div>
+  </div>
+
+  <!-- ══ OVERVIEW ══ -->
+  <div class="section active" id="section-overview">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Overview</h2>
+        <span id="overviewDate">—</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Models Practiced</div>
+          <div class="stat-value accent" id="ov-practiced">0</div>
+          <div class="stat-sub">unique models applied</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Applications</div>
+          <div class="stat-value" id="ov-total">0</div>
+          <div class="stat-sub">sessions logged</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Effectiveness</div>
+          <div class="stat-value accent" id="ov-effectiveness">—</div>
+          <div class="stat-sub">out of 5 stars</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Insights Captured</div>
+          <div class="stat-value" id="ov-insights">0</div>
+          <div class="stat-sub">documented learnings</div>
+        </div>
+      </div>
+
+      <!-- Category Pipeline -->
+      <div class="pipeline">
+        <div class="cat-card cc-clarity" onclick="filterLibrary('Clarity')">
+          <div class="cat-num">01 · CLARITY</div>
+          <div class="cat-name" style="color:var(--cat-clarity)">Framing</div>
+          <div class="cat-desc">Reframe problems from first principles</div>
+          <span class="cat-badge" style="background:rgba(124,110,224,0.12);color:var(--cat-clarity)" id="catb-clarity">4 models</span>
+        </div>
+        <div class="cat-card cc-decision" onclick="filterLibrary('Decision')">
+          <div class="cat-num">02 · DECISION</div>
+          <div class="cat-name" style="color:var(--cat-decision)">Choosing</div>
+          <div class="cat-desc">Make better decisions under uncertainty</div>
+          <span class="cat-badge" style="background:rgba(212,168,67,0.12);color:var(--cat-decision)" id="catb-decision">4 models</span>
+        </div>
+        <div class="cat-card cc-risk" onclick="filterLibrary('Risk')">
+          <div class="cat-num">03 · RISK</div>
+          <div class="cat-name" style="color:var(--cat-risk)">Probability</div>
+          <div class="cat-desc">Think in odds, not certainties</div>
+          <span class="cat-badge" style="background:rgba(74,159,212,0.12);color:var(--cat-risk)" id="catb-risk">4 models</span>
+        </div>
+        <div class="cat-card cc-psych" onclick="filterLibrary('Psychology')">
+          <div class="cat-num">04 · PSYCHOLOGY</div>
+          <div class="cat-name" style="color:var(--cat-psych)">Behaviour</div>
+          <div class="cat-desc">Understand incentives and biases</div>
+          <span class="cat-badge" style="background:rgba(212,107,67,0.12);color:var(--cat-psych)" id="catb-psych">4 models</span>
+        </div>
+        <div class="cat-card cc-systems" onclick="filterLibrary('Systems')">
+          <div class="cat-num">05 · SYSTEMS</div>
+          <div class="cat-name" style="color:var(--cat-systems)">Leverage</div>
+          <div class="cat-desc">See loops, delays, and emergence</div>
+          <span class="cat-badge" style="background:rgba(58,181,160,0.12);color:var(--cat-systems)" id="catb-systems">4 models</span>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Most Used Models</div>
+            <button class="btn" style="font-size:11px;padding:4px 10px" onclick="showSection('applications',document.querySelector('[data-section=applications]'))">All →</button>
+          </div>
+          <div class="card-body" id="ov-top-models">
+            <div class="empty">No applications yet</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><div class="card-title">7-Day Activity</div></div>
+            <div class="card-body">
+              <div class="hm-days" id="hm-days"></div>
+              <div class="heatmap" id="heatmap"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Today's Thinking Prompt</div></div>
+            <div class="card-body">
+              <div id="ov-prompt" style="font-family:var(--font-display);font-style:italic;font-size:15px;color:var(--text);line-height:1.5;margin-bottom:12px">—</div>
+              <button class="btn" style="font-size:11px;padding:4px 10px" onclick="newPrompt()">New prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Applications</div></div>
+          <div class="card-body" id="ov-recent"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Logs</div></div>
+          <div class="card-body" id="ov-logs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PRACTICE SESSION ══ -->
+  <div class="section" id="section-practice">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Practice Session</h2>
+        <span>Apply a mental model to a real situation</span>
+      </div>
+
+      <!-- Context -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-title">Session Context</div></div>
+        <div class="card-body">
+          <div class="two-col">
+            <div class="field">
+              <label class="field-label">Situation / Problem</label>
+              <input type="text" id="ctx-situation" placeholder="Describe what you're trying to think through…">
+            </div>
+            <div class="field">
+              <label class="field-label">Domain</label>
+              <select id="ctx-domain">
+                <option value="">— select domain —</option>
+                <option>Business / Product</option>
+                <option>Career / Growth</option>
+                <option>Finance / Investment</option>
+                <option>Relationships / People</option>
+                <option>Health / Wellbeing</option>
+                <option>Learning / Skill</option>
+                <option>Decision Making</option>
+                <option>Strategy / Planning</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Stakes</label>
+            <select id="ctx-stakes">
+              <option value="">— select stakes —</option>
+              <option>🟢 Low — low cost to be wrong</option>
+              <option>🟡 Medium — meaningful consequences</option>
+              <option>🔴 High — significant impact</option>
+              <option>⚫ Critical — irreversible outcome</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Selector -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header">
+          <div class="card-title">Select Mental Model</div>
+          <div id="selected-model-tag" style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim)">None selected</div>
+        </div>
+        <div class="card-body">
+          <div class="tabs" id="model-cat-tabs">
+            <button class="tab active" onclick="filterModelSelector('All',this)">All</button>
+            <button class="tab" onclick="filterModelSelector('Clarity',this)">Clarity</button>
+            <button class="tab" onclick="filterModelSelector('Decision',this)">Decision</button>
+            <button class="tab" onclick="filterModelSelector('Risk',this)">Risk</button>
+            <button class="tab" onclick="filterModelSelector('Psychology',this)">Psychology</button>
+            <button class="tab" onclick="filterModelSelector('Systems',this)">Systems</button>
+          </div>
+          <div class="model-selector-grid" id="model-selector-grid"></div>
+        </div>
+      </div>
+
+      <!-- Dynamic Practice Steps -->
+      <div id="practice-steps-area" style="display:none">
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header">
+            <div class="card-title" id="psteps-title">Model Steps</div>
+            <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim)" id="psteps-subtitle">—</div>
+          </div>
+          <div class="card-body">
+            <div id="psteps-container"></div>
+          </div>
+        </div>
+
+        <!-- Outcome & Rating -->
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><div class="card-title">Outcome & Rating</div></div>
+          <div class="card-body">
+            <div class="two-col">
+              <div>
+                <div class="field">
+                  <label class="field-label">Key Insight From This Session</label>
+                  <textarea id="ps-insight" placeholder="What did applying this model reveal?"></textarea>
+                </div>
+                <div class="field">
+                  <label class="field-label">Action / Decision Made</label>
+                  <input type="text" id="ps-action" placeholder="What will you do differently because of this?">
+                </div>
+              </div>
+              <div>
+                <div class="field">
+                  <label class="field-label">Model Effectiveness (tap to rate)</label>
+                  <div class="star-row" id="eff-stars">
+                    <span class="star" onclick="setEffectiveness(1)" data-val="1">★</span>
+                    <span class="star" onclick="setEffectiveness(2)" data-val="2">★</span>
+                    <span class="star" onclick="setEffectiveness(3)" data-val="3">★</span>
+                    <span class="star" onclick="setEffectiveness(4)" data-val="4">★</span>
+                    <span class="star" onclick="setEffectiveness(5)" data-val="5">★</span>
+                  </div>
+                  <div style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);margin-top:4px" id="eff-label">Not rated</div>
+                </div>
+                <div class="field">
+                  <label class="field-label">Clarity Gained</label>
+                  <select id="ps-clarity">
+                    <option value="">— level —</option>
+                    <option value="1">Slightly clearer</option>
+                    <option value="2">Noticeably clearer</option>
+                    <option value="3">Significant clarity</option>
+                    <option value="4">Breakthrough clarity</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label">Tags</label>
+                  <input type="text" id="ps-tags" placeholder="Comma-separated: growth, strategy…">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn" onclick="clearPractice()">Clear</button>
+          <button class="btn btn-primary" onclick="saveApplication()">Save Application ↗</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MODEL LIBRARY ══ -->
+  <div class="section" id="section-library">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Model Library</h2>
+        <span>20 high-leverage mental models</span>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="btn active" id="lib-all" onclick="filterLibrary('All')">All (20)</button>
+        <button class="btn" id="lib-clarity" onclick="filterLibrary('Clarity')" style="border-left:3px solid var(--cat-clarity)">Clarity</button>
+        <button class="btn" id="lib-decision" onclick="filterLibrary('Decision')" style="border-left:3px solid var(--cat-decision)">Decision</button>
+        <button class="btn" id="lib-risk" onclick="filterLibrary('Risk')" style="border-left:3px solid var(--cat-risk)">Risk</button>
+        <button class="btn" id="lib-psych" onclick="filterLibrary('Psychology')" style="border-left:3px solid var(--cat-psych)">Psychology</button>
+        <button class="btn" id="lib-systems" onclick="filterLibrary('Systems')" style="border-left:3px solid var(--cat-systems)">Systems</button>
+      </div>
+
+      <div class="model-grid" id="model-grid"></div>
+    </div>
+  </div>
+
+  <!-- ══ APPLICATIONS ══ -->
+  <div class="section" id="section-applications">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Applications Log</h2>
+        <span>Every model session you've run</span>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+        <button class="btn active" id="af-all" onclick="filterApps('all',this)">All</button>
+        <button class="btn" onclick="filterApps('clarity',this)" style="border-left:3px solid var(--cat-clarity)">Clarity</button>
+        <button class="btn" onclick="filterApps('decision',this)" style="border-left:3px solid var(--cat-decision)">Decision</button>
+        <button class="btn" onclick="filterApps('risk',this)" style="border-left:3px solid var(--cat-risk)">Risk</button>
+        <button class="btn" onclick="filterApps('psychology',this)" style="border-left:3px solid var(--cat-psych)">Psychology</button>
+        <button class="btn" onclick="filterApps('systems',this)" style="border-left:3px solid var(--cat-systems)">Systems</button>
+        <button class="btn" onclick="filterApps('high-eff',this)">⭐ High Impact</button>
+      </div>
+
+      <div id="app-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ TASKS ══ -->
+  <div class="section" id="section-tasks">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Tasks</h2>
+        <span id="taskStats">—</span>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-title">Add Task</div></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 160px 120px 120px auto;gap:10px;align-items:end">
+            <div class="field" style="margin:0">
+              <label class="field-label">Task</label>
+              <input type="text" id="taskInput" placeholder="What needs doing?" onkeydown="if(event.key==='Enter')addTask()">
+            </div>
+            <div class="field" style="margin:0">
+              <label class="field-label">Model</label>
+              <select id="taskModel">
+                <option value="General">General</option>
+                <option>First Principles</option>
+                <option>Inversion</option>
+                <option>Second-Order</option>
+                <option>Probabilistic</option>
+                <option>Systems Thinking</option>
+                <option>Occam's Razor</option>
+                <option>Circle of Competence</option>
+                <option>Regret Minimization</option>
+                <option>Expected Value</option>
+                <option>Opportunity Cost</option>
+                <option>Compounding</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label class="field-label">Category</label>
+              <select id="taskCategory">
+                <option value="General">General</option>
+                <option>Clarity</option>
+                <option>Decision</option>
+                <option>Risk</option>
+                <option>Psychology</option>
+                <option>Systems</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label class="field-label">Priority</label>
+              <select id="taskPriority">
+                <option value="high">High</option>
+                <option value="med">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">&nbsp;</label>
+              <button class="btn btn-primary" onclick="addTask()" style="height:36px">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">All Tasks</div>
+          <div style="display:flex;gap:6px">
+            <button class="btn" onclick="filterTasks('all')"  id="tf-all"  style="font-size:11px;padding:4px 10px">All</button>
+            <button class="btn" onclick="filterTasks('open')" id="tf-open" style="font-size:11px;padding:4px 10px">Open</button>
+            <button class="btn" onclick="filterTasks('done')" id="tf-done" style="font-size:11px;padding:4px 10px">Done</button>
+          </div>
+        </div>
+        <div class="card-body" id="taskList"><div class="empty">No tasks yet</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DAILY LOG ══ -->
+  <div class="section" id="section-log">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Daily Log</h2>
+        <span>Stream of thought</span>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-title">New Entry</div></div>
+        <div class="card-body">
+          <div class="field">
+            <textarea id="logInputSection" placeholder="What are you thinking, applying, questioning, noticing…" style="min-height:100px"></textarea>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="field-label" style="margin:0">Tag Model:</span>
+              <select id="logModelSection" style="width:180px;padding:5px 10px">
+                <option value="General">General</option>
+                <option>First Principles</option>
+                <option>Inversion</option>
+                <option>Second-Order Thinking</option>
+                <option>Probabilistic Thinking</option>
+                <option>Systems Thinking</option>
+                <option>Occam's Razor</option>
+                <option>Circle of Competence</option>
+                <option>Hanlon's Razor</option>
+                <option>Regret Minimization</option>
+                <option>Opportunity Cost</option>
+                <option>Expected Value</option>
+                <option>Compounding</option>
+                <option>Margin of Safety</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="addLogEntry()">Post Entry</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Log Timeline</div></div>
+        <div class="card-body" id="fullLogList"><div class="empty">Log timeline empty.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INSIGHTS ══ -->
+  <div class="section" id="section-insights">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Insights</h2>
+        <span>Key learnings from model application</span>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Add Insight</div></div>
+            <div class="card-body">
+              <div class="field">
+                <label class="field-label">Insight</label>
+                <textarea id="insightInput" placeholder="What did applying this model reveal about your thinking?"></textarea>
+              </div>
+              <div class="field">
+                <label class="field-label">Type</label>
+                <select id="insightType">
+                  <option>Pattern Recognition</option>
+                  <option>Assumption Busted</option>
+                  <option>Decision Improved</option>
+                  <option>Bias Identified</option>
+                  <option>Model Combination</option>
+                  <option>Blind Spot Found</option>
+                  <option>Leverage Found</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="addInsight()" style="width:100%">Save Insight</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">All Insights</div></div>
+          <div class="card-body">
+            <div class="insight-grid" id="insightGridArea"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DATA CENTER ══ -->
+  <div class="section" id="section-data-center">
+    <div class="content-area">
+      <div class="section-head">
+        <h2>Data & Backup</h2>
+        <span>Export, import, reset</span>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Export / Import</div></div>
+          <div class="card-body">
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Download all your applications, tasks, logs, and insights as a JSON file. Import to restore.</p>
+            <div style="display:flex;gap:8px">
+              <button class="btn" onclick="exportData()" style="flex:1">Download JSON 📥</button>
+              <button class="btn" onclick="document.getElementById('importFile').click()" style="flex:1">Upload JSON 📤</button>
+            </div>
+            <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">System Reset</div></div>
+          <div class="card-body">
+            <label class="field-label" style="color:var(--red)">Factory Reset</label>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Clears all applications, tasks, logs and insights. Model library is preserved.</p>
+            <button class="btn btn-danger" onclick="confirmReset()">Reset All Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<div class="modal-backdrop" id="logModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Log Entry</div>
+      <button class="modal-close" onclick="closeModal('logModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label class="field-label">What's happening?</label>
+        <textarea id="modalLogInput" placeholder="Thoughts, model applications, observations…"></textarea></div>
+      <div class="field"><label class="field-label">Mental Model Tag</label>
+        <select id="modalLogModel">
+          <option>General</option><option>First Principles</option><option>Inversion</option>
+          <option>Second-Order Thinking</option><option>Probabilistic Thinking</option>
+          <option>Systems Thinking</option><option>Occam's Razor</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('logModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitModalLog()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="taskModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Create Task</div>
+      <button class="modal-close" onclick="closeModal('taskModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label class="field-label">Task Description</label>
+        <input type="text" id="modalTaskInput" placeholder="What needs doing?"></div>
+      <div class="field"><label class="field-label">Mental Model</label>
+        <select id="modalTaskModel">
+          <option>General</option><option>First Principles</option><option>Inversion</option>
+          <option>Second-Order Thinking</option><option>Systems Thinking</option>
+        </select>
+      </div>
+      <div class="field"><label class="field-label">Priority</label>
+        <select id="modalTaskPriority">
+          <option value="high">High</option><option value="med">Medium</option><option value="low">Low</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('taskModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitModalTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modelDetailModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="mdm-title">Model Detail</div>
+      <button class="modal-close" onclick="closeModal('modelDetailModal')">×</button>
+    </div>
+    <div class="modal-body" id="mdm-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="mdm-practice-btn">Practice This Model</button>
+      <button class="btn" onclick="closeModal('modelDetailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="appDetailModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="adm-title">Application Detail</div>
+      <button class="modal-close" onclick="closeModal('appDetailModal')">×</button>
+    </div>
+    <div class="modal-body" id="adm-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="adm-delete-btn">Delete</button>
+      <button class="btn" onclick="closeModal('appDetailModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// MENTAL MODELS DATA (20 top models)
+// ═══════════════════════════════════════
+const MENTAL_MODELS = [
+  // ── CLARITY ──
+  {
+    id: 'first-principles', name: 'First Principles', icon: '⬡', category: 'Clarity',
+    color: 'var(--cat-clarity)',
+    summary: 'Break any problem down to its fundamental truths, then reason upward from there.',
+    when: 'When conventional wisdom seems wrong, or when you want to find genuinely novel solutions.',
+    steps: [
+      { prompt: 'What problem or belief are you examining? State it precisely.', placeholder: 'I want to understand / solve…' },
+      { prompt: 'What assumptions are embedded in how people normally approach this? List them all.', placeholder: 'Everyone assumes… | Convention says…' },
+      { prompt: 'Which assumptions can you actually verify? Ask "why is this true?" for each. Break to fundamentals.', placeholder: 'Digging deeper: assumption X is actually… because…' },
+      { prompt: 'What are the irreducible bedrock truths you\'ve found — things that are provably, fundamentally true?', placeholder: 'Bedrock truths: 1. … 2. … 3. …' },
+      { prompt: 'Now reason upward from only those truths. What solution or conclusion emerges when you ignore convention?', placeholder: 'Building from scratch: if I only knew these truths, I\'d…' },
+    ]
+  },
+  {
+    id: 'occams-razor', name: "Occam's Razor", icon: '✂', category: 'Clarity',
+    color: 'var(--cat-clarity)',
+    summary: 'When multiple explanations exist, prefer the one with the fewest assumptions.',
+    when: 'Diagnosing problems, evaluating theories, cutting through over-engineered solutions.',
+    steps: [
+      { prompt: 'What are you trying to explain or understand?', placeholder: 'The situation I\'m analysing is…' },
+      { prompt: 'List all the explanations or solutions you can think of (including complex ones).', placeholder: 'Explanation 1: … | Explanation 2: … | Explanation 3: …' },
+      { prompt: 'For each explanation, how many assumptions does it require? Count them.', placeholder: 'Explanation 1 requires: X assumptions. Explanation 2 requires: Y…' },
+      { prompt: 'What is the simplest explanation that accounts for all the facts? State it plainly.', placeholder: 'The simplest sufficient explanation is…' },
+      { prompt: 'What unnecessary complexity can you eliminate from your current thinking or solution?', placeholder: 'I can cut: … | This simplifies to: …' },
+    ]
+  },
+  {
+    id: 'circle-of-competence', name: 'Circle of Competence', icon: '◎', category: 'Clarity',
+    color: 'var(--cat-clarity)',
+    summary: 'Know what you know well — and know the boundary where your real knowledge ends.',
+    when: 'Before making decisions in unfamiliar territory, evaluating risks, giving advice.',
+    steps: [
+      { prompt: 'What domain or decision are you operating in right now?', placeholder: 'The domain is…' },
+      { prompt: 'What do you genuinely know well in this domain? (Verified by track record, not feeling)', placeholder: 'Things I truly understand here: …' },
+      { prompt: 'Where does your real knowledge end? What are you guessing or assuming without solid basis?', placeholder: 'I\'m operating outside my circle when I assume…' },
+      { prompt: 'Who has genuine expertise in the area where your knowledge ends? What would they know that you don\'t?', placeholder: 'A true expert would know: …' },
+      { prompt: 'What decision or action adjustments does this honest assessment suggest?', placeholder: 'Given my actual circle, I should… | I should defer to… on…' },
+    ]
+  },
+  {
+    id: 'map-vs-territory', name: 'Map vs Territory', icon: '🗺', category: 'Clarity',
+    color: 'var(--cat-clarity)',
+    summary: 'Your mental model of reality is not reality. Identify where the map diverges from the territory.',
+    when: 'When results are not matching expectations, before making high-stakes assumptions.',
+    steps: [
+      { prompt: 'What situation are you operating in? Describe what you believe to be true.', placeholder: 'My current mental model of this situation is…' },
+      { prompt: 'What evidence or real-world data do you actually have vs. what are you inferring?', placeholder: 'Hard evidence: … | Inferences / assumptions: …' },
+      { prompt: 'Where is your map most likely wrong? Where are you least in contact with reality?', placeholder: 'My map is probably wrong about… because…' },
+      { prompt: 'What would you need to do to update your map — to bring it closer to the actual territory?', placeholder: 'To reality-check, I need to: …' },
+      { prompt: 'Given the gap, what decisions should you make differently?', placeholder: 'Adjusting for map-territory gap, I\'ll now…' },
+    ]
+  },
+
+  // ── DECISION ──
+  {
+    id: 'second-order', name: 'Second-Order Thinking', icon: '⟳', category: 'Decision',
+    color: 'var(--cat-decision)',
+    summary: 'Think about the consequences of the consequences. First-order thinking asks "what happens?" — second-order asks "and then what?"',
+    when: 'Before any significant decision. Policy changes, strategy moves, relationship choices.',
+    steps: [
+      { prompt: 'What action or decision are you considering?', placeholder: 'I\'m considering doing / deciding…' },
+      { prompt: 'What are the direct, immediate first-order effects? (These are obvious)', placeholder: '1st order: If I do X, immediately Y happens…' },
+      { prompt: 'For each first-order effect — what happens NEXT? What are the second-order effects?', placeholder: '2nd order: And then Y causes Z to happen… then Q…' },
+      { prompt: 'Push to third order: what do those second-order effects cause in turn?', placeholder: '3rd order: And that leads to… which eventually means…' },
+      { prompt: 'Given the full consequence chain, does this decision look the same as before? What will you do?', placeholder: 'Seeing the full picture, I now think… | I\'ll proceed / change my approach by…' },
+    ]
+  },
+  {
+    id: 'inversion', name: 'Inversion', icon: '↺', category: 'Decision',
+    color: 'var(--cat-decision)',
+    summary: 'Instead of asking how to succeed, ask how to guarantee failure — then avoid those things.',
+    when: 'Any goal-setting, risk assessment, pre-mortem analysis, strategy design.',
+    steps: [
+      { prompt: 'What goal are you trying to achieve? State it clearly.', placeholder: 'My goal is…' },
+      { prompt: 'Invert it: What would guarantee absolute failure? Be exhaustive and specific.', placeholder: 'To guarantee failure, I would… | The anti-goal looks like…' },
+      { prompt: 'Of these failure modes, which are you already doing or at risk of doing?', placeholder: 'I\'m already doing / at risk of: …' },
+      { prompt: 'What behaviours, decisions, or habits must you eliminate to avoid failure?', placeholder: 'I must never / always avoid: …' },
+      { prompt: 'What positive strategy emerges from inverting the "never do" list?', placeholder: 'The positive corollary is: doing X prevents failure, which means I should proactively…' },
+    ]
+  },
+  {
+    id: 'regret-minimization', name: 'Regret Minimization', icon: '⌛', category: 'Decision',
+    color: 'var(--cat-decision)',
+    summary: 'Project yourself to age 80. Which path would you regret not taking? Minimize future regret.',
+    when: 'Major life or career decisions. Anything involving fear of failure or status quo bias.',
+    steps: [
+      { prompt: 'What decision are you paralysed by or unsure about?', placeholder: 'The decision I\'m facing is…' },
+      { prompt: 'Imagine you are 80 years old, looking back on your life. You chose NOT to do this thing. How do you feel?', placeholder: 'At 80, if I didn\'t take this path, I would feel… because…' },
+      { prompt: 'Now imagine at 80 you DID do it and it failed completely. How do you feel?', placeholder: 'At 80, if I tried and failed, I would feel… because…' },
+      { prompt: 'Which scenario creates more regret? Is the failure regret survivable?', placeholder: 'The greater regret is… | Failure is / is not survivable because…' },
+      { prompt: 'What does this tell you about the right decision?', placeholder: 'Applying regret minimization, I should…' },
+    ]
+  },
+  {
+    id: 'reversible-irreversible', name: 'Reversible vs Irreversible', icon: '⇌', category: 'Decision',
+    color: 'var(--cat-decision)',
+    summary: 'Classify decisions as Type 1 (hard to reverse) or Type 2 (reversible). Adjust speed and rigor accordingly.',
+    when: 'Before any decision. Prevents over-thinking reversible decisions and under-thinking permanent ones.',
+    steps: [
+      { prompt: 'What decision are you making?', placeholder: 'Decision: …' },
+      { prompt: 'Is this Type 1 (one-way door — hard/expensive/impossible to undo) or Type 2 (two-way door — easily reversible)?', placeholder: 'This is Type 1 / Type 2 because…' },
+      { prompt: 'What is the cost of being wrong? If Type 1: how bad is irreversible failure? If Type 2: what is the cost to reverse?', placeholder: 'Cost of being wrong: … | Reversibility cost: …' },
+      { prompt: 'Based on the type, what level of analysis and speed is appropriate?', placeholder: 'Given this is Type [X], the appropriate process is: spend [time], involve [people], gather [data]…' },
+      { prompt: 'Have you been treating this decision with the appropriate weight? What will you decide?', placeholder: 'I\'ve been [over/under] thinking this. The right call is…' },
+    ]
+  },
+
+  // ── RISK ──
+  {
+    id: 'probabilistic', name: 'Probabilistic Thinking', icon: '◇', category: 'Risk',
+    color: 'var(--cat-risk)',
+    summary: 'Think in distributions and probabilities, not certainties. Assign odds rather than making binary predictions.',
+    when: 'Forecasting outcomes, assessing risk, evaluating arguments, making bets.',
+    steps: [
+      { prompt: 'What are you trying to predict or assess? State it as a precise yes/no question.', placeholder: 'The prediction I\'m making is: Will X happen by [date]?' },
+      { prompt: 'What base rate exists? How often does this type of thing happen historically?', placeholder: 'Base rate / reference class: Out of similar situations, about X% result in Y…' },
+      { prompt: 'What specific evidence updates your probability? List things that push it higher and lower.', placeholder: 'Increases probability: … | Decreases probability: …' },
+      { prompt: 'Given base rate + evidence, what is your calibrated probability estimate?', placeholder: 'My probability estimate: __% | Confidence: …' },
+      { prompt: 'What would change your mind? Define your update triggers in advance.', placeholder: 'If X happens, I\'ll revise to __%. If Y happens, I\'ll revise to __%.' },
+    ]
+  },
+  {
+    id: 'margin-of-safety', name: 'Margin of Safety', icon: '⊞', category: 'Risk',
+    color: 'var(--cat-risk)',
+    summary: 'Build in a buffer between your estimate and your limit. Assume you will be wrong — plan for it.',
+    when: 'Budgeting, timelines, resource planning, financial decisions, engineering.',
+    steps: [
+      { prompt: 'What are you estimating? (Cost, time, capacity, required return, etc.)', placeholder: 'I\'m estimating…' },
+      { prompt: 'What is your base estimate under normal, expected conditions?', placeholder: 'Best estimate: … | Most likely outcome: …' },
+      { prompt: 'What could go wrong? What are the realistic downside scenarios?', placeholder: 'Downside scenarios: … | Worst plausible case: …' },
+      { prompt: 'Given the uncertainty, what buffer/margin should you add to your estimate?', placeholder: 'I should add __% margin because…' },
+      { prompt: 'What is your final conservative estimate with margin of safety built in?', placeholder: 'Conservative final estimate: … | I\'m now protected against…' },
+    ]
+  },
+  {
+    id: 'expected-value', name: 'Expected Value', icon: '∑', category: 'Risk',
+    color: 'var(--cat-risk)',
+    summary: 'Expected value = probability × outcome. Make decisions by comparing the weighted average of all outcomes.',
+    when: 'Any decision with uncertain outcomes. Bets, investments, career choices, product bets.',
+    steps: [
+      { prompt: 'What decision involves uncertain outcomes? Define the choices.', placeholder: 'The decision is: Option A vs Option B' },
+      { prompt: 'For Option A, list all possible outcomes and assign a probability to each. (Probabilities must sum to 100%)', placeholder: 'Outcome 1: [value] with [X]% probability | Outcome 2: [value] with [Y]%…' },
+      { prompt: 'Calculate Option A\'s Expected Value: multiply each outcome by its probability and sum.', placeholder: 'EV(A) = (outcome1 × p1) + (outcome2 × p2) + … = …' },
+      { prompt: 'Repeat for Option B (or compare to doing nothing). What are the EVs?', placeholder: 'EV(B) = … | EV(nothing) = …' },
+      { prompt: 'Which option has the highest expected value? Does non-financial value change the calculus?', placeholder: 'Highest EV option is… | Adjusted for non-financial factors, I will…' },
+    ]
+  },
+  {
+    id: 'compounding', name: 'Compounding', icon: '◉', category: 'Risk',
+    color: 'var(--cat-risk)',
+    summary: 'Small consistent gains compound into massive outcomes over time. Identify what is compounding for and against you.',
+    when: 'Long-term planning, habits, skill building, financial decisions, relationships.',
+    steps: [
+      { prompt: 'What area of your life or work are you analysing for compounding effects?', placeholder: 'The area I\'m examining is…' },
+      { prompt: 'What is currently compounding in your favour? (Skills, relationships, assets, reputation)', placeholder: 'Compounding FOR me: …' },
+      { prompt: 'What is currently compounding against you? (Debt, bad habits, neglected relationships, skill gaps)', placeholder: 'Compounding AGAINST me: …' },
+      { prompt: 'If the current trajectory continues for 10 years, where does each compound to? (Be honest)', placeholder: 'In 10 years, the positive compounds become: … | The negative compounds become: …' },
+      { prompt: 'What small change today would create the most powerful compounding effect over the long term?', placeholder: 'The highest-leverage change to start compounding right now is…' },
+    ]
+  },
+
+  // ── PSYCHOLOGY ──
+  {
+    id: 'incentive-analysis', name: 'Incentive Analysis', icon: '⚡', category: 'Psychology',
+    color: 'var(--cat-psych)',
+    summary: "Show me the incentive and I'll show you the outcome. Map what people are truly incentivised to do.",
+    when: 'Understanding behavior, predicting conflicts, designing systems, evaluating advice.',
+    steps: [
+      { prompt: 'Whose behavior are you trying to understand or predict?', placeholder: 'The person / group I\'m analysing is…' },
+      { prompt: 'What are their explicit incentives? (Money, status, safety, recognition, promotion)', placeholder: 'Explicit incentives: …' },
+      { prompt: 'What are their hidden or implicit incentives? (Avoiding blame, protecting territory, looking good)', placeholder: 'Hidden incentives: …' },
+      { prompt: 'How do their incentives align with or diverge from what they\'re telling you?', placeholder: 'Their incentives align / diverge with their stated position because…' },
+      { prompt: 'Given the true incentives, what behavior should you actually expect? How does this change your approach?', placeholder: 'I should expect them to… | This means I should…' },
+    ]
+  },
+  {
+    id: 'confirmation-bias', name: 'Confirmation Bias Check', icon: '⚖', category: 'Psychology',
+    color: 'var(--cat-psych)',
+    summary: 'Actively seek evidence that contradicts your current belief. What you ignore matters as much as what you notice.',
+    when: 'Any strongly held belief, investment thesis, plan, or decision you\'re attached to.',
+    steps: [
+      { prompt: 'What belief, plan, or thesis are you examining? State it clearly.', placeholder: 'My current belief / plan is…' },
+      { prompt: 'What evidence are you already weighing heavily? (The evidence that supports your view)', placeholder: 'Evidence I\'m emphasising: …' },
+      { prompt: 'What evidence have you seen but discounted? What are the strongest counterarguments?', placeholder: 'Evidence I\'ve ignored or dismissed: …' },
+      { prompt: 'Steelman the opposing view: what would a smart, informed person who disagrees with you say?', placeholder: 'The strongest case AGAINST my belief is…' },
+      { prompt: 'Has your view changed? Should you update your belief or plan?', placeholder: 'After checking for confirmation bias, my updated view is… | Confidence level changes from __% to __%' },
+    ]
+  },
+  {
+    id: 'availability-heuristic', name: 'Availability Heuristic', icon: '◑', category: 'Psychology',
+    color: 'var(--cat-psych)',
+    summary: 'We judge probability by how easily examples come to mind — not by actual frequency. Recent and vivid ≠ likely.',
+    when: 'Risk assessment, fear-based decisions, media-influenced thinking, pattern recognition.',
+    steps: [
+      { prompt: 'What risk or probability are you assessing?', placeholder: 'I\'m trying to assess the likelihood of…' },
+      { prompt: 'What vivid or recent examples are making this feel more or less likely than it is?', placeholder: 'What\'s influencing my intuition (recent news, personal experience, vivid story): …' },
+      { prompt: 'What is the actual base rate? (Real statistical frequency, not memorable examples)', placeholder: 'Actual statistical frequency: … | Source: …' },
+      { prompt: 'Are you over- or under-estimating this risk due to availability bias?', placeholder: 'My intuition says __%. Actual base rate is __%. I\'m [over/under] estimating by __%.' },
+      { prompt: 'Correcting for the availability heuristic, what is your recalibrated assessment?', placeholder: 'Recalibrated view: …' },
+    ]
+  },
+  {
+    id: 'hanlons-razor', name: "Hanlon's Razor", icon: '⟐', category: 'Psychology',
+    color: 'var(--cat-psych)',
+    summary: 'Never attribute to malice that which can be adequately explained by stupidity (or ignorance, busyness, or incompetence).',
+    when: 'Interpreting frustrating behavior, conflict resolution, team dynamics, negotiations.',
+    steps: [
+      { prompt: 'Describe the behavior that frustrated or harmed you.', placeholder: 'What happened: …' },
+      { prompt: 'What\'s your instinctive interpretation? (Are you assuming bad intent?)', placeholder: 'My initial interpretation: They did this because they wanted to…' },
+      { prompt: 'What simpler, non-malicious explanations could explain this equally well?', placeholder: 'Alternative explanations: ignorance / busyness / miscommunication / incompetence: …' },
+      { prompt: 'Which explanation is more likely given what you actually know about this person/situation?', placeholder: 'The more probable explanation is… because…' },
+      { prompt: 'How does this change how you should respond?', placeholder: 'Instead of assuming malice, I\'ll approach this by…' },
+    ]
+  },
+
+  // ── SYSTEMS ──
+  {
+    id: 'systems-thinking', name: 'Systems Thinking', icon: '⟲', category: 'Systems',
+    color: 'var(--cat-systems)',
+    summary: 'See the whole system: stocks, flows, feedback loops, delays, and leverage points — not just isolated events.',
+    when: 'Diagnosing recurring problems, designing solutions that don\'t create new problems, understanding organisations.',
+    steps: [
+      { prompt: 'Define the system boundary: what is inside and outside this system?', placeholder: 'Inside: … | Outside / environment: …' },
+      { prompt: 'Identify the key stocks (what accumulates) and flows (what fills or drains them).', placeholder: 'Stocks: … | Inflows: … | Outflows: …' },
+      { prompt: 'Map the feedback loops. Are they reinforcing (+, causes growth or collapse) or balancing (–, seeks equilibrium)?', placeholder: 'Reinforcing loops: … | Balancing loops: …' },
+      { prompt: 'Where are the significant delays? How long between action and visible outcome?', placeholder: 'Key delay: action X takes [time] to produce visible effect Y because…' },
+      { prompt: 'Where are the leverage points — places where a small change produces a large system-level shift?', placeholder: 'High-leverage point: … | Intervention: … | Expected effect: …' },
+    ]
+  },
+  {
+    id: 'opportunity-cost', name: 'Opportunity Cost', icon: '⊗', category: 'Systems',
+    color: 'var(--cat-systems)',
+    summary: 'The real cost of any choice is what you give up. Every yes is a no to everything else.',
+    when: 'Resource allocation, time management, investment decisions, strategic prioritisation.',
+    steps: [
+      { prompt: 'What decision or allocation are you making? (Time, money, focus, people)', placeholder: 'I\'m deciding to use [resource] for…' },
+      { prompt: 'What are all the realistic alternatives you\'re giving up by making this choice?', placeholder: 'By doing this, I can\'t do: 1. … 2. … 3. …' },
+      { prompt: 'What is the value of the next best alternative? (This is the true opportunity cost)', placeholder: 'The next best use of this resource would be worth: …' },
+      { prompt: 'Does your chosen option outperform the opportunity cost? By how much?', placeholder: 'My choice generates [value] vs opportunity cost of [value]. Net gain/loss: …' },
+      { prompt: 'What will you decide, fully accounting for what you\'re giving up?', placeholder: 'Fully accounting for opportunity cost, I will / will not proceed because…' },
+    ]
+  },
+  {
+    id: 'sunk-cost', name: 'Sunk Cost Fallacy', icon: '⊘', category: 'Systems',
+    color: 'var(--cat-systems)',
+    summary: 'Past investment (time, money, effort) is irrelevant to future decisions. Only future costs and benefits matter.',
+    when: 'Any decision where you feel you "can\'t stop now." Projects, relationships, investments, strategies.',
+    steps: [
+      { prompt: 'What decision are you weighing, and what have you already invested?', placeholder: 'The decision is: … | I\'ve already invested: [time/money/effort]' },
+      { prompt: 'Be honest: how much is your past investment influencing your thinking about continuing?', placeholder: 'My past investment is [significantly / somewhat / barely] influencing me because…' },
+      { prompt: 'Imagine you haven\'t invested anything yet. Starting fresh today with full information — would you begin?', placeholder: 'Starting from zero today, I would / would not begin this because…' },
+      { prompt: 'What are the actual future costs and benefits from this point forward? (Ignore the past entirely)', placeholder: 'Future cost to continue: … | Future benefit if it works: … | Future benefit of stopping: …' },
+      { prompt: 'Based only on future costs and benefits, what is the right decision?', placeholder: 'Ignoring sunk costs, the rational decision is to…' },
+    ]
+  },
+  {
+    id: 'thought-experiment', name: 'Thought Experiment', icon: '◈', category: 'Systems',
+    color: 'var(--cat-systems)',
+    summary: 'Use hypothetical reasoning to test ideas, stress-test beliefs, and explore consequences safely.',
+    when: 'Exploring edge cases, testing ethical principles, stress-testing assumptions, generating novel ideas.',
+    steps: [
+      { prompt: 'What question, belief, or situation do you want to explore through a thought experiment?', placeholder: 'I want to explore: What if [X]…' },
+      { prompt: 'Define the hypothetical scenario clearly. Change ONE key variable from reality.', placeholder: 'Hypothetical: Imagine a world where / a situation where [one thing is different]…' },
+      { prompt: 'What follows from this hypothetical? Trace the logical consequences.', placeholder: 'If that were true, then: … which means… which leads to…' },
+      { prompt: 'What does this thought experiment reveal about the original question or belief?', placeholder: 'This reveals that my original belief / assumption is…' },
+      { prompt: 'What real-world action or updated view does this suggest?', placeholder: 'This thought experiment suggests I should… | My updated view is…' },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════
+// THINKING PROMPTS
+// ═══════════════════════════════════════
+const PROMPTS = [
+  "What assumption are you making right now that you haven't actually verified?",
+  "What would a smart, disinterested outsider say about your current biggest decision?",
+  "Where in your life are you reasoning by analogy when you should be using first principles?",
+  "What is compounding against you right now that you're choosing to ignore?",
+  "Whose incentives are misaligned with the advice they're giving you?",
+  "What decision are you treating as irreversible that is actually reversible — and vice versa?",
+  "What would failure look like in 12 months? Is that trajectory already present today?",
+  "What is the second-order consequence of your most important current plan?",
+  "What have you been ignoring that contradicts your strongest belief?",
+  "Where are you outside your circle of competence but acting as if you're inside it?",
+  "What is the expected value of the risk you're currently avoiding?",
+  "Where is your mental map most out of sync with actual territory?",
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const LS_KEY = 'mm_tracker_v1';
+
+function getEmptyState() {
+  return { applications: [], tasks: [], logs: [], insights: [] };
+}
+
+let data = getEmptyState();
+let taskFilter    = 'all';
+let appFilter     = 'all';
+let libFilter     = 'All';
+let selectedModelId = null;
+let practiceEffectiveness = 0;
+let practiceAnswers = {};
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  document.getElementById('sidebarDate').textContent   = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+  document.getElementById('overviewDate').textContent  = now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  const stored = localStorage.getItem(LS_KEY);
+  if (stored) { try { data = { ...getEmptyState(), ...JSON.parse(stored) }; } catch(e) {} }
+
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(d => {
+    document.getElementById('hm-days').innerHTML += `<div class="hm-day">${d[0]}</div>`;
+  });
+
+  renderModelSelectorGrid('All');
+  renderModelLibrary('All');
+  newPrompt();
+  renderAll();
+});
+
+function saveData() {
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
+// ── SECTION NAVIGATION ──
+const sectionTitles = {
+  overview:'Overview', practice:'Practice Session', library:'Model Library',
+  applications:'Applications Log', tasks:'Tasks', log:'Daily Log',
+  insights:'Insights', 'data-center':'Data & Backup'
+};
+
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById('section-' + id);
+  if (sec) sec.classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('topbarTitle').textContent = sectionTitles[id] || id;
+  renderAll();
+}
+
+// ═══════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════
+function renderAll() {
+  renderOverview();
+  renderApplications();
+  renderTasks();
+  renderLogs();
+  renderInsights();
+  updateCounts();
+  updateStreak();
+  updateProgress();
+}
+
+function updateCounts() {
+  document.getElementById('navAppCount').textContent  = data.applications.length;
+  document.getElementById('navTaskCount').textContent = data.tasks.length;
+  document.getElementById('navLogCount').textContent  = data.logs.length;
+}
+
+function updateStreak() {
+  const days = new Set(data.applications.map(a => a.date.slice(0,10)));
+  let streak = 0;
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    if (days.has(d.toISOString().slice(0,10))) streak++;
+    else if (i > 0) break;
+  }
+  document.getElementById('streakIndicator').textContent = `🔥 ${streak} day streak`;
+}
+
+function updateProgress() {
+  const today = new Date().toISOString().slice(0,10);
+  const todayApps = data.applications.filter(a => a.date.slice(0,10) === today);
+  const pct = Math.min(todayApps.length / 3 * 100, 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPct').textContent  = Math.round(pct) + '%';
+  document.getElementById('progressSub').textContent  = `${todayApps.length} model${todayApps.length!==1?'s':''} practiced today`;
+}
+
+// ═══════════════════════════════════════
+// OVERVIEW
+// ═══════════════════════════════════════
+function renderOverview() {
+  const apps = data.applications;
+  const uniqueModels = new Set(apps.map(a => a.modelId)).size;
+  document.getElementById('ov-practiced').textContent    = uniqueModels;
+  document.getElementById('ov-total').textContent        = apps.length;
+  document.getElementById('ov-insights').textContent     = data.insights.length;
+
+  const effs = apps.map(a => a.effectiveness).filter(Boolean);
+  document.getElementById('ov-effectiveness').textContent = effs.length
+    ? (effs.reduce((a,b)=>a+b,0)/effs.length).toFixed(1) + ' ★'
+    : '—';
+
+  // Top models
+  const usage = {};
+  apps.forEach(a => { usage[a.modelId] = (usage[a.modelId]||0)+1; });
+  const topEl = document.getElementById('ov-top-models');
+  const sorted = Object.entries(usage).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  if (!sorted.length) {
+    topEl.innerHTML = '<div class="empty">No applications yet</div>';
+  } else {
+    topEl.innerHTML = sorted.map(([id, count]) => {
+      const m = MENTAL_MODELS.find(m=>m.id===id);
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">${m?.icon||'◆'}</span>
+          <span style="font-size:13px;color:var(--text)">${m?.name||id}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:10px;font-family:var(--font-mono);padding:1px 7px;border-radius:20px;background:var(--accent-dim);color:var(--accent)">${m?.category||'—'}</span>
+          <span style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim)">${count}×</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Heatmap (28 days)
+  const hmEl = document.getElementById('heatmap');
+  hmEl.innerHTML = '';
+  for (let i = 27; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    const count = apps.filter(a=>a.date.startsWith(key)).length;
+    const lvl = count===0?'':count===1?'l1':count===2?'l2':count<=3?'l3':'l4';
+    hmEl.innerHTML += `<div class="hm-cell ${lvl}" title="${count} apps on ${key}"></div>`;
+  }
+
+  // Recent apps
+  const recEl = document.getElementById('ov-recent');
+  recEl.innerHTML = apps.length
+    ? apps.slice(0,3).map(a => appEntryHTML(a)).join('')
+    : '<div class="empty">No applications yet</div>';
+
+  // Recent logs
+  const logsEl = document.getElementById('ov-logs');
+  logsEl.innerHTML = data.logs.length
+    ? [...data.logs].sort((a,b)=>b.id-a.id).slice(0,3).map(l => logEntryHTML(l)).join('')
+    : '<div class="empty">No log entries yet</div>';
+}
+
+// ═══════════════════════════════════════
+// MODEL LIBRARY
+// ═══════════════════════════════════════
+function getCatColor(cat) {
+  return {Clarity:'var(--cat-clarity)',Decision:'var(--cat-decision)',Risk:'var(--cat-risk)',Psychology:'var(--cat-psych)',Systems:'var(--cat-systems)'}[cat] || 'var(--text-dim)';
+}
+function getCatDim(cat) {
+  return {
+    Clarity:'rgba(124,110,224,0.12)',Decision:'rgba(212,168,67,0.12)',
+    Risk:'rgba(74,159,212,0.12)',Psychology:'rgba(212,107,67,0.12)',
+    Systems:'rgba(58,181,160,0.12)'
+  }[cat] || 'var(--surface3)';
+}
+
+function filterLibrary(cat) {
+  libFilter = cat;
+  // Update filter buttons
+  ['All','Clarity','Decision','Risk','Psychology','Systems'].forEach(c => {
+    const btn = document.getElementById('lib-' + c.toLowerCase());
+    if (btn) btn.classList.toggle('active', c === cat);
+  });
+  document.getElementById('lib-all')?.classList.toggle('active', cat==='All');
+  renderModelLibrary(cat);
+  // Also navigate
+  showSection('library', document.querySelector('[data-section=library]'));
+}
+
+function renderModelLibrary(filter) {
+  const grid = document.getElementById('model-grid');
+  if (!grid) return;
+  const filtered = filter === 'All' ? MENTAL_MODELS : MENTAL_MODELS.filter(m=>m.category===filter);
+  const usage = {};
+  data.applications.forEach(a=>{ usage[a.modelId]=(usage[a.modelId]||0)+1; });
+  grid.innerHTML = filtered.map(m => `
+    <div class="model-card" style="--c:${getCatColor(m.category)}" onclick="openModelDetail('${m.id}')">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:${getCatColor(m.category)};opacity:.7"></div>
+      <div class="model-card-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="model-icon">${m.icon}</span>
+          <span class="model-name">${m.name}</span>
+        </div>
+        <span class="model-cat-tag" style="background:${getCatDim(m.category)};color:${getCatColor(m.category)}">${m.category}</span>
+      </div>
+      <div class="model-summary">${m.summary}</div>
+      <div class="model-when">Use when: ${m.when.slice(0,80)}…</div>
+      <div class="model-usage-row">
+        <span class="model-usage-count">Applied ${usage[m.id]||0}× </span>
+        <button class="btn btn-primary" style="font-size:11px;padding:4px 10px" onclick="event.stopPropagation();startPractice('${m.id}')">Practice →</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════
+// MODEL DETAIL MODAL
+// ═══════════════════════════════════════
+function openModelDetail(modelId) {
+  const m = MENTAL_MODELS.find(m=>m.id===modelId);
+  if (!m) return;
+  const usage = data.applications.filter(a=>a.modelId===modelId);
+  document.getElementById('mdm-title').textContent = m.icon + ' ' + m.name;
+  document.getElementById('mdm-body').innerHTML = `
+    <div style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-family:var(--font-mono);background:${getCatDim(m.category)};color:${getCatColor(m.category)};margin-bottom:14px">${m.category}</div>
+    <p style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:16px">${m.summary}</p>
+    <div class="detail-block"><div class="detail-lbl">When to use</div><div class="detail-val">${m.when}</div></div>
+    <div style="margin:16px 0 10px"><div style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">The ${m.steps.length} Practice Steps</div>
+    ${m.steps.map((s,i)=>`
+      <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <span style="flex-shrink:0;font-size:10px;font-family:var(--font-mono);padding:2px 7px;border-radius:20px;background:var(--accent-dim);color:var(--accent);margin-top:2px">0${i+1}</span>
+        <span style="font-size:13px;color:var(--text-muted);line-height:1.5">${s.prompt}</span>
+      </div>`).join('')}
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm);margin-top:8px">
+      <div style="text-align:center"><div style="font-family:var(--font-display);font-size:24px;color:var(--accent)">${usage.length}</div><div style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim)">applications</div></div>
+      <div style="flex:1;font-size:12px;color:var(--text-muted)">${usage.length ? 'Last applied: ' + usage.sort((a,b)=>b.id-a.id)[0].dateStr : 'Not yet applied'}</div>
+    </div>
+  `;
+  document.getElementById('mdm-practice-btn').onclick = () => { closeModal('modelDetailModal'); startPractice(modelId); };
+  openModal('modelDetailModal');
+}
+
+// ═══════════════════════════════════════
+// PRACTICE SESSION
+// ═══════════════════════════════════════
+function renderModelSelectorGrid(filter) {
+  const grid = document.getElementById('model-selector-grid');
+  if (!grid) return;
+  const filtered = filter === 'All' ? MENTAL_MODELS : MENTAL_MODELS.filter(m=>m.category===filter);
+  grid.innerHTML = filtered.map(m => `
+    <div class="ms-card" id="msc-${m.id}" style="border-left-color:${getCatColor(m.category)}" onclick="selectModel('${m.id}')">
+      <div class="ms-card-name">${m.icon} ${m.name}</div>
+      <div class="ms-card-cat">${m.category}</div>
+    </div>
+  `).join('');
+  // re-select if already selected
+  if (selectedModelId) {
+    const el = document.getElementById('msc-' + selectedModelId);
+    if (el) el.classList.add('selected');
+  }
+}
+
+function filterModelSelector(cat, btn) {
+  document.querySelectorAll('#model-cat-tabs .tab').forEach(t=>t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderModelSelectorGrid(cat);
+}
+
+function selectModel(modelId) {
+  selectedModelId = modelId;
+  practiceAnswers = {};
+  practiceEffectiveness = 0;
+  document.querySelectorAll('.ms-card').forEach(c=>c.classList.remove('selected'));
+  const el = document.getElementById('msc-' + modelId);
+  if (el) el.classList.add('selected');
+
+  const m = MENTAL_MODELS.find(m=>m.id===modelId);
+  document.getElementById('selected-model-tag').textContent = m ? `${m.icon} ${m.name}` : 'None';
+  renderPracticeSteps(m);
+  document.getElementById('practice-steps-area').style.display = 'block';
+  document.getElementById('ps-insight').value = '';
+  document.getElementById('ps-action').value  = '';
+  setEffectiveness(0);
+
+  // scroll to steps
+  document.getElementById('practice-steps-area').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderPracticeSteps(m) {
+  if (!m) return;
+  const color = getCatColor(m.category);
+  document.getElementById('psteps-title').innerHTML    = `${m.icon} ${m.name}`;
+  document.getElementById('psteps-subtitle').textContent = m.category + ' · ' + m.steps.length + ' steps';
+  document.getElementById('psteps-container').innerHTML = m.steps.map((s,i) => `
+    <div class="practice-step">
+      <div class="practice-step-header">
+        <span class="step-num-badge" style="background:${getCatDim(m.category)};color:${color}">Step 0${i+1}</span>
+        <span class="step-prompt-text">${s.prompt}</span>
+      </div>
+      <div class="practice-step-body">
+        <textarea id="step-answer-${i}" placeholder="${s.placeholder}" style="min-height:72px" oninput="practiceAnswers[${i}]=this.value"></textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function startPractice(modelId) {
+  showSection('practice', document.querySelector('[data-section=practice]'));
+  selectModel(modelId);
+}
+
+function setEffectiveness(val) {
+  practiceEffectiveness = val;
+  document.querySelectorAll('.star').forEach((s,i) => {
+    s.classList.toggle('lit', i < val);
+  });
+  const labels = ['', 'Not effective', 'Slightly helpful', 'Noticeably useful', 'Very effective', 'Breakthrough!'];
+  document.getElementById('eff-label').textContent = labels[val] || 'Not rated';
+}
+
+function saveApplication() {
+  if (!selectedModelId) { toast('Please select a mental model first'); return; }
+  const m = MENTAL_MODELS.find(m=>m.id===selectedModelId);
+  const situation = document.getElementById('ctx-situation').value.trim();
+  if (!situation) { toast('Please describe your situation'); return; }
+
+  const answers = {};
+  m.steps.forEach((s,i) => {
+    const el = document.getElementById('step-answer-' + i);
+    if (el) answers[i] = el.value.trim();
+  });
+
+  const now = new Date();
+  const app = {
+    id: Date.now(),
+    date: now.toISOString(),
+    dateStr: now.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}),
+    timeStr: now.toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'}),
+    situation,
+    domain:          document.getElementById('ctx-domain').value,
+    stakes:          document.getElementById('ctx-stakes').value,
+    modelId:         selectedModelId,
+    modelName:       m.name,
+    modelIcon:       m.icon,
+    modelCategory:   m.category,
+    answers,
+    insight:         document.getElementById('ps-insight').value.trim(),
+    action:          document.getElementById('ps-action').value.trim(),
+    effectiveness:   practiceEffectiveness,
+    clarity:         document.getElementById('ps-clarity').value,
+    tags:            document.getElementById('ps-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+  };
+
+  data.applications.unshift(app);
+  saveData();
+  toast('Application saved!');
+  clearPractice();
+  renderAll();
+}
+
+function clearPractice() {
+  selectedModelId = null;
+  practiceAnswers = {};
+  practiceEffectiveness = 0;
+  ['ctx-situation','ctx-domain','ctx-stakes','ps-insight','ps-action','ps-tags'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('ps-clarity').value='';
+  document.getElementById('selected-model-tag').textContent='None selected';
+  document.getElementById('practice-steps-area').style.display='none';
+  document.querySelectorAll('.ms-card').forEach(c=>c.classList.remove('selected'));
+  setEffectiveness(0);
+}
+
+// ═══════════════════════════════════════
+// APPLICATIONS LOG
+// ═══════════════════════════════════════
+function filterApps(f, btn) {
+  appFilter = f;
+  document.querySelectorAll('#section-applications .btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderApplications();
+}
+
+function renderApplications() {
+  let apps = [...data.applications];
+  if (appFilter !== 'all' && appFilter !== 'high-eff') {
+    apps = apps.filter(a=>a.modelCategory?.toLowerCase()===appFilter);
+  }
+  if (appFilter === 'high-eff') {
+    apps = apps.filter(a=>a.effectiveness>=4);
+  }
+  const el = document.getElementById('app-list');
+  if (!el) return;
+  el.innerHTML = apps.length
+    ? apps.map(a => appEntryHTML(a)).join('')
+    : '<div class="empty">No applications match this filter</div>';
+}
+
+function appEntryHTML(a) {
+  const stars = '★'.repeat(a.effectiveness||0) + '☆'.repeat(5-(a.effectiveness||0));
+  return `<div class="app-entry" onclick="openAppDetail(${a.id})">
+    <div class="app-entry-header">
+      <div>
+        <div class="app-entry-title">${a.modelIcon||'◆'} ${a.modelName} <span style="font-weight:400;color:var(--text-muted)">→ ${esc(a.situation?.slice(0,50))}${a.situation?.length>50?'…':''}</span></div>
+        <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-dim);margin-top:2px">${a.dateStr} · ${a.timeStr}</div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:13px;color:var(--accent);flex-shrink:0">${stars}</div>
+    </div>
+    <div class="app-entry-meta">
+      <span class="app-badge cat" style="background:${getCatDim(a.modelCategory)};color:${getCatColor(a.modelCategory)}">${a.modelCategory}</span>
+      ${a.domain?`<span class="app-badge cat">${a.domain}</span>`:''}
+      ${a.clarity?`<span class="app-badge eff-${Math.min(a.effectiveness||3,5)}">${['','Slightly clearer','Noticeably clearer','Significant clarity','Breakthrough clarity'][a.clarity]||a.clarity}</span>`:''}
+    </div>
+    ${a.insight?`<div class="app-snippet">💡 ${esc(a.insight.slice(0,100))}${a.insight.length>100?'…':''}</div>`:''}
+  </div>`;
+}
+
+function openAppDetail(id) {
+  const a = data.applications.find(a=>a.id===id);
+  if (!a) return;
+  const m = MENTAL_MODELS.find(m=>m.id===a.modelId);
+  const stars = '★'.repeat(a.effectiveness||0) + '☆'.repeat(5-(a.effectiveness||0));
+  document.getElementById('adm-title').textContent = `${a.modelIcon||''} ${a.modelName}`;
+  document.getElementById('adm-body').innerHTML = `
+    <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim);margin-bottom:14px">${a.modelCategory} · ${a.dateStr} ${a.timeStr}${a.domain?' · '+a.domain:''}</div>
+    <div class="detail-block" style="background:var(--accent-dim);border:1px solid var(--accent-glow)">
+      <div class="detail-lbl">Situation</div>
+      <div class="detail-val">${esc(a.situation)}</div>
+    </div>
+    ${m?.steps.map((s,i)=>a.answers?.[i]?`<div class="detail-block"><div class="detail-lbl">Step ${i+1}: ${s.prompt.slice(0,60)}…</div><div class="detail-val">${esc(a.answers[i])}</div></div>`:'' ).join('')||''}
+    ${a.insight?`<div class="detail-block"><div class="detail-lbl">Key Insight</div><div class="detail-val" style="color:var(--accent)">${esc(a.insight)}</div></div>`:''}
+    ${a.action?`<div class="detail-block"><div class="detail-lbl">Action / Decision</div><div class="detail-val">${esc(a.action)}</div></div>`:''}
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <div style="font-family:var(--font-mono);font-size:18px;color:var(--accent)">${stars}</div>
+      ${a.tags?.length?`<div>${a.tags.map(t=>`<span style="font-size:10px;font-family:var(--font-mono);padding:1px 7px;border-radius:20px;background:var(--surface3);color:var(--text-muted);margin-right:4px">${t}</span>`).join('')}</div>`:''}
+    </div>
+  `;
+  document.getElementById('adm-delete-btn').onclick = () => deleteApp(id);
+  openModal('appDetailModal');
+}
+
+function deleteApp(id) {
+  if (!confirm('Delete this application?')) return;
+  data.applications = data.applications.filter(a=>a.id!==id);
+  saveData(); closeModal('appDetailModal'); renderAll();
+  toast('Application deleted');
+}
+
+// ═══════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════
+function addTask() {
+  const inp = document.getElementById('taskInput');
+  if (!inp.value.trim()) return;
+  data.tasks.push({
+    id: Date.now(), text: inp.value,
+    model: document.getElementById('taskModel').value,
+    category: document.getElementById('taskCategory').value,
+    priority: document.getElementById('taskPriority').value,
+    done: false
+  });
+  inp.value = '';
+  saveData(); renderAll();
+}
+
+function submitModalTask() {
+  const text = document.getElementById('modalTaskInput').value.trim();
+  if (!text) return;
+  data.tasks.push({ id:Date.now(), text, model:document.getElementById('modalTaskModel').value, category:'General', priority:document.getElementById('modalTaskPriority').value, done:false });
+  document.getElementById('modalTaskInput').value='';
+  closeModal('taskModal'); saveData(); renderAll();
+}
+
+function toggleTask(id) {
+  const t = data.tasks.find(t=>t.id===id);
+  if (t) { t.done=!t.done; saveData(); renderAll(); }
+}
+
+function filterTasks(f) {
+  taskFilter=f;
+  ['all','open','done'].forEach(k=>{ document.getElementById('tf-'+k).classList.toggle('active',k===f); });
+  renderTasks();
+}
+
+function renderTasks() {
+  let tasks = [...data.tasks];
+  if (taskFilter==='open') tasks=tasks.filter(t=>!t.done);
+  if (taskFilter==='done') tasks=tasks.filter(t=>t.done);
+  const open = data.tasks.filter(t=>!t.done).length;
+  document.getElementById('taskStats').textContent = `${open} remaining task${open!==1?'s':''}`;
+  const el=document.getElementById('taskList');
+  if (!el) return;
+  el.innerHTML = tasks.length ? tasks.map(t=>`
+    <div class="task-item">
+      <div class="task-check ${t.done?'done':''}" onclick="toggleTask(${t.id})"></div>
+      <div class="task-text ${t.done?'done':''}">${esc(t.text)}</div>
+      <span class="task-model-tag">${t.model||'General'}</span>
+      <span class="task-priority prio-${t.priority}">${t.priority}</span>
+      <button class="log-delete" onclick="deleteTask(${t.id})">×</button>
+    </div>`).join('')
+    : '<div class="empty">No tasks match filter</div>';
+}
+
+function deleteTask(id) {
+  data.tasks=data.tasks.filter(t=>t.id!==id);
+  saveData(); renderAll();
+}
+
+// ═══════════════════════════════════════
+// LOGS
+// ═══════════════════════════════════════
+function addLogEntry() {
+  const txt = document.getElementById('logInputSection').value.trim();
+  if (!txt) return;
+  const m = document.getElementById('logModelSection').value;
+  data.logs.push({ id:Date.now(), text:txt, model:m, time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) });
+  document.getElementById('logInputSection').value='';
+  saveData(); renderAll();
+}
+
+function submitModalLog() {
+  const text=document.getElementById('modalLogInput').value.trim();
+  if(!text) return;
+  data.logs.push({ id:Date.now(), text, model:document.getElementById('modalLogModel').value, time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) });
+  document.getElementById('modalLogInput').value='';
+  closeModal('logModal'); saveData(); renderAll();
+}
+
+function logEntryHTML(l) {
+  const m = MENTAL_MODELS.find(m=>m.name===l.model);
+  const color = m ? getCatColor(m.category) : 'var(--accent)';
+  return `<div class="log-entry">
+    <div class="log-dot" style="background:${color}"></div>
+    <div class="log-content">
+      <div class="log-meta">
+        <span class="log-tag">${esc(l.model)}</span>
+        <span class="log-time">${l.time}</span>
+      </div>
+      <div class="log-text">${esc(l.text)}</div>
+    </div>
+    <button class="log-delete" onclick="deleteLog(${l.id})">×</button>
+  </div>`;
+}
+
+function renderLogs() {
+  const el = document.getElementById('fullLogList');
+  if (!el) return;
+  const sorted = [...data.logs].sort((a,b)=>b.id-a.id);
+  el.innerHTML = sorted.length ? sorted.map(l=>logEntryHTML(l)).join('') : '<div class="empty">Log timeline empty.</div>';
+}
+
+function deleteLog(id) {
+  data.logs=data.logs.filter(l=>l.id!==id);
+  saveData(); renderAll();
+}
+
+// ═══════════════════════════════════════
+// INSIGHTS
+// ═══════════════════════════════════════
+function addInsight() {
+  const txt=document.getElementById('insightInput').value.trim();
+  if(!txt) return;
+  data.insights.push({ id:Date.now(), text:txt, type:document.getElementById('insightType').value });
+  document.getElementById('insightInput').value='';
+  saveData(); renderAll();
+  toast('Insight saved');
+}
+
+function renderInsights() {
+  const el=document.getElementById('insightGridArea');
+  if(!el) return;
+  if(!data.insights.length){ el.innerHTML='<div class="empty" style="grid-column:span 2">No insights yet</div>'; return; }
+  el.innerHTML=[...data.insights].sort((a,b)=>b.id-a.id).map(ins=>`
+    <div class="insight-item">
+      <div class="insight-tag">// ${esc(ins.type)}</div>
+      <div class="insight-text">${esc(ins.text)}</div>
+      <button class="insight-del" onclick="deleteInsight(${ins.id})">×</button>
+    </div>`).join('');
+}
+
+function deleteInsight(id) {
+  data.insights=data.insights.filter(i=>i.id!==id);
+  saveData(); renderAll();
+}
+
+// ═══════════════════════════════════════
+// PROMPT
+// ═══════════════════════════════════════
+function newPrompt() {
+  const el=document.getElementById('ov-prompt');
+  if(el) el.textContent='"' + PROMPTS[Math.floor(Math.random()*PROMPTS.length)] + '"';
+}
+
+// ═══════════════════════════════════════
+// DATA EXPORT / IMPORT / RESET
+// ═══════════════════════════════════════
+function exportData() {
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='mental_models_tracker.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('Data exported');
+}
+
+function importData(e) {
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{ try { data={...getEmptyState(),...JSON.parse(ev.target.result)}; saveData(); renderAll(); toast('Data imported'); } catch { toast('Import failed — invalid JSON'); } };
+  reader.readAsText(file);
+}
+
+function confirmReset() {
+  if(!confirm('Reset all data? This cannot be undone.')) return;
+  data=getEmptyState(); saveData(); renderAll();
+  toast('Data reset');
+}
+
+// ═══════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-backdrop').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function toast(msg) {
+  const t=document.createElement('div');
+  t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+// ═══════════════════════════════════════
+// UTIL
+// ═══════════════════════════════════════
+function esc(s) {
+  if(!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
