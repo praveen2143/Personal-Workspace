@@ -35,23 +35,24 @@
     }
 
     /* ── UNIFIED MASTER TOP HEADER/TAB BAR ── */
-    .master-navbar {
-      background: var(--navbar-bg);
-      border-bottom: 1px solid var(--nav-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      height: 56px;
-      user-select: none;
-      z-index: 1000;
-    }
+.master-navbar {
+  background: var(--navbar-bg);
+  border-bottom: 1px solid var(--nav-border);
+  display: flex;
+  align-items: stretch;
+  height: 56px;
+  user-select: none;
+  z-index: 1000;
+}
 
-    .workspace-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+.workspace-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--nav-border);
+}
 
     .brand-icon {
       width: 24px;
@@ -72,12 +73,16 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .tabs-container {
-      display: flex;
-      height: 100%;
-      gap: 4px;
-      padding-top: 6px;
-    }
+.tabs-container {
+  display: flex;
+  align-items: flex-end;
+  flex: 1;
+  padding: 0 12px;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs-container::-webkit-scrollbar { display: none; }
 
     .workspace-tab {
       display: flex;
@@ -125,14 +130,17 @@
       opacity: 0.5;
     }
 
-    .workspace-status {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: #627199;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+.workspace-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #627199;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 20px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--nav-border);
+}
 
     .status-dot {
       width: 6px;
@@ -207,7 +215,10 @@
         <span class="tab-label">Mental Models</span>
       </div>
     </div>
-
+<div class="workspace-status">
+  <div class="status-dot"></div>
+  Active
+</div>
   </nav>
 
   <main class="workspace-viewport-wrapper" id="viewportContainer">
