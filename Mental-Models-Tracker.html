@@ -33,6 +33,21 @@
     --cat-risk:      #4a9fd4;
     --cat-psych:     #d46b43;
     --cat-systems:   #3ab5a0;
+	/* New Categories */
+	--cat-thinking:     #8a7ce0;
+	--cat-causality:    #607c80;
+	--cat-change:       #d4a843;
+	--cat-ethics:       #d46b8a;
+	--cat-leadership:   #a8d443;
+	--cat-strategy:     #d443b8;
+	--cat-comm:         #43d4c9;
+	--cat-communication:#43d4c9;
+	--cat-hygiene:      #4a72d4;
+	--cat-problem:      #d49a43;
+	--cat-resource:     #75d443;
+	--cat-learning:     #e08a3c;
+	--cat-creativity:   #c4d443;
+	--cat-time:         #4a9fd4;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -160,6 +175,16 @@
   .cc-risk::before      { background: var(--cat-risk); }
   .cc-psych::before     { background: var(--cat-psych); }
   .cc-systems::before   { background: var(--cat-systems); }
+  .cc-thinking::before      { background: var(--cat-thinking); }
+.cc-learning::before      { background: var(--cat-learning); }
+.cc-creativity::before    { background: var(--cat-creativity); }
+.cc-strategy::before      { background: var(--cat-strategy); }
+.cc-communication::before { background: var(--cat-communication); }
+.cc-leadership::before    { background: var(--cat-leadership); }
+.cc-time::before          { background: var(--cat-time); }
+.cc-causality::before     { background: var(--cat-causality); }
+.cc-change::before        { background: var(--cat-change); }
+.cc-ethics::before        { background: var(--cat-ethics); }
 
   .cat-num { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-bottom: 8px; }
   .cat-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
@@ -382,7 +407,7 @@
     <div class="nav-item" data-section="library" onclick="showSection('library',this)">
       <div class="nav-dot" style="background:var(--cat-systems)"></div>
       Model Library
-      <span class="nav-count">20</span>
+      <span class="nav-count">75</span>
     </div>
     <div class="nav-item" data-section="applications" onclick="showSection('applications',this)">
       <div class="nav-dot" style="background:var(--cat-decision)"></div>
@@ -469,37 +494,97 @@
 
       <!-- Category Pipeline -->
       <div class="pipeline">
-        <div class="cat-card cc-clarity" onclick="filterLibrary('Clarity')">
-          <div class="cat-num">01 · CLARITY</div>
-          <div class="cat-name" style="color:var(--cat-clarity)">Framing</div>
-          <div class="cat-desc">Reframe problems from first principles</div>
-          <span class="cat-badge" style="background:rgba(124,110,224,0.12);color:var(--cat-clarity)" id="catb-clarity">4 models</span>
-        </div>
-        <div class="cat-card cc-decision" onclick="filterLibrary('Decision')">
-          <div class="cat-num">02 · DECISION</div>
-          <div class="cat-name" style="color:var(--cat-decision)">Choosing</div>
-          <div class="cat-desc">Make better decisions under uncertainty</div>
-          <span class="cat-badge" style="background:rgba(212,168,67,0.12);color:var(--cat-decision)" id="catb-decision">4 models</span>
-        </div>
-        <div class="cat-card cc-risk" onclick="filterLibrary('Risk')">
-          <div class="cat-num">03 · RISK</div>
-          <div class="cat-name" style="color:var(--cat-risk)">Probability</div>
-          <div class="cat-desc">Think in odds, not certainties</div>
-          <span class="cat-badge" style="background:rgba(74,159,212,0.12);color:var(--cat-risk)" id="catb-risk">4 models</span>
-        </div>
-        <div class="cat-card cc-psych" onclick="filterLibrary('Psychology')">
-          <div class="cat-num">04 · PSYCHOLOGY</div>
-          <div class="cat-name" style="color:var(--cat-psych)">Behaviour</div>
-          <div class="cat-desc">Understand incentives and biases</div>
-          <span class="cat-badge" style="background:rgba(212,107,67,0.12);color:var(--cat-psych)" id="catb-psych">4 models</span>
-        </div>
-        <div class="cat-card cc-systems" onclick="filterLibrary('Systems')">
-          <div class="cat-num">05 · SYSTEMS</div>
-          <div class="cat-name" style="color:var(--cat-systems)">Leverage</div>
-          <div class="cat-desc">See loops, delays, and emergence</div>
-          <span class="cat-badge" style="background:rgba(58,181,160,0.12);color:var(--cat-systems)" id="catb-systems">4 models</span>
-        </div>
-      </div>
+  <div class="cat-card cc-clarity" onclick="filterLibrary('Clarity')">
+    <div class="cat-num">01 · CLARITY</div>
+    <div class="cat-name" style="color:var(--cat-clarity)">Framing</div>
+    <div class="cat-desc">Reframe problems from first principles</div>
+    <span class="cat-badge" style="background:rgba(124,110,224,0.12);color:var(--cat-clarity)" id="catb-clarity">4 models</span>
+  </div>
+  <div class="cat-card cc-decision" onclick="filterLibrary('Decision')">
+    <div class="cat-num">02 · DECISION</div>
+    <div class="cat-name" style="color:var(--cat-decision)">Choosing</div>
+    <div class="cat-desc">Make better decisions under uncertainty</div>
+    <span class="cat-badge" style="background:rgba(212,168,67,0.12);color:var(--cat-decision)" id="catb-decision">4 models</span>
+  </div>
+  <div class="cat-card cc-risk" onclick="filterLibrary('Risk')">
+    <div class="cat-num">03 · RISK</div>
+    <div class="cat-name" style="color:var(--cat-risk)">Probability</div>
+    <div class="cat-desc">Think in odds, not certainties</div>
+    <span class="cat-badge" style="background:rgba(74,159,212,0.12);color:var(--cat-risk)" id="catb-risk">4 models</span>
+  </div>
+  <div class="cat-card cc-psych" onclick="filterLibrary('Psychology')">
+    <div class="cat-num">04 · PSYCHOLOGY</div>
+    <div class="cat-name" style="color:var(--cat-psych)">Behaviour</div>
+    <div class="cat-desc">Understand incentives and biases</div>
+    <span class="cat-badge" style="background:rgba(212,107,67,0.12);color:var(--cat-psych)" id="catb-psych">4 models</span>
+  </div>
+  <div class="cat-card cc-systems" onclick="filterLibrary('Systems')">
+    <div class="cat-num">05 · SYSTEMS</div>
+    <div class="cat-name" style="color:var(--cat-systems)">Leverage</div>
+    <div class="cat-desc">See loops, delays, and emergence</div>
+    <span class="cat-badge" style="background:rgba(58,181,160,0.12);color:var(--cat-systems)" id="catb-systems">4 models</span>
+  </div>
+  <div class="cat-card cc-thinking" onclick="filterLibrary('Thinking Quality')">
+    <div class="cat-num">06 · THINKING</div>
+    <div class="cat-name" style="color:var(--cat-thinking)">Quality</div>
+    <div class="cat-desc">Reason laterally, dialectically, deeply</div>
+    <span class="cat-badge" style="background:rgba(138,124,224,0.12);color:var(--cat-thinking)" id="catb-thinking">6 models</span>
+  </div>
+  <div class="cat-card cc-learning" onclick="filterLibrary('Learning & Knowledge')">
+    <div class="cat-num">07 · LEARNING</div>
+    <div class="cat-name" style="color:var(--cat-learning)">Knowledge</div>
+    <div class="cat-desc">Retain and transfer what you learn</div>
+    <span class="cat-badge" style="background:rgba(224,138,60,0.12);color:var(--cat-learning)" id="catb-learning">6 models</span>
+  </div>
+  <div class="cat-card cc-creativity" onclick="filterLibrary('Creativity & Innovation')">
+    <div class="cat-num">08 · CREATIVITY</div>
+    <div class="cat-name" style="color:var(--cat-creativity)">Innovation</div>
+    <div class="cat-desc">Break patterns, combine ideas, invent</div>
+    <span class="cat-badge" style="background:rgba(196,212,67,0.12);color:var(--cat-creativity)" id="catb-creativity">6 models</span>
+  </div>
+  <div class="cat-card cc-strategy" onclick="filterLibrary('Strategy & Competition')">
+    <div class="cat-num">09 · STRATEGY</div>
+    <div class="cat-name" style="color:var(--cat-strategy)">Competition</div>
+    <div class="cat-desc">Play long games on the right board</div>
+    <span class="cat-badge" style="background:rgba(212,67,184,0.12);color:var(--cat-strategy)" id="catb-strategy">6 models</span>
+  </div>
+  <div class="cat-card cc-communication" onclick="filterLibrary('Communication & Persuasion')">
+    <div class="cat-num">10 · COMMS</div>
+    <div class="cat-name" style="color:var(--cat-communication)">Persuasion</div>
+    <div class="cat-desc">Frame, narrate, and move people</div>
+    <span class="cat-badge" style="background:rgba(67,212,201,0.12);color:var(--cat-communication)" id="catb-communication">6 models</span>
+  </div>
+  <div class="cat-card cc-leadership" onclick="filterLibrary('Leadership & Influence')">
+    <div class="cat-num">11 · LEADERSHIP</div>
+    <div class="cat-name" style="color:var(--cat-leadership)">Influence</div>
+    <div class="cat-desc">Align people without losing trust</div>
+    <span class="cat-badge" style="background:rgba(168,212,67,0.12);color:var(--cat-leadership)" id="catb-leadership">6 models</span>
+  </div>
+  <div class="cat-card cc-time" onclick="filterLibrary('Time & Energy')">
+    <div class="cat-num">12 · TIME</div>
+    <div class="cat-name" style="color:var(--cat-time)">Energy</div>
+    <div class="cat-desc">Protect attention, not just hours</div>
+    <span class="cat-badge" style="background:rgba(74,159,212,0.12);color:var(--cat-time)" id="catb-time">6 models</span>
+  </div>
+  <div class="cat-card cc-causality" onclick="filterLibrary('Causality & Logic')">
+    <div class="cat-num">13 · CAUSALITY</div>
+    <div class="cat-name" style="color:var(--cat-causality)">Logic</div>
+    <div class="cat-desc">Separate cause from correlation</div>
+    <span class="cat-badge" style="background:rgba(96,124,128,0.12);color:var(--cat-causality)" id="catb-causality">6 models</span>
+  </div>
+  <div class="cat-card cc-change" onclick="filterLibrary('Change & Adaptation')">
+    <div class="cat-num">14 · CHANGE</div>
+    <div class="cat-name" style="color:var(--cat-change)">Adaptation</div>
+    <div class="cat-desc">Ride S-curves, don't fight disruption</div>
+    <span class="cat-badge" style="background:rgba(212,168,67,0.12);color:var(--cat-change)" id="catb-change">6 models</span>
+  </div>
+  <div class="cat-card cc-ethics" onclick="filterLibrary('Ethics & Values')">
+    <div class="cat-num">15 · ETHICS</div>
+    <div class="cat-name" style="color:var(--cat-ethics)">Values</div>
+    <div class="cat-desc">Reason well under moral uncertainty</div>
+    <span class="cat-badge" style="background:rgba(212,107,138,0.12);color:var(--cat-ethics)" id="catb-ethics">6 models</span>
+  </div>
+</div>
 
       <div class="two-col">
         <div class="card">
@@ -595,13 +680,23 @@
           <div id="selected-model-tag" style="font-size:11px;font-family:var(--font-mono);color:var(--text-dim)">None selected</div>
         </div>
         <div class="card-body">
-          <div class="tabs" id="model-cat-tabs">
+          <div class="tabs" id="model-cat-tabs" style="flex-wrap:wrap">
             <button class="tab active" onclick="filterModelSelector('All',this)">All</button>
             <button class="tab" onclick="filterModelSelector('Clarity',this)">Clarity</button>
             <button class="tab" onclick="filterModelSelector('Decision',this)">Decision</button>
             <button class="tab" onclick="filterModelSelector('Risk',this)">Risk</button>
             <button class="tab" onclick="filterModelSelector('Psychology',this)">Psychology</button>
             <button class="tab" onclick="filterModelSelector('Systems',this)">Systems</button>
+            <button class="tab" onclick="filterModelSelector('Thinking Quality',this)">Thinking Quality</button>
+            <button class="tab" onclick="filterModelSelector('Causality & Logic',this)">Causality & Logic</button>
+            <button class="tab" onclick="filterModelSelector('Change & Adaptation',this)">Change & Adaptation</button>
+            <button class="tab" onclick="filterModelSelector('Ethics & Values',this)">Ethics & Values</button>
+            <button class="tab" onclick="filterModelSelector('Leadership & Influence',this)">Leadership & Influence</button>
+            <button class="tab" onclick="filterModelSelector('Strategy & Competition',this)">Strategy & Competition</button>
+            <button class="tab" onclick="filterModelSelector('Communication & Persuasion',this)">Communication & Persuasion</button>
+            <button class="tab" onclick="filterModelSelector('Learning & Knowledge',this)">Learning & Knowledge</button>
+            <button class="tab" onclick="filterModelSelector('Creativity & Innovation',this)">Creativity & Innovation</button>
+            <button class="tab" onclick="filterModelSelector('Time & Energy',this)">Time & Energy</button>
           </div>
           <div class="model-selector-grid" id="model-selector-grid"></div>
         </div>
@@ -679,16 +774,26 @@
     <div class="content-area">
       <div class="section-head">
         <h2>Model Library</h2>
-        <span>20 high-leverage mental models</span>
+        <span>75 high-leverage mental models</span>
       </div>
 
       <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-        <button class="btn active" id="lib-all" onclick="filterLibrary('All')">All (20)</button>
+        <button class="btn active" id="lib-all" onclick="filterLibrary('All')">All</button>
         <button class="btn" id="lib-clarity" onclick="filterLibrary('Clarity')" style="border-left:3px solid var(--cat-clarity)">Clarity</button>
         <button class="btn" id="lib-decision" onclick="filterLibrary('Decision')" style="border-left:3px solid var(--cat-decision)">Decision</button>
         <button class="btn" id="lib-risk" onclick="filterLibrary('Risk')" style="border-left:3px solid var(--cat-risk)">Risk</button>
-        <button class="btn" id="lib-psych" onclick="filterLibrary('Psychology')" style="border-left:3px solid var(--cat-psych)">Psychology</button>
+        <button class="btn" id="lib-psychology" onclick="filterLibrary('Psychology')" style="border-left:3px solid var(--cat-psych)">Psychology</button>
         <button class="btn" id="lib-systems" onclick="filterLibrary('Systems')" style="border-left:3px solid var(--cat-systems)">Systems</button>
+        <button class="btn" id="lib-thinking-quality" onclick="filterLibrary('Thinking Quality')" style="border-left:3px solid var(--cat-thinking)">Thinking Quality</button>
+        <button class="btn" id="lib-causality---logic" onclick="filterLibrary('Causality & Logic')" style="border-left:3px solid var(--cat-causality)">Causality & Logic</button>
+        <button class="btn" id="lib-change---adaptation" onclick="filterLibrary('Change & Adaptation')" style="border-left:3px solid var(--cat-change)">Change & Adaptation</button>
+        <button class="btn" id="lib-ethics---values" onclick="filterLibrary('Ethics & Values')" style="border-left:3px solid var(--cat-ethics)">Ethics & Values</button>
+        <button class="btn" id="lib-leadership---influence" onclick="filterLibrary('Leadership & Influence')" style="border-left:3px solid var(--cat-leadership)">Leadership & Influence</button>
+        <button class="btn" id="lib-strategy---competition" onclick="filterLibrary('Strategy & Competition')" style="border-left:3px solid var(--cat-strategy)">Strategy & Competition</button>
+        <button class="btn" id="lib-communication---persuasion" onclick="filterLibrary('Communication & Persuasion')" style="border-left:3px solid var(--cat-communication)">Communication & Persuasion</button>
+        <button class="btn" id="lib-learning---knowledge" onclick="filterLibrary('Learning & Knowledge')" style="border-left:3px solid var(--cat-learning)">Learning & Knowledge</button>
+        <button class="btn" id="lib-creativity---innovation" onclick="filterLibrary('Creativity & Innovation')" style="border-left:3px solid var(--cat-creativity)">Creativity & Innovation</button>
+        <button class="btn" id="lib-time---energy" onclick="filterLibrary('Time & Energy')" style="border-left:3px solid var(--cat-time)">Time & Energy</button>
       </div>
 
       <div class="model-grid" id="model-grid"></div>
@@ -710,6 +815,16 @@
         <button class="btn" onclick="filterApps('risk',this)" style="border-left:3px solid var(--cat-risk)">Risk</button>
         <button class="btn" onclick="filterApps('psychology',this)" style="border-left:3px solid var(--cat-psych)">Psychology</button>
         <button class="btn" onclick="filterApps('systems',this)" style="border-left:3px solid var(--cat-systems)">Systems</button>
+        <button class="btn" onclick="filterApps('thinking quality',this)" style="border-left:3px solid var(--cat-thinking)">Thinking Quality</button>
+        <button class="btn" onclick="filterApps('causality & logic',this)" style="border-left:3px solid var(--cat-causality)">Causality & Logic</button>
+        <button class="btn" onclick="filterApps('change & adaptation',this)" style="border-left:3px solid var(--cat-change)">Change & Adaptation</button>
+        <button class="btn" onclick="filterApps('ethics & values',this)" style="border-left:3px solid var(--cat-ethics)">Ethics & Values</button>
+        <button class="btn" onclick="filterApps('leadership & influence',this)" style="border-left:3px solid var(--cat-leadership)">Leadership & Influence</button>
+        <button class="btn" onclick="filterApps('strategy & competition',this)" style="border-left:3px solid var(--cat-strategy)">Strategy & Competition</button>
+        <button class="btn" onclick="filterApps('communication & persuasion',this)" style="border-left:3px solid var(--cat-communication)">Communication & Persuasion</button>
+        <button class="btn" onclick="filterApps('learning & knowledge',this)" style="border-left:3px solid var(--cat-learning)">Learning & Knowledge</button>
+        <button class="btn" onclick="filterApps('creativity & innovation',this)" style="border-left:3px solid var(--cat-creativity)">Creativity & Innovation</button>
+        <button class="btn" onclick="filterApps('time & energy',this)" style="border-left:3px solid var(--cat-time)">Time & Energy</button>
         <button class="btn" onclick="filterApps('high-eff',this)">⭐ High Impact</button>
       </div>
 
@@ -753,13 +868,23 @@
             <div class="field" style="margin:0">
               <label class="field-label">Category</label>
               <select id="taskCategory">
-                <option value="General">General</option>
-                <option>Clarity</option>
-                <option>Decision</option>
-                <option>Risk</option>
-                <option>Psychology</option>
-                <option>Systems</option>
-              </select>
+  <option value="General">General</option>
+  <option>Clarity</option>
+  <option>Decision</option>
+  <option>Risk</option>
+  <option>Psychology</option>
+  <option>Systems</option>
+  <option>Thinking Quality</option>
+  <option>Learning &amp; Knowledge</option>
+  <option>Creativity &amp; Innovation</option>
+  <option>Strategy &amp; Competition</option>
+  <option>Communication &amp; Persuasion</option>
+  <option>Leadership &amp; Influence</option>
+  <option>Time &amp; Energy</option>
+  <option>Causality &amp; Logic</option>
+  <option>Change &amp; Adaptation</option>
+  <option>Ethics &amp; Values</option>
+</select>
             </div>
             <div class="field" style="margin:0">
               <label class="field-label">Priority</label>
@@ -1270,6 +1395,738 @@ const MENTAL_MODELS = [
       { prompt: 'What real-world action or updated view does this suggest?', placeholder: 'This thought experiment suggests I should… | My updated view is…' },
     ]
   },
+  // ── THINKING QUALITY ──
+  {
+    id: 'lateral-thinking', name: 'Lateral Thinking', icon: '⇗', category: 'Thinking Quality',
+    color: 'var(--cat-thinking)',
+    summary: 'Solve problems through unorthodox, indirect logic by deliberately discarding predictable thinking patterns.',
+    when: 'When you are stuck in a mental rut or standard analytical approaches yield generic results.',
+    steps: [
+      { prompt: 'What is the specific problem you are trying to solve?', placeholder: 'The challenge is…' },
+      { prompt: 'What is the dominant, conventional line of logic for this problem?', placeholder: 'The predictable approach is…' },
+      { prompt: 'Introduce a random disruptor or proactive provocation to shift perspective.', placeholder: 'What if we couldn\'t use [major tool/process], or looked at this from the perspective of a [unrelated field]?' },
+      { prompt: 'What lateral associations, hidden pathways, or non-obvious ideas emerge from this provocation?', placeholder: 'Nonsensical or novel connections emerging: …' },
+      { prompt: 'How can you shape a wild lateral concept into a functional, practical strategy?', placeholder: 'Extracting the principle: I can apply this by…' }
+    ]
+  },
+  {
+    id: 'dialectical-thinking', name: 'Dialectical Thinking', icon: '☯', category: 'Thinking Quality',
+    color: 'var(--cat-thinking)',
+    summary: 'Synthesize a superior truth by pits an initial proposition (thesis) against its opposite contradiction (antithesis).',
+    when: 'When navigating highly polarized situations, complex trade-offs, or dogmatic assumptions.',
+    steps: [
+      { prompt: 'What is your core belief, idea, or working assumption? (The Thesis)', placeholder: 'The thesis is…' },
+      { prompt: 'What is the most compelling argument or reality that directly opposes it? (The Antithesis)', placeholder: 'The antithesis is…' },
+      { prompt: 'Examine both simultaneously. What valid elements or pressures exist in both sides?', placeholder: 'Both truths contain value because…' },
+      { prompt: 'How do these opposing forces interact, conflict, or expose gaps in each other?', placeholder: 'The tension between them reveals that…' },
+      { prompt: 'Resolve the tension. What unified, higher-level concept integrates the truths of both? (The Synthesis)', placeholder: 'The synthesis that resolves this is…' }
+    ]
+  },
+  {
+    id: 'analogical-reasoning', name: 'Analogical Reasoning', icon: '🔗', category: 'Thinking Quality',
+    color: 'var(--cat-thinking)',
+    summary: 'Process unfamiliar problems by mapping structural similarities from a completely understood domain.',
+    when: 'When trying to comprehend, explain, or untangle a foreign, highly complex target concept.',
+    steps: [
+      { prompt: 'What is the confusing, complex, or unfamiliar target system you are analyzing?', placeholder: 'The unfamiliar target is…' },
+      { prompt: 'What is a completely different, highly familiar domain that shares a structural blueprint?', placeholder: 'A familiar source domain is…' },
+      { prompt: 'Map the explicit parallels between elements of the source and the target.', placeholder: 'Just like [Source element X] functions as [Function], [Target element Y] acts as…' },
+      { prompt: 'Where does the analogy breakdown? Identify the critical differences to prevent over-extending it.', placeholder: 'The analogy breaks down when…' },
+      { prompt: 'What new clarity, structural insights, or solutions about the target domain do you discover?', placeholder: 'Leveraging the analogy, I now understand that…' }
+    ]
+  },
+  {
+    id: 'steel-manning', name: 'Steel-manning', icon: '🛡', category: 'Thinking Quality',
+    color: 'var(--cat-thinking)',
+    summary: 'Build the strongest possible version of an opposing argument before attempting to evaluate or refute it.',
+    when: 'During debates, intellectual self-audits, disagreements, or when assessing competitive threats.',
+    steps: [
+      { prompt: 'What argument, viewpoint, or critique do you disagree with or find flawed?', placeholder: 'The opposing position is…' },
+      { prompt: 'Strip away bad delivery or weak phrasing. What is the most brilliant, unassailable version of this view?', placeholder: 'If a world-class expert defended this view, they would argue…' },
+      { prompt: 'What facts, data, or valid underlying concerns justify or support this steel-manned position?', placeholder: 'This view is highly grounded because…' },
+      { prompt: 'Why does a rational person hold this view? Validate its structural logic.', placeholder: 'This point of view makes total sense if you prioritize…' },
+      { prompt: 'How does encountering this flawless counter-version refine, alter, or test your original perspective?', placeholder: 'My own position must adapt to account for this by…' }
+    ]
+  },
+  {
+    id: 'socratic-questioning', name: 'Socratic Questioning', icon: '⁕', category: 'Thinking Quality',
+    color: 'var(--cat-thinking)',
+    summary: 'Systematically probe underlying assumptions through disciplined, progressive questioning to uncover depth.',
+    when: 'Evaluating declarations of truth, exploring deep motivations, or auditing uncritical beliefs.',
+    steps: [
+      { prompt: 'What statement, claim, or conclusion is being asserted as fact?', placeholder: 'The assertion is…' },
+      { prompt: 'Clarify the statement: What exactly does this mean, and what examples support it?', placeholder: 'To be precise, this means… and an example is…' },
+      { prompt: 'Challenge assumptions: What implicit ideas are being taken for granted without proof here?', placeholder: 'This statement assumes that… which might not be true if…' },
+      { prompt: 'Examine evidence: What verifiable data, foundations, or reasons actually back this up?', placeholder: 'The underlying evidence is…' },
+      { prompt: 'Explore consequences: If this claim is true, what does it imply? What happens if it\'s false?', placeholder: 'The systemic implications are…' }
+    ]
+  },
+
+  // ── LEARNING & KNOWLEDGE ──
+  {
+    id: 'feynman-technique', name: 'Feynman Technique', icon: '⚛', category: 'Learning & Knowledge',
+    color: 'var(--cat-learning)',
+    summary: 'Deepen understanding of a concept by forcing yourself to explain it simply to an uninitiated child.',
+    when: 'When memorizing jargon covers up a lack of true understanding; mastering complex theoretical material.',
+    steps: [
+      { prompt: 'What complex concept, model, or dynamic are you trying to truly master?', placeholder: 'The concept is…' },
+      { prompt: 'Explain it out loud or in writing using plain language a 10-year-old would understand. Ban jargon.', placeholder: 'In simple terms, this works like…' },
+      { prompt: 'Where did you stumble, hesitate, or find yourself forced to use complex buzzwords? Pinpoint the gap.', placeholder: 'I hit a friction point / couldn\'t explain why…' },
+      { prompt: 'Return to the source material to patch that exact gap. Read up until the mechanics make intuitive sense.', placeholder: 'The missing link or mechanism I found is…' },
+      { prompt: 'Create a streamlined, unified narrative. What clean analogy or crystal story summarizes the concept perfectly?', placeholder: 'The ultimate simple explanation is…' }
+    ]
+  },
+  {
+    id: 'spaced-repetition', name: 'Spaced Repetition', icon: '⏳', category: 'Learning & Knowledge',
+    color: 'var(--cat-learning)',
+    summary: 'Review information at escalating intervals to shift tracking metrics from short-term memory to long-term storage.',
+    when: 'When trying to permanently anchor raw data, framework parameters, vocabularies, or foundational facts.',
+    steps: [
+      { prompt: 'What essential structural facts, equations, or concepts do you need to retain indefinitely?', placeholder: 'The core knowledge to retain is…' },
+      { prompt: 'Break the knowledge down into bite-sized, atomic prompt-and-response flashcards.', placeholder: 'Prompt: … | Target Answer: …' },
+      { prompt: 'Establish your baseline retrieval calendar. When will you perform the immediate active recalls?', placeholder: 'Review schedule: Day 1, Day 3, Day 7…' },
+      { prompt: 'Track your performance. Which cards felt effortless, and which required serious cognitive strain?', placeholder: 'Easy cards: … | High friction/failed cards: …' },
+      { prompt: 'Adjust your review intervals dynamically based on performance to disrupt the forgetting curve.', placeholder: 'Push easy items out to [Interval], pull failed items back to [Interval]…' }
+    ]
+  },
+  {
+    id: 'interleaving', name: 'Interleaving', icon: '🔀', category: 'Learning & Knowledge',
+    color: 'var(--cat-learning)',
+    summary: 'Mix distinct skills, problem formats, or topics together during practice rather than blocking them into uniform units.',
+    when: 'When you want to build flexible execution skills instead of robotic, context-dependent habits.',
+    steps: [
+      { prompt: 'What distinct, related skills or subject themes are you currently working to develop?', placeholder: 'Skill A: … | Skill B: … | Skill C: …' },
+      { prompt: 'How have you been grouping your practice? (Spot the predictable block-learning habits)', placeholder: 'Conventionally, I study all of A, then all of B…' },
+      { prompt: 'Design a randomized, alternating practice sequence that mixes these topics up.', placeholder: 'Interleaved plan: Practice A for 15m, instantly switch to C, then B, then A…' },
+      { prompt: 'As your brain experiences initial confusion due to context switching, describe the tracking errors.', placeholder: 'The friction point of switching shows I struggle to identify which technique applies when…' },
+      { prompt: 'How does this forced discrimination challenge help you match specific methods to unpredictable real-world situations?', placeholder: 'By practicing out of order, I am training my brain to automatically pick the right tool because…' }
+    ]
+  },
+  {
+    id: 'desirable-difficulty', name: 'Desirable Difficulty', icon: '🏋', category: 'Learning & Knowledge',
+    color: 'var(--cat-learning)',
+    summary: 'Deliberately engineer optimal friction, strain, and effort into learning environments to supercharge long-term retrieval.',
+    when: 'When your learning processes feel smooth, passive, and easy (which signals structural illusion of competence).',
+    steps: [
+      { prompt: 'What are you studying, and how are you consuming the information?', placeholder: 'I am reading / listening to…' },
+      { prompt: 'Identify passive, low-effort activities that give a false sense of security.', placeholder: 'Passive habits: Highlighting text, re-reading summaries, passive viewing…' },
+      { prompt: 'How can you deliberately introduce productive friction or strain into this process?', placeholder: 'To add difficulty, I will switch to closed-book active recall, generation, or self-testing…' },
+      { prompt: 'Push past the initial frustration of increased errors. What deep insights are revealed by working through the friction?', placeholder: 'The struggle forces me to realize I didn\'t actually know…' },
+      { prompt: 'How does working through this challenge alter your long-term storage and grasp of the material?', placeholder: 'Because my brain had to sweat, the encoded structural concept is now…' }
+    ]
+  },
+  {
+    id: 'transfer-learning', name: 'Transfer Learning', icon: '⇄', category: 'Learning & Knowledge',
+    color: 'var(--cat-learning)',
+    summary: 'Extract foundational rules, conceptual dynamics, or mental tools from an area of expertise and apply them to a brand-new space.',
+    when: 'Facing an unfamiliar field where you want to skip the beginner curve by repurposing legacy skills.',
+    steps: [
+      { prompt: 'What is the unfamiliar challenge or new domain you are trying to navigate?', placeholder: 'The new field/problem is…' },
+      { prompt: 'What unrelated domain do you already possess world-class or master-level execution context in?', placeholder: 'My established area of deep mastery is…' },
+      { prompt: 'Extract the abstract principles, rhythms, structural patterns, or operational heuristics from your master domain.', placeholder: 'Abstract mechanics that make my master domain work: 1. … 2. …' },
+      { prompt: 'How can you inject these exact same structural patterns directly into your new challenge?', placeholder: 'Applying principle X to this new problem looks like…' },
+      { prompt: 'Where do the domains diverge? What unique adaptations must you make so the old lessons don\'t misfire?', placeholder: 'I must adjust the model because the new domain lacks…' }
+    ]
+  },
+  {
+    id: 'forgetting-curve', name: 'The Forgetting Curve', icon: '📉', category: 'Learning & Knowledge',
+    color: 'var(--cat-learning)',
+    summary: 'A mathematical model showing how newly acquired data exponentially decays if there is no conscious attempt to retain it.',
+    when: 'Designing curricula, planning onboarding, or auditing why your reading retention feels non-existent.',
+    steps: [
+      { prompt: 'What critical body of information did you recently consume or study?', placeholder: 'I recently learned/read…' },
+      { prompt: 'How much time has elapsed since encoding? Estimate your current natural decay drop-off rate.', placeholder: 'It has been [time] since I learned this. Without review, I likely only retain __%.' },
+      { prompt: 'What active intervention can you deploy right now to interrupt the drop-off and reset the curve?', placeholder: 'To proactively halt the decay, I will immediately run a synthesis exercise or test…' },
+      { prompt: 'How can you structure downstream checks to match the leveling off of memory decay over time?', placeholder: 'I will anchor future reviews precisely at Day 3, Day 10, and Day 30…' },
+      { prompt: 'What is the long-term payoff of flattening the curve for this specific knowledge set?', placeholder: 'By flattening the curve, this framework turns into an intuitive mental default, allowing me to…' }
+    ]
+  },
+
+  // ── CREATIVITY & INNOVATION ──
+  {
+    id: 'scamper', name: 'SCAMPER', icon: '⚙', category: 'Creativity & Innovation',
+    color: 'var(--cat-creativity)',
+    summary: 'A powerful checklist framework used to ignite creative ideas by systematically twisting an existing object, system, or service.',
+    when: 'When looking to reinvent an uninspired product, refine a workflow, or optimize a business model.',
+    steps: [
+      { prompt: 'What product, concept, or process are you looking to radically transform?', placeholder: 'The current state project is…' },
+      { prompt: 'Apply S/C/A: What can you Substitute? What can you Combine it with? How can you Adapt an outside idea?', placeholder: 'Substitutions/Combinations/Adaptations: …' },
+      { prompt: 'Apply M/P: How can you Magnify/Modify its features? What completely alternative Purpose can you put it to?', placeholder: 'Modifications/Alternative uses: …' },
+      { prompt: 'Apply E/R: What can you Eliminate or minimize? What happens if you Reverse or rearrange its structure?', placeholder: 'Eliminations/Reversals: …' },
+      { prompt: 'Review the creative options generated. What breakthrough configuration stands out as a viable feature?', placeholder: 'The most compelling innovative variation is…' }
+    ]
+  },
+  {
+    id: 'combinatorial-creativity', name: 'Combinatorial Creativity', icon: '🧬', category: 'Creativity & Innovation',
+    color: 'var(--cat-creativity)',
+    summary: 'The understanding that there are no completely original concepts; new ideas are simply new combinations of existing elements.',
+    when: 'When staring at a blank page or trying to spawn an innovative concept from scratch.',
+    steps: [
+      { prompt: 'What is the creative objective or output you are trying to produce?', placeholder: 'I want to invent / design a…' },
+      { prompt: 'Identify two or more completely independent concepts, fields, or cultural items.', placeholder: 'Element A: [e.g., Cryptography] | Element B: [e.g., Supply chain logistics]' },
+      { prompt: 'Force a marriage between these elements. Smash their unique features, vocabularies, or styles together.', placeholder: 'Combining A and B yields a system where…' },
+      { prompt: 'What strange hybrid ideas, unexpected utilities, or creative sparks show up from this friction?', placeholder: 'Emergent concepts: …' },
+      { prompt: 'Refine the best cross-pollinated idea into an actionable, cohesive concept.', placeholder: 'By weaving these worlds together, the final concept is…' }
+    ]
+  },
+  {
+    id: 'constraints-as-fuel', name: 'Constraints as Fuel', icon: '📦', category: 'Creativity & Innovation',
+    color: 'var(--cat-creativity)',
+    summary: 'Deliberately restrict your options, resources, budget, or scope to kill option paralysis and force creative breakthroughs.',
+    when: 'When an open-ended project stalls out due to endless choices, bloat, or lack of momentum.',
+    steps: [
+      { prompt: 'What project are you pursuing, and what limits are making you feel stuck?', placeholder: 'The project is stuck because we lack [time/money/tools]…' },
+      { prompt: 'Lean into the limitation: Treat the restriction as an absolute, immutable law of nature.', placeholder: 'Accepting the rule: We must build this using only $50 / in 48 hours / with 1 person…' },
+      { prompt: 'How does this lack of resources instantly eliminate lazy, expensive solutions?', placeholder: 'This constraint stops us from doing the obvious thing, which was…' },
+      { prompt: 'What clever, streamlined workarounds, hacks, or raw simplifications are you forced to dream up?', placeholder: 'Under pressure, the lean workaround that emerges is…' },
+      { prompt: 'What is the unique strategic advantage of the elegant, high-constraint solution you engineered?', placeholder: 'Because of this constraint, our final output is uniquely…' }
+    ]
+  },
+  {
+    id: 'random-entry', name: 'Random Entry', icon: '🎯', category: 'Creativity & Innovation',
+    color: 'var(--cat-creativity)',
+    summary: 'Force-link a completely random noun or external stimulus to your current problem to shake loose unexpected insights.',
+    when: 'When brainstorming has hit a wall and you keep circling the same three boring answers.',
+    steps: [
+      { prompt: 'What specific problem statement are you working to crack?', placeholder: 'I need a fresh angle on how to…' },
+      { prompt: 'Select a completely random word, object, or image out of thin air. (Do not curate it).', placeholder: 'Random entry item: [e.g., Submarine]' },
+      { prompt: 'List the core characteristics, attributes, and properties of this random item.', placeholder: 'Attributes: It operates underwater, uses sonar, handles immense pressure, hides out…' },
+      { prompt: 'Force a logical bridge connecting those random attributes directly back to your original problem.', placeholder: 'Connecting sonar to marketing: What if we sent out signals to map our audience density before…' },
+      { prompt: 'What novel, unexpected directions or concepts did this forced bridge uncover?', placeholder: 'The unexpected breakthrough concept is…' }
+    ]
+  },
+  {
+    id: 'reverse-brainstorming', name: 'Reverse Brainstorming', icon: '🙃', category: 'Creativity & Innovation',
+    color: 'var(--cat-creativity)',
+    summary: 'Solve a problem by brainstorming exactly how to cause it, then flipping those negative concepts into fixes.',
+    when: 'When traditional positive goal-setting feels dry, uninspiring, or fails to spot hidden blindspots.',
+    steps: [
+      { prompt: 'What positive outcome or design improvement are you trying to achieve?', placeholder: 'I want to optimize our customer onboarding experience…' },
+      { prompt: 'Reframe the challenge: How can you deliberately create the absolute worst version of this outcome?', placeholder: 'How do we make onboarding an absolute nightmare? Confuse them, lose their data, add 50 steps…' },
+      { prompt: 'Brainstorm aggressive, highly efficient tactics to pull off that reverse failure mission.', placeholder: 'To ensure failure, I would: 1. Hide the login button. 2. Use confusing corporate speak…' },
+      { prompt: 'Look at those destructive tactics. Where are elements of those failures accidentally happening today?', placeholder: 'Shockingly, we are already doing a version of tactic #2 by…' },
+      { prompt: 'Invert every single destructive strategy to create an innovative checklist for success.', placeholder: 'Flipping the script: We will make the login universal and rewrite our copy to be ultra-clear…' }
+    ]
+  },
+  {
+    id: 'oblique-strategies', name: 'Oblique Strategies', icon: '🃏', category: 'Creativity & Innovation',
+    color: 'var(--cat-creativity)',
+    summary: 'Break psychological blockages by adopting cryptic, abstract creative prompts that challenge your default habits.',
+    when: 'When over-thinking or perfectionism creates performance anxiety during the creative process.',
+    steps: [
+      { prompt: 'What creative work, design, or composition are you currently over-analyzing?', placeholder: 'I am blocked on adjusting the flow of…' },
+      { prompt: 'Adopt an abstract constraint or prompt. (e.g., "Honor thy error as a hidden intention" or "Emphasize the flaws").', placeholder: 'The oblique strategy prompt applied is…' },
+      { prompt: 'Interpret the cryptic prompt. What does it mean when applied to your specific project bottleneck?', placeholder: 'Applying this abstract prompt means I should stop fixing artifact X and instead make it the centerpiece…' },
+      { prompt: 'Break your habits. Act immediately on this strange interpretation without over-intellectualizing it.', placeholder: 'The rapid operational adjustment I just made is…' },
+      { prompt: 'How did this unexpected detour shift the style or unlock the potential of your final output?', placeholder: 'By stepping sideways, the project now feels incredibly fresh because…' }
+    ]
+  },
+
+  // ── STRATEGY & COMPETITION ──
+  {
+    id: 'game-theory', name: 'Game Theory', icon: '♟', category: 'Strategy & Competition',
+    color: 'var(--cat-strategy)',
+    summary: 'Analyze competitive arenas by mapping out players, choices, and interdependent payoffs, assuming everyone acts rationally.',
+    when: 'Navigating high-stakes situations, pricing battles, negotiations, or partnerships.',
+    steps: [
+      { prompt: 'Who are the active players in this scenario, and what are their strategic options?', placeholder: 'Player 1 choices: … | Player 2 choices: …' },
+      { prompt: 'Map the payoff matrix: What happens if everyone cooperates? What happens if one defects?', placeholder: 'If both cooperate: Win-Win. If one defects: Exploitation. If both defect: Mutually Assured Destruction…' },
+      { prompt: 'What is each player\'s dominant strategy? (The move they must make regardless of what the other does).', placeholder: 'Their rational dominant move is to… because it minimizes their worst-case exposure.' },
+      { prompt: 'Identify the Nash Equilibrium — the point where no player has an incentive to change their mind.', placeholder: 'Left to market forces, the game will settle at…' },
+      { prompt: 'How can you alter the rules, incentives, or communication to move the game toward a better outcome?', placeholder: 'To shift the equilibrium, I should introduce a structural penalty for cheating / a reward for…' }
+    ]
+  },
+  {
+    id: 'zero-sum-vs-positive-sum', name: 'Zero-Sum vs Positive-Sum', icon: '±', category: 'Strategy & Competition',
+    color: 'var(--cat-strategy)',
+    summary: 'Distinguish games where one person\'s gain is another\'s loss from games where collaboration grows the total pie.',
+    when: 'Evaluating partnerships, allocating company resources, or setting up negotiation strategies.',
+    steps: [
+      { prompt: 'What market dynamic, negotiation, or relationship are you auditing?', placeholder: 'The scenario is…' },
+      { prompt: 'Is this structurally Zero-Sum (fixed pie, raw conflict) or Positive-Sum (win-win potential)?', placeholder: 'This is [Type] because your gain [does / does not] automatically bankrupt my position.' },
+      { prompt: 'Identify zero-sum mindsets. Are you treating a value-creation opportunity as a win-lose battle?', placeholder: 'I am acting defensively about… which is causing friction.' },
+      { prompt: 'How can you reframe the rules or discover hidden assets to turn a win-lose conflict into a win-win partnership?', placeholder: 'By bundling resource X with their resource Y, we can both expand our market share by…' },
+      { prompt: 'What is your updated strategy based on the true nature of the game?', placeholder: 'I will shift from an adversarial stance to a cooperative model because…' }
+    ]
+  },
+  {
+    id: 'blue-ocean-thinking', name: 'Blue Ocean Thinking', icon: '🌊', category: 'Strategy & Competition',
+    color: 'var(--cat-strategy)',
+    summary: 'Stop fighting rivals in overcrowded markets (Red Oceans). Create uncontested market space (Blue Oceans) by making the competition irrelevant.',
+    when: 'Launching products or services into mature markets where profit margins are razor-thin.',
+    steps: [
+      { prompt: 'What industry space are you looking to target, and who is the dominant incumbent standard?', placeholder: 'The established industry is…' },
+      { prompt: 'What are the standard vectors everyone fights over? (Price, features, speed, traditional metrics).', placeholder: 'Rivals compete entirely on: 1. … 2. … 3. …' },
+      { prompt: 'What features can you eliminate or reduce far below the industry norm to cut costs?', placeholder: 'We can completely cut… and heavily reduce…' },
+      { prompt: 'What features can you raise or create far above industry standards to deliver massive new value?', placeholder: 'We can dramatically over-deliver on… and invent a new feature called…' },
+      { prompt: 'Define your unique Blue Ocean position. Who is your new, non-traditional target customer?', placeholder: 'By changing the offering, we escape the feature war and capture a brand-new audience who cares about…' }
+    ]
+  },
+  {
+    id: 'asymmetric-warfare', name: 'Asymmetric Warfare', icon: '🏹', category: 'Strategy & Competition',
+    color: 'var(--cat-strategy)',
+    summary: 'How underdogs defeat giants by refusing to fight on the incumbent\'s terms, leveraging agility to attack unfortified gaps.',
+    when: 'When you are a small startup, challenger brand, or resource-constrained player going up against market leaders.',
+    steps: [
+      { prompt: 'Who is the massive industry giant you are competing against?', placeholder: 'The entrenched competitor is…' },
+      { prompt: 'What are the giant\'s core strengths? (Capital, brand recognition, massive scale). Where are they fortified?', placeholder: 'They are unassailable in terms of… If we fight them directly there, we lose.' },
+      { prompt: 'What are the vulnerabilities born from their scale? (Bureaucracy, slow speed, high overhead, serving everyone).', placeholder: 'Because they are huge, they are slow to adapt to… and they cannot easily customize services for…' },
+      { prompt: 'What unconventional, nimble tactics can you deploy that the giant cannot easily mirror without sabotaging themselves?', placeholder: 'We can launch a highly specialized, ultra-fast campaign focused exclusively on…' },
+      { prompt: 'What is your focused guerrilla plan to capture market share while staying below their radar?', placeholder: 'Instead of matching their advertising spend, we will win through…' }
+    ]
+  },
+  {
+    id: 'schelling-points', name: 'Schelling Points', icon: '📍', category: 'Strategy & Competition',
+    color: 'var(--cat-strategy)',
+    summary: 'The focal point solution that people naturally gravitate toward in the absence of explicit communication.',
+    when: 'Predicting competitor moves, designing open marketplaces, or coordinating distributed teams without active management.',
+    steps: [
+      { prompt: 'What coordination challenge or predictive decision are you analyzing?', placeholder: 'I want to predict where / when / how players will…' },
+      { prompt: 'If all communication was completely cut off, what is the most obvious, default option on the table?', placeholder: 'The single most culturally prominent, simple, or default milestone is…' },
+      { prompt: 'Why is this option the psychological focal point? What makes it stand out from the noise?', placeholder: 'It stands out because it is a round number / the historical precedent / the natural boundary…' },
+      { prompt: 'Where do you expect your competitors, users, or partners to converge based on this default instinct?', placeholder: 'Even without talking, I anticipate they will choose to…' },
+      { prompt: 'How should you position your strategy to take advantage of this natural point of convergence?', placeholder: 'Anticipating this behavior, I will set our baseline standard at…' }
+    ]
+  },
+  {
+    id: 'strategic-patience', name: 'Strategic Patience', icon: '🏹', category: 'Strategy & Competition',
+    color: 'var(--cat-strategy)',
+    summary: 'Deliberately delay definitive action in order to let compounding work, gather data, or wait for competitors to burn out.',
+    when: 'Under immense pressure to "do something" in volatile, low-visibility situations.',
+    steps: [
+      { prompt: 'What crisis or market shift is tempting you to make an immediate, reactive move?', placeholder: 'I feel pressured to urgently respond to…' },
+      { prompt: 'What are the hidden costs of acting too soon? (Burning capital, revealing your hand, building on bad assumptions).', placeholder: 'An immediate reaction risks…' },
+      { prompt: 'What missing information, system stabilization, or competitive mistake will emerge if you choose to wait?', placeholder: 'Waiting allows the market to clarify X, and lets our competitor waste resources on…' },
+      { prompt: 'Define your explicit trigger condition. What specific signal tells you the window for waiting has closed?', placeholder: 'I will remain observant until event X occurs or metric Y crosses the __ threshold.' },
+      { prompt: 'What proactive foundation-building work can you complete while you wait to ensure a flawless execution?', placeholder: 'While holding the line, we will focus internally on optimizing our…' }
+    ]
+  },
+  // ── COMMUNICATION & PERSUASION ──
+  {
+    id: 'framing-effects', name: 'Framing Effects', icon: '▣', category: 'Communication & Persuasion',
+    color: 'var(--cat-communication)',
+    summary: 'The same information produces different responses depending on how it\'s framed. Master framing and you master how information lands.',
+    when: 'Writing, presenting, negotiating, messaging strategy, any communication where reception matters.',
+    steps: [
+      { prompt: 'What message, proposal, or piece of information are you trying to communicate?', placeholder: 'The core message I want to convey: …' },
+      { prompt: 'Who is your audience? What are their existing beliefs, fears, values, and reference points?', placeholder: 'Audience: … | Their values: … | Their fears: … | Their current framing of this topic: …' },
+      { prompt: 'Reframe your message at least 3 ways — loss vs. gain, specific vs. abstract, individual vs. collective, short-term vs. long-term.', placeholder: 'Gain frame: … | Loss frame: … | Concrete frame: … | Abstract frame: … | Collective frame: …' },
+      { prompt: 'Which frame is most likely to resonate with this specific audience, and why? Test it against their values.', placeholder: 'Most resonant frame for this audience: … | Because their primary driver is… | This frame activates…' },
+      { prompt: 'What frames are being used against you in this situation — by opponents, by status quo narratives? How do you counter or reframe them?', placeholder: 'Opposing frames I\'m up against: … | Counter-frame strategy: … | My reframe that shifts the reference point: …' },
+    ]
+  },
+  {
+    id: 'narrative-logic', name: 'Narrative Logic', icon: '▷', category: 'Communication & Persuasion',
+    color: 'var(--cat-communication)',
+    summary: 'Humans think in stories, not statistics. Structure your communication as a narrative with stakes, conflict, and resolution to make it stick.',
+    when: 'Pitching ideas, giving presentations, writing persuasive content, leading change, making complex ideas accessible.',
+    steps: [
+      { prompt: 'What is the core idea or proposal you are trying to communicate?', placeholder: 'The idea I\'m communicating: …' },
+      { prompt: 'What is the world-before story — the status quo, the problem, the tension that makes your idea necessary? Who is the protagonist and what do they want?', placeholder: 'World before: … | Protagonist (audience / character): … | Their desire / problem: … | The tension is: …' },
+      { prompt: 'What is the inciting disruption — the insight, data, event, or shift that makes the status quo untenable? This is your hook.', placeholder: 'The disruption / hook: … | Why the old way no longer works: … | The stakes if nothing changes: …' },
+      { prompt: 'What is your solution — the journey, the change, the new approach? Frame it as a path from tension to resolution.', placeholder: 'The journey / solution: … | Key milestones: … | What changes along the way: …' },
+      { prompt: 'What is the world-after — the transformed state if the idea is adopted? Make it vivid and emotionally resonant.', placeholder: 'World after: … | What the protagonist gains: … | The emotional payoff of the story: … | The memorable closing image: …' },
+    ]
+  },
+  {
+    id: 'ethos-pathos-logos', name: 'Ethos / Pathos / Logos', icon: '△', category: 'Communication & Persuasion',
+    color: 'var(--cat-communication)',
+    summary: 'Aristotle\'s three modes of persuasion: credibility (ethos), emotion (pathos), and logic (logos). Masterful persuasion uses all three.',
+    when: 'Any situation where you need to move people: presentations, writing, sales, leadership, advocacy.',
+    steps: [
+      { prompt: 'What are you trying to persuade someone to believe or do?', placeholder: 'I\'m trying to persuade: [audience] to [believe/do]: …' },
+      { prompt: 'Ethos — Credibility: Why should they trust YOU on this? What experience, credentials, track record, or character makes you credible here?', placeholder: 'My credibility: … | Why they should trust my judgment: … | If I lack credibility: how I will borrow it by citing / aligning with…' },
+      { prompt: 'Pathos — Emotion: What does your audience care about deeply? What fear, hope, identity, or value can you connect this message to honestly?', placeholder: 'Emotional resonance: … | The hope / fear this touches: … | Story or image that makes this emotionally real: …' },
+      { prompt: 'Logos — Logic: What is the rational case? What evidence, data, or reasoning makes this logically compelling?', placeholder: 'Logical argument structure: … | Key evidence: … | The strongest rational reason: … | Counterarguments I address: …' },
+      { prompt: 'For THIS audience, what is the right ratio of ethos/pathos/logos? Which mode is most under-used in your current approach?', placeholder: 'This audience responds most to: … | I\'m over-relying on: … | The missing ingredient in my current approach: … | Adjusted message: …' },
+    ]
+  },
+  {
+    id: 'pyramid-principle', name: 'The Pyramid Principle', icon: '▲', category: 'Communication & Persuasion',
+    color: 'var(--cat-communication)',
+    summary: 'Lead with your conclusion, then support it. Structure communication as a pyramid: answer first, reasoning below.',
+    when: 'Writing reports, emails, presentations, memos, any business or professional communication.',
+    steps: [
+      { prompt: 'What is the single most important thing you want your audience to take away? State it in one sentence — the apex of your pyramid.', placeholder: 'The one-sentence answer / recommendation: …' },
+      { prompt: 'What are the 3 main arguments or reasons that support this conclusion? These form the second tier of the pyramid.', placeholder: 'Support 1: … | Support 2: … | Support 3: … | (Each should be independently compelling)' },
+      { prompt: 'For each of the 3 supports, what data, examples, or sub-arguments back them up? These are the third tier.', placeholder: 'Evidence for Support 1: … | Evidence for Support 2: … | Evidence for Support 3: …' },
+      { prompt: 'Does every element in your pyramid actually support the apex? Cut anything that doesn\'t directly serve the main conclusion.', placeholder: 'Things I\'m cutting because they don\'t support the apex: … | The tightened pyramid: …' },
+      { prompt: 'Draft the opening: state the context, complication, and answer in 3 sentences — the SCQ (Situation, Complication, Question/Answer).', placeholder: 'Situation: … | Complication: … | Answer: … | (This is your executive summary / opening paragraph)' },
+    ]
+  },
+  {
+    id: 'overton-window', name: 'Overton Window', icon: '⬜', category: 'Communication & Persuasion',
+    color: 'var(--cat-communication)',
+    summary: 'The range of ideas currently acceptable to the mainstream. Shift it deliberately by making the extreme more visible, making the radical seem reasonable.',
+    when: 'Advocacy, policy change, culture change, introducing radical ideas, moving what\'s considered "acceptable."',
+    steps: [
+      { prompt: 'What idea or change do you want to advocate for? How does it currently sit relative to mainstream opinion?', placeholder: 'The idea I\'m advocating: … | Currently perceived as: acceptable / radical / unthinkable | Why it\'s outside the window: …' },
+      { prompt: 'Map the current window: what is currently considered acceptable, popular, sensible, and radical on this topic?', placeholder: 'Unthinkable: … | Radical: … | Acceptable: … | Sensible: … | Popular: … | Policy: …' },
+      { prompt: 'To make your idea seem more reasonable, what MORE extreme position could be made visible first — a "window opener"?', placeholder: 'A position more extreme than mine that, if aired, makes my idea look moderate: … | The Overton anchor I can use: …' },
+      { prompt: 'How do you gradually normalize your idea — through language choice, visible examples, coalition-building, repeated exposure?', placeholder: 'Normalization strategy: … | Language shifts: … | Examples that make this feel possible: … | Allies who give it credibility: …' },
+      { prompt: 'What is the timeline and sequencing? What intermediate steps are needed before your target idea becomes mainstream?', placeholder: 'Step 1 (shift the anchor): … | Step 2 (normalize): … | Step 3 (mainstream): … | My idea becomes policy-ready when: …' },
+    ]
+  },
+  {
+    id: 'social-proof-dynamics', name: 'Social Proof Dynamics', icon: '◉', category: 'Communication & Persuasion',
+    color: 'var(--cat-communication)',
+    summary: 'People look to others\' behaviour to guide their own — especially under uncertainty. Harness social proof to accelerate adoption and persuasion.',
+    when: 'Marketing, culture change, building momentum, onboarding, any situation where adoption is slow.',
+    steps: [
+      { prompt: 'What behaviour, belief, or adoption are you trying to encourage in others?', placeholder: 'I\'m trying to get [audience] to: …' },
+      { prompt: 'What social proof already exists? Who has already adopted or endorsed this? (Peers, authorities, crowds, similar others)', placeholder: 'Existing proof: … | Endorsements: … | Usage numbers: … | Peer examples: …' },
+      { prompt: 'For your target audience, what type of social proof carries the most weight — expert authority, peer similarity, crowd size, or specific role models?', placeholder: 'This audience trusts most: … | The most powerful proof type for them: … | Why: …' },
+      { prompt: 'Where is social proof most conspicuously absent — creating hesitation or uncertainty in your audience? What is the "nobody else is doing it" fear?', placeholder: 'The gap in social proof: … | Their hesitation: "What if I\'m the only one…" | The uncertainty I need to resolve: …' },
+      { prompt: 'Design a social proof strategy: how will you make existing proof more visible, generate new proof, and display it at the right moment?', placeholder: 'Make proof visible: … | Generate new proof by: … | Right moment to show it: … | Proof cascade strategy: …' },
+    ]
+  },
+  // ── LEADERSHIP & INFLUENCE ──
+  {
+  id: 'autonomy-vs-alignment', name: 'Autonomy vs Alignment', icon: '⇌', category: 'Leadership & Influence',
+  color: 'var(--cat-leadership)',
+  summary: 'The tension between giving people freedom to act and ensuring they act in service of shared goals.',
+  when: 'Designing teams, delegating decisions, setting organisational culture, scaling a company.',
+  steps: [
+    { prompt: 'What is the decision or domain you\'re considering delegating or aligning?', placeholder: 'The area in question is…' },
+    { prompt: 'What does full autonomy look like here — and what risks does it carry?', placeholder: 'If people act entirely freely, they might… which risks…' },
+    { prompt: 'What does full alignment look like here — and what does it cost in terms of creativity or speed?', placeholder: 'If everyone defers to central direction, we gain… but lose…' },
+    { prompt: 'What is the minimum shared context — values, goals, constraints — needed so autonomous action naturally stays aligned?', placeholder: 'The non-negotiable shared anchors are: …' },
+    { prompt: 'Where on the autonomy-alignment dial should you set this, and what structures make that possible?', placeholder: 'The right calibration is… achieved by…' },
+  ]
+},
+{
+  id: 'principal-agent', name: 'Principal-Agent Problem', icon: '⟁', category: 'Leadership & Influence',
+  color: 'var(--cat-leadership)',
+  summary: 'When someone (agent) acts on behalf of another (principal), incentives diverge — often invisibly.',
+  when: 'Hiring, contracting, delegating, evaluating advice from anyone with different incentives.',
+  steps: [
+    { prompt: 'Who is the principal (you / your organisation) and who is the agent acting on your behalf?', placeholder: 'Principal: … | Agent: …' },
+    { prompt: 'What outcome does the principal actually want? What does the agent want?', placeholder: 'Principal wants: … | Agent wants: …' },
+    { prompt: 'Where do those interests diverge? What would the agent rationally do that hurts the principal?', placeholder: 'The divergence is: … | An agent acting in their own interest would…' },
+    { prompt: 'How is this misalignment currently hidden or hard to detect?', placeholder: 'It\'s invisible because… | I can\'t easily see it because…' },
+    { prompt: 'What incentive structures, transparency mechanisms, or monitoring would close the gap?', placeholder: 'To realign incentives, I could… | To increase visibility, I\'ll…' },
+  ]
+},
+{
+  id: 'skin-in-the-game', name: 'Skin in the Game', icon: '◈', category: 'Leadership & Influence',
+  color: 'var(--cat-leadership)',
+  summary: 'People who bear the consequences of their decisions make better decisions. Shared risk creates accountability.',
+  when: 'Evaluating advice, designing incentives, assessing who to trust, building accountable teams.',
+  steps: [
+    { prompt: 'Who is making the decision or giving the advice you\'re relying on?', placeholder: 'The decision-maker / advisor is…' },
+    { prompt: 'What happens to them if they\'re wrong? Do they bear any of the downside?', placeholder: 'If this goes badly for me, they experience… | They are insulated from…' },
+    { prompt: 'How does the asymmetry of risk affect the quality of their input?', placeholder: 'Because they don\'t bear the cost, they are likely to… which means I should discount…' },
+    { prompt: 'What would their recommendation or behaviour look like if they had real skin in the game?', placeholder: 'If they shared the downside, they would probably…' },
+    { prompt: 'How can you restructure this so the right people bear appropriate risk — or adjust how much weight you give their input?', placeholder: 'To introduce skin in the game, I could… | Given the asymmetry, I\'ll weight their view…' },
+  ]
+},
+{
+  id: 'distributed-cognition', name: 'Distributed Cognition', icon: '⬡', category: 'Leadership & Influence',
+  color: 'var(--cat-leadership)',
+  summary: 'Thinking and knowledge are spread across people, tools, and environments — not locked in one mind.',
+  when: 'Designing teams, knowledge systems, handoffs, onboarding, or any complex collaborative work.',
+  steps: [
+    { prompt: 'What task or problem requires knowledge and thinking from multiple people or sources?', placeholder: 'The distributed challenge is…' },
+    { prompt: 'Where does the relevant knowledge and expertise currently live — who holds what?', placeholder: 'Knowledge node A (person / tool / doc) knows: … | Node B knows: …' },
+    { prompt: 'What are the critical handoff or integration points where distributed cognition breaks down?', placeholder: 'The weakest link is between… and … because…' },
+    { prompt: 'What shared artefacts, tools, or processes would make the collective thinking more than the sum of its parts?', placeholder: 'To externalise and share cognition better, we could…' },
+    { prompt: 'How would you redesign the system so the right knowledge reaches the right person at the right time?', placeholder: 'A better-distributed cognitive system looks like…' },
+  ]
+},
+{
+  id: 'trust-calibration', name: 'Trust Calibration', icon: '⊹', category: 'Leadership & Influence',
+  color: 'var(--cat-leadership)',
+  summary: 'Trust should be extended in proportion to demonstrated competence and integrity — not too much, not too little.',
+  when: 'Delegating, hiring, building relationships, deciding how much to verify or supervise.',
+  steps: [
+    { prompt: 'Who are you extending or withholding trust from, and in what domain?', placeholder: 'The person / team is… | The domain is…' },
+    { prompt: 'What evidence of competence do you have in this specific domain? (Track record, not general impression)', placeholder: 'Demonstrated competence evidence: … | Gaps in the track record: …' },
+    { prompt: 'What evidence of integrity and alignment do you have? Have they been transparent when it cost them?', placeholder: 'Integrity signals: … | Moments that tested alignment: …' },
+    { prompt: 'Are you over-trusting (abdicating oversight) or under-trusting (micromanaging, wasting energy)?', placeholder: 'My current calibration is… which shows up as… | The real cost of this miscalibration is…' },
+    { prompt: 'What is the right level of trust for this person in this domain right now, and how will you extend it incrementally?', placeholder: 'Calibrated trust level: … | I\'ll expand autonomy when they demonstrate…' },
+  ]
+},
+
+// ── TIME & ENERGY ──
+{
+  id: 'parkinsons-law', name: "Parkinson's Law", icon: '⧗', category: 'Time & Energy',
+  color: 'var(--cat-time)',
+  summary: 'Work expands to fill the time available for its completion. Constraints create focus.',
+  when: 'Planning projects, fighting procrastination, running meetings, improving personal productivity.',
+  steps: [
+    { prompt: 'What task or project are you working on? How long have you allocated to it?', placeholder: 'The task is… | Current time allocation: …' },
+    { prompt: 'Is the current timeline driven by what the work genuinely requires, or by what felt comfortable to schedule?', placeholder: 'Honest answer: the timeline is padded because… | The real work probably takes…' },
+    { prompt: 'What would a genuinely tight deadline look like — one that forces prioritisation without sacrificing quality?', placeholder: 'A tighter, honest deadline would be… | To hit it I\'d have to cut / compress…' },
+    { prompt: 'What filler work, perfectionism, or low-value activity does the current slack enable?', placeholder: 'The extra time gets eaten by: …' },
+    { prompt: 'What constraint — a deadline, a timebox, a public commitment — would you impose to harness Parkinson\'s Law deliberately?', placeholder: 'I\'ll create artificial constraint by… | New deadline / timebox: …' },
+  ]
+},
+{
+  id: 'pareto-principle', name: 'Pareto Principle (80/20)', icon: '◑', category: 'Time & Energy',
+  color: 'var(--cat-time)',
+  summary: 'Roughly 80% of outcomes come from 20% of inputs. Find the vital few, ignore the trivial many.',
+  when: 'Prioritising work, auditing where time goes, identifying high-leverage activities.',
+  steps: [
+    { prompt: 'What are you trying to optimise — output, revenue, impact, wellbeing? Define the outcome.', placeholder: 'The outcome I care most about is…' },
+    { prompt: 'List all the activities, inputs, or efforts that contribute to that outcome.', placeholder: 'Contributing activities: 1. … 2. … 3. … 4. … 5. …' },
+    { prompt: 'Estimate the real contribution of each. Which 20% of inputs are likely driving 80% of results?', placeholder: 'The vital few are probably: … because they drive… | The rest contribute roughly…' },
+    { prompt: 'What is in the trivial 80% that you\'re currently over-investing in?', placeholder: 'I spend too much time / energy on: … even though it only produces…' },
+    { prompt: 'What would you stop, delegate, or compress to double down on the vital 20%?', placeholder: 'To rebalance toward the 20%, I\'ll: stop… reduce… redirect time to…' },
+  ]
+},
+{
+  id: 'timeboxing', name: 'Timeboxing', icon: '▣', category: 'Time & Energy',
+  color: 'var(--cat-time)',
+  summary: 'Assign a fixed, non-negotiable block of time to an activity. Stop when the box ends.',
+  when: 'Scheduling work, protecting focus time, escaping perfectionism, managing meetings.',
+  steps: [
+    { prompt: 'What work do you need to do? What outcome should the timebox produce?', placeholder: 'The task is… | The output I need at the end is…' },
+    { prompt: 'How long does this genuinely require? Push past your first instinct — be honest.', placeholder: 'My gut says … but the realistic tight version is…' },
+    { prompt: 'When exactly will this timebox run? Block it specifically (day, start time, end time).', placeholder: 'Scheduled for: [day] from [start] to [end]' },
+    { prompt: 'What will you do when the box ends, regardless of whether the work feels done?', placeholder: 'When the timer ends, I will: stop and ship / review and triage / hand off…' },
+    { prompt: 'What distractions, interruptions, or scope creep must you protect against to make this box sacred?', placeholder: 'To protect the box I\'ll: … | The most likely sabotage is…' },
+  ]
+},
+{
+  id: 'energy-vs-time', name: 'Energy vs Time Management', icon: '⚡', category: 'Time & Energy',
+  color: 'var(--cat-time)',
+  summary: 'Managing energy — physical, mental, emotional — is more valuable than managing time. Full hours don\'t equal full output.',
+  when: 'Scheduling demanding work, combating burnout, structuring a workday, sustainable performance.',
+  steps: [
+    { prompt: 'What is your honest current energy state across physical, mental, and emotional dimensions?', placeholder: 'Physical energy: … | Mental energy: … | Emotional energy: …' },
+    { prompt: 'When during the day (or week) are you at peak cognitive and creative energy? When do you crash?', placeholder: 'Peak windows: … | Low-energy windows: …' },
+    { prompt: 'What work is currently scheduled in your peak windows vs. your troughs? Map the mismatch.', placeholder: 'Peak time is currently used for: … | Troughs are used for: …' },
+    { prompt: 'What drains your energy disproportionately — and what replenishes it fastest?', placeholder: 'Energy drains: … | Energy replenishers: …' },
+    { prompt: 'Redesign your schedule: what high-leverage work moves to peak windows, and what filler shifts to the troughs?', placeholder: 'New design: peaks go to… | Troughs become time for… | Recovery built in at…' },
+  ]
+},
+{
+  id: 'deep-work', name: 'Deep Work', icon: '◉', category: 'Time & Energy',
+  color: 'var(--cat-time)',
+  summary: 'Cognitively demanding work performed in distraction-free focus produces disproportionate value. This capacity must be trained and protected.',
+  when: 'Creating anything complex, learning difficult skills, producing your highest-leverage output.',
+  steps: [
+    { prompt: 'What cognitively demanding task most requires deep, uninterrupted focus in your work?', placeholder: 'My most important deep work is…' },
+    { prompt: 'How much true deep work are you doing weekly right now? Be honest.', placeholder: 'Currently I get roughly … hours of real deep work per week because…' },
+    { prompt: 'What are the main sources of shallow fragmentation — interruptions, notifications, meetings, reactive work — eating your depth?', placeholder: 'The biggest depth-destroyers are: …' },
+    { prompt: 'What rituals, environments, or rules would create the conditions for reliable deep work?', placeholder: 'Conditions I need: … | Rituals to enter focus state: … | Environment: …' },
+    { prompt: 'What is your concrete commitment — days, durations, conditions — for deep work going forward?', placeholder: 'My deep work commitment: [time] on [days] in [environment], protected by [rules]' },
+  ]
+},
+{
+  id: 'batching', name: 'Batching', icon: '⊞', category: 'Time & Energy',
+  color: 'var(--cat-time)',
+  summary: 'Group similar tasks together to eliminate the cognitive overhead of context-switching.',
+  when: 'Email, admin, meetings, creative work, errands — any recurring tasks that fragment your flow.',
+  steps: [
+    { prompt: 'List all the recurring task types in your work or life that consume time and attention.', placeholder: 'Task types: email, meetings, admin, calls, creative, errands, reviews…' },
+    { prompt: 'How are these currently scattered across your day? Where is the context-switching cost highest?', placeholder: 'The most costly context switches happen when I go from… to… because…' },
+    { prompt: 'Which tasks are genuinely similar in cognitive mode — and could be grouped into a single block?', placeholder: 'Natural batches: [task A + task B + task C] all require the same mental mode…' },
+    { prompt: 'When and how often should each batch run? Design the batched schedule.', placeholder: 'Email batch: … [time/frequency] | Creative batch: … | Admin batch: …' },
+    { prompt: 'What must you protect against to make batching work — same-day urgency culture, notification habits, others\' expectations?', placeholder: 'The hardest barrier to batching is… | I\'ll manage that by…' },
+  ]
+},
+
+// ── CAUSALITY & LOGIC ──
+{
+  id: 'correlation-vs-causation', name: 'Correlation vs Causation', icon: '≁', category: 'Causality & Logic',
+  color: 'var(--cat-causality)',
+  summary: 'Two things moving together doesn\'t mean one causes the other. Confuse them and you\'ll intervene on the wrong thing.',
+  when: 'Interpreting data, evaluating studies, diagnosing problems, making predictions.',
+  steps: [
+    { prompt: 'What two variables or events appear to be related in the pattern you\'re examining?', placeholder: 'I\'ve noticed that [A] and [B] seem to move together…' },
+    { prompt: 'What is the causal story you (or others) are implicitly assuming? State it explicitly.', placeholder: 'The assumed causal story is: A causes B because…' },
+    { prompt: 'What alternative explanations exist? Could B cause A? Could a third variable C cause both?', placeholder: 'Reverse causation: … | Common cause: … | Coincidence / spurious correlation: …' },
+    { prompt: 'What evidence would distinguish correlation from genuine causation here? What experiment or data would settle it?', placeholder: 'To establish causation, you\'d need: … | The missing evidence is…' },
+    { prompt: 'Given this uncertainty, what is the most defensible claim you can make — and what interventions follow?', placeholder: 'I can confidently say: … | I should be cautious about claiming: … | The right action given uncertainty is…' },
+  ]
+},
+{
+  id: 'post-hoc-fallacy', name: 'Post Hoc Fallacy', icon: '↝', category: 'Causality & Logic',
+  color: 'var(--cat-causality)',
+  summary: '"After this, therefore because of this." Assuming that because B followed A, A caused B.',
+  when: 'Evaluating interventions, interpreting past decisions, avoiding superstitious thinking.',
+  steps: [
+    { prompt: 'What sequence of events are you trying to interpret? What happened first, and what followed?', placeholder: 'First: [A] happened. Then: [B] happened. People are assuming…' },
+    { prompt: 'What is the causal claim being made based on the sequence?', placeholder: 'The implicit conclusion is: A caused B because B came after A…' },
+    { prompt: 'What else was happening at the same time? What other factors could explain B independent of A?', placeholder: 'Other simultaneous factors: … | B might have happened anyway because…' },
+    { prompt: 'Is there a plausible mechanism by which A actually produces B? Or just temporal proximity?', placeholder: 'A plausible mechanism would be: … | The actual mechanism evidence is: …' },
+    { prompt: 'What would you need to control for, or what comparison case would test whether A truly caused B?', placeholder: 'To test this properly, I\'d need: … | The counterfactual case is…' },
+  ]
+},
+{
+  id: 'necessary-vs-sufficient', name: 'Necessary vs Sufficient Conditions', icon: '⊃', category: 'Causality & Logic',
+  color: 'var(--cat-causality)',
+  summary: 'Necessary: must be present for the outcome. Sufficient: guarantees the outcome alone. Confusing them leads to bad strategy.',
+  when: 'Diagnosing failures, designing strategies, evaluating requirements, logic of any kind.',
+  steps: [
+    { prompt: 'What outcome are you trying to understand or produce?', placeholder: 'The outcome I\'m examining is…' },
+    { prompt: 'What conditions are necessary — without which the outcome cannot occur, even if other things are in place?', placeholder: 'Necessary conditions (must-haves): 1. … 2. … 3. …' },
+    { prompt: 'What conditions are sufficient — which alone would guarantee the outcome regardless of anything else?', placeholder: 'Sufficient conditions (if present, outcome is certain): …' },
+    { prompt: 'Which conditions are you currently treating as sufficient when they\'re only necessary — or vice versa?', placeholder: 'I\'m confusing: … (which is only necessary) with being sufficient. Or I\'m ignoring that…' },
+    { prompt: 'Given the correct logic, what must you actually ensure is in place to reliably produce the outcome?', placeholder: 'The real requirements are: … | The gap between current state and sufficient conditions is…' },
+  ]
+},
+{
+  id: 'counterfactual-reasoning', name: 'Counterfactual Reasoning', icon: '⁋', category: 'Causality & Logic',
+  color: 'var(--cat-causality)',
+  summary: 'Ask: "What would have happened had things been different?" Counterfactuals isolate true causal impact.',
+  when: 'Evaluating decisions, assessing impact, learning from outcomes, avoiding hindsight bias.',
+  steps: [
+    { prompt: 'What decision, action, or event are you trying to evaluate the impact of?', placeholder: 'I\'m evaluating the impact of… which resulted in…' },
+    { prompt: 'What would the world most plausibly have looked like if this decision or event had NOT occurred?', placeholder: 'Without this, the most likely alternative was…' },
+    { prompt: 'What is the true causal difference between the actual outcome and the counterfactual? How much of the result was due to this factor alone?', placeholder: 'The real attributable impact is: … | What would have happened anyway: …' },
+    { prompt: 'What confounds or other factors make it hard to cleanly isolate the counterfactual?', placeholder: 'The analysis is complicated by: … | I can\'t cleanly isolate because…' },
+    { prompt: 'Given the honest counterfactual, how should you update your view of this decision or strategy?', placeholder: 'Adjusting for the counterfactual, I now think the decision was… | The lesson is…' },
+  ]
+},
+{
+  id: 'reductio-ad-absurdum', name: 'Reductio ad Absurdum', icon: '⤢', category: 'Causality & Logic',
+  color: 'var(--cat-causality)',
+  summary: 'To disprove a claim, assume it\'s true and follow the logic until you reach an absurd or contradictory conclusion.',
+  when: 'Stress-testing arguments, identifying flawed premises, philosophical reasoning, debate.',
+  steps: [
+    { prompt: 'What claim, rule, or argument do you want to stress-test? State it precisely.', placeholder: 'The claim I\'m examining is: …' },
+    { prompt: 'Assume it\'s completely true and apply it universally, without exception. What follows logically?', placeholder: 'If this were universally true, then: … which would also mean: …' },
+    { prompt: 'Follow the chain of implications to its logical extreme. Where does it lead?', placeholder: 'Taken to the extreme, this implies: … | The end state would be…' },
+    { prompt: 'Does that conclusion contradict other things we know to be true, or lead to an absurd outcome?', placeholder: 'The absurdity or contradiction is: … which we know is false / unacceptable because…' },
+    { prompt: 'What does the absurd conclusion reveal about the original claim — where is it wrong, overstated, or missing nuance?', placeholder: 'The flaw in the original claim is: … | A more accurate version would be…' },
+  ]
+},
+
+// ── CHANGE & ADAPTATION ──
+{
+  id: 'sigmoid-s-curve', name: 'S-Curve Adoption', icon: '∫', category: 'Change & Adaptation',
+  color: 'var(--cat-change)',
+  summary: 'Change follows a predictable S-shape: slow start, explosive growth, then plateau. Position yourself by knowing where on the curve you are.',
+  when: 'Timing market entry, technology adoption, career transitions, any growth or change prediction.',
+  steps: [
+    { prompt: 'What technology, trend, behaviour, or change are you analysing?', placeholder: 'The phenomenon I\'m tracking is…' },
+    { prompt: 'Where on the S-curve is this right now — early steep climb, explosive growth, or plateau? What\'s your evidence?', placeholder: 'I believe it\'s in the [early / growth / plateau] phase because…' },
+    { prompt: 'What does the remaining unfulfilled potential of this curve look like? How much growth is left?', placeholder: 'Remaining potential: … | Ceiling likely at: …' },
+    { prompt: 'What signals will tell you the current S-curve is plateauing and a new one is beginning?', placeholder: 'Signs the current curve is topping out: … | The next S-curve starting will look like…' },
+    { prompt: 'Given where you are on the curve, what is the right strategic posture — invest, ride, prepare for the next curve?', placeholder: 'Strategic implication: I should… | The timing consideration is…' },
+  ]
+},
+{
+  id: 'regression-to-mean', name: 'Regression to the Mean', icon: '⇔', category: 'Change & Adaptation',
+  color: 'var(--cat-change)',
+  summary: 'Extreme outcomes tend to be followed by more average ones. Don\'t mistake normal reversion for your intervention working.',
+  when: 'Evaluating interventions, managing performance, interpreting streaks and outliers.',
+  steps: [
+    { prompt: 'What extreme outcome (unusually good or bad) are you responding to or interpreting?', placeholder: 'The extreme outcome was: … | It stood out because…' },
+    { prompt: 'Is this extreme result likely due to genuine underlying change, or partly due to random variation and luck?', placeholder: 'The role of chance / random variation here is likely: … because…' },
+    { prompt: 'If you do nothing, what would you expect to happen next — based on regression to the mean alone?', placeholder: 'Without any intervention, the next result would probably be: … because extremes tend to…' },
+    { prompt: 'What intervention did you (or someone) apply after this extreme result? How might regression to the mean make it look effective when it isn\'t?', placeholder: 'The intervention was: … | It could appear to work even if useless because…' },
+    { prompt: 'How do you distinguish genuine improvement from statistical reversion in this situation?', placeholder: 'A real improvement would look like: … | The test to distinguish it is…' },
+  ]
+},
+{
+  id: 'punctuated-equilibrium', name: 'Punctuated Equilibrium', icon: '⌇', category: 'Change & Adaptation',
+  color: 'var(--cat-change)',
+  summary: 'Systems don\'t change gradually — they stay stable for long periods, then change rapidly and violently.',
+  when: 'Strategy under uncertainty, industry disruption, organisational change, career planning.',
+  steps: [
+    { prompt: 'What system, industry, organisation, or situation are you analysing?', placeholder: 'The system I\'m examining is…' },
+    { prompt: 'What is the current stable equilibrium — what forces are keeping things as they are?', placeholder: 'The stabilising forces are: … | Things stay the same because…' },
+    { prompt: 'What pressures, tensions, or stresses are building beneath the surface that the current equilibrium is suppressing?', placeholder: 'Underlying pressures building: … | The tension is accumulating in…' },
+    { prompt: 'What kind of trigger or threshold event could cause a rapid phase shift? How close might it be?', placeholder: 'A likely trigger would be: … | Possible timeline: …' },
+    { prompt: 'If rapid change is coming, what position should you be in before it hits — and what would you regret not doing?', placeholder: 'Pre-disruption positioning: I should… | The most costly inaction would be…' },
+  ]
+},
+{
+  id: 'antifragility', name: 'Antifragility', icon: '⟁', category: 'Change & Adaptation',
+  color: 'var(--cat-change)',
+  summary: 'Fragile things break under stress. Robust things survive it. Antifragile things get stronger from it.',
+  when: 'Designing systems, career planning under uncertainty, risk strategy, resilience-building.',
+  steps: [
+    { prompt: 'What system, plan, business, or situation are you designing or evaluating?', placeholder: 'The thing I\'m examining is…' },
+    { prompt: 'What volatility, stresses, or shocks is this likely to face? List the realistic disruptions.', placeholder: 'Likely stresses: … | The volatility environment looks like…' },
+    { prompt: 'Is this currently fragile (breaks under stress), robust (survives), or antifragile (improves under stress)?', placeholder: 'Current classification: … | Evidence for this: …' },
+    { prompt: 'What would make this antifragile — what structures or properties allow it to benefit from disorder?', placeholder: 'Antifragile properties would include: … | Stress could be a benefit if…' },
+    { prompt: 'What specific changes would move this from fragile/robust toward antifragile?', placeholder: 'Concrete redesign: remove… | add… | restructure… so that stress becomes…' },
+  ]
+},
+{
+  id: 'creative-destruction', name: 'Creative Destruction', icon: '⊗', category: 'Change & Adaptation',
+  color: 'var(--cat-change)',
+  summary: 'Innovation destroys existing value to create new value. Progress requires the dismantling of what came before.',
+  when: 'Industry strategy, evaluating disruption threats, deciding when to cannibalise your own work.',
+  steps: [
+    { prompt: 'What existing system, product, business model, or practice is under threat of creative destruction?', placeholder: 'The incumbent being disrupted is…' },
+    { prompt: 'What new thing is destroying it? What value is being created in the destruction?', placeholder: 'The disruptive force is: … | The new value it creates: …' },
+    { prompt: 'Who loses in this destruction, and who wins? What are the second-order social and economic effects?', placeholder: 'Losers: … | Winners: … | Broader effects: …' },
+    { prompt: 'If you\'re the incumbent — should you cannibalise yourself before someone else does? What would that look like?', placeholder: 'Self-cannibalisation would mean: … | The cost of not doing it first is…' },
+    { prompt: 'What is the right strategic posture — protect, adapt, lead the destruction, or build for what comes after?', placeholder: 'My strategic posture should be: … | The next value system emerging from this destruction is…' },
+  ]
+},
+
+// ── ETHICS & VALUES ──
+{
+  id: 'veil-of-ignorance', name: 'Veil of Ignorance', icon: '⊙', category: 'Ethics & Values',
+  color: 'var(--cat-ethics)',
+  summary: 'Design rules or systems as if you don\'t know which position you\'ll occupy. Forces genuinely fair thinking.',
+  when: 'Designing policies, resolving disputes fairly, allocating resources, any governance decision.',
+  steps: [
+    { prompt: 'What rule, system, policy, or decision are you designing or evaluating?', placeholder: 'The thing I\'m designing / deciding is…' },
+    { prompt: 'Who are all the people who will be affected — what positions, roles, or circumstances might they be in?', placeholder: 'The affected parties include: … | The range of positions is…' },
+    { prompt: 'Now imagine you don\'t know which position you\'ll occupy. Step behind the veil. What do you notice about the current arrangement?', placeholder: 'Behind the veil, the current arrangement looks: … | What I\'d fear ending up as…' },
+    { prompt: 'What principles or rules would you choose if you genuinely didn\'t know where you\'d land?', placeholder: 'From behind the veil, I\'d want: … | Principles I\'d insist on: …' },
+    { prompt: 'How does this compare to the current design? What changes does a veil-of-ignorance standard demand?', placeholder: 'The gaps are: … | Changes needed to pass the fairness test: …' },
+  ]
+},
+{
+  id: 'categorical-imperative', name: 'Categorical Imperative', icon: '⊢', category: 'Ethics & Values',
+  color: 'var(--cat-ethics)',
+  summary: 'Act only according to rules you could will to be universal laws. If you couldn\'t endorse everyone doing it, don\'t do it.',
+  when: 'Any ethical decision, justifying exceptions for yourself, evaluating policies or personal rules.',
+  steps: [
+    { prompt: 'What action or decision are you considering? State the specific behaviour, not the outcome.', placeholder: 'I\'m considering: …' },
+    { prompt: 'Formulate this as a universal maxim: "Everyone in this situation should do X." State it explicitly.', placeholder: 'Universal maxim: "Everyone who faces [situation] should [action] because…"' },
+    { prompt: 'Could this maxim be universalised without contradiction or collapse? What happens if literally everyone acts this way?', placeholder: 'If everyone did this: … | This leads to contradiction / collapse because…' },
+    { prompt: 'Does this action treat everyone affected as an end in themselves — or as merely a means to your goal?', placeholder: 'The people affected are treated as: … | Any instrumentalisation: …' },
+    { prompt: 'Given this test, is the action permissible, impermissible, or does it require modification?', placeholder: 'The verdict is: … | If impermissible, the adjusted action that would pass the test is…' },
+  ]
+},
+{
+  id: 'consequentialism-vs-deontology', name: 'Consequentialism vs Deontology', icon: '⇋', category: 'Ethics & Values',
+  color: 'var(--cat-ethics)',
+  summary: 'Consequentialism judges acts by outcomes. Deontology judges acts by rules and duties. Both reveal things the other misses.',
+  when: 'Hard ethical dilemmas, tradeoffs with clear winners and losers, policy design, personal integrity.',
+  steps: [
+    { prompt: 'What ethical dilemma or difficult decision are you facing? Describe it fully.', placeholder: 'The dilemma is: … | The tension between outcomes and rules shows up as…' },
+    { prompt: 'Apply consequentialist thinking: what are the full outcomes of each option? Who benefits, who is harmed, what are the numbers?', placeholder: 'Option A outcomes: … | Option B outcomes: … | Best consequences overall: …' },
+    { prompt: 'Apply deontological thinking: what duties, rights, rules, or commitments are at stake regardless of outcomes?', placeholder: 'Relevant duties / rights: … | Rules that apply: … | What can\'t be violated even for good outcomes: …' },
+    { prompt: 'Where do the two frameworks agree? Where do they conflict?', placeholder: 'Agreement: … | Conflict: the consequentialist says… but the deontologist says…' },
+    { prompt: 'What does the tension between them reveal about your values — and how will you decide?', placeholder: 'The conflict reveals that I actually prioritise… | My decision is… because…' },
+  ]
+},
+{
+  id: 'moral-licensing', name: 'Moral Licensing', icon: '◬', category: 'Ethics & Values',
+  color: 'var(--cat-ethics)',
+  summary: 'Past good behaviour creates a psychological license to behave badly. Virtue becomes permission to lapse.',
+  when: 'Self-evaluation, building consistent habits, ethics under pressure, avoiding hypocrisy.',
+  steps: [
+    { prompt: 'In what domain are you trying to behave consistently — ethically, healthily, professionally?', placeholder: 'The domain I\'m examining is: …' },
+    { prompt: 'Have you recently done something "good" in this domain that you\'re now (consciously or not) using as credit?', placeholder: 'The "good behaviour" I\'m drawing credit from: … | I did this on: …' },
+    { prompt: 'What lapse or inconsistency might this be unconsciously licensing?', placeholder: 'The behaviour it\'s giving me permission for: … | Signs I\'m doing this: …' },
+    { prompt: 'Is your identity in this domain built on past acts, or on consistent ongoing behaviour?', placeholder: 'Honest self-assessment: I think of myself as [good in X] because… | But the actual recent pattern is…' },
+    { prompt: 'What would it look like to revoke the license and return to consistent standards regardless of past credit?', placeholder: 'Revoking moral licensing means: … | The standard I want to hold consistently is…' },
+  ]
+},
+{
+  id: 'scope-insensitivity', name: 'Scope Insensitivity', icon: '≈', category: 'Ethics & Values',
+  color: 'var(--cat-ethics)',
+  summary: 'Humans feel similar concern for 1 victim as for 1,000. Emotional response doesn\'t scale with the numbers.',
+  when: 'Charitable giving, policy evaluation, resource allocation, any decision involving large or abstract populations.',
+  steps: [
+    { prompt: 'What problem or cause are you evaluating that involves different scales of impact?', placeholder: 'I\'m thinking about: … which could affect [scale] people…' },
+    { prompt: 'What is your emotional, intuitive response to this issue? Notice the feeling.', placeholder: 'My gut response / emotional pull is: …' },
+    { prompt: 'Now examine the actual scale: what are the real numbers? How does 10x more people affected change the moral weight?', placeholder: 'Actual numbers: … | 10x scale would mean… | 100x would mean…' },
+    { prompt: 'Are you allocating attention, money, or effort in proportion to actual scale — or in proportion to emotional vividness?', placeholder: 'My current allocation: … | The more vivid but smaller issue gets… vs the larger but abstract issue…' },
+    { prompt: 'If you forced yourself to reason about scale rather than feel about it, what would you do differently?', placeholder: 'A scale-adjusted approach would: … | The highest-impact reallocation would be…' },
+  ]
+},
 ];
 
 // ═══════════════════════════════════════
@@ -1324,6 +2181,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderModelLibrary('All');
   newPrompt();
   renderAll();
+  populateModelDropdowns();
 });
 
 function saveData() {
@@ -1350,6 +2208,24 @@ function showSection(id, el) {
 // ═══════════════════════════════════════
 // RENDER ALL
 // ═══════════════════════════════════════
+function updateCatBadges() {
+  const catMap = {
+    'clarity':'Clarity','decision':'Decision','risk':'Risk',
+    'psych':'Psychology','systems':'Systems','thinking':'Thinking Quality',
+    'learning':'Learning & Knowledge','creativity':'Creativity & Innovation',
+    'strategy':'Strategy & Competition','communication':'Communication & Persuasion',
+    'leadership':'Leadership & Influence','time':'Time & Energy',
+    'causality':'Causality & Logic','change':'Change & Adaptation','ethics':'Ethics & Values'
+  };
+  Object.entries(catMap).forEach(([key, cat]) => {
+    const el = document.getElementById('catb-' + key);
+    if (!el) return;
+    const count = MENTAL_MODELS.filter(m => m.category === cat).length;
+    const used  = new Set(data.applications.filter(a => a.modelCategory === cat).map(a => a.modelId)).size;
+    el.textContent = used ? `${used}/${count} used` : `${count} models`;
+  });
+}
+
 function renderAll() {
   renderOverview();
   renderApplications();
@@ -1359,6 +2235,7 @@ function renderAll() {
   updateCounts();
   updateStreak();
   updateProgress();
+  updateCatBadges();
 }
 
 function updateCounts() {
@@ -1453,21 +2330,54 @@ function renderOverview() {
 // MODEL LIBRARY
 // ═══════════════════════════════════════
 function getCatColor(cat) {
-  return {Clarity:'var(--cat-clarity)',Decision:'var(--cat-decision)',Risk:'var(--cat-risk)',Psychology:'var(--cat-psych)',Systems:'var(--cat-systems)'}[cat] || 'var(--text-dim)';
+  const colors = {
+    'Clarity': 'var(--cat-clarity)',
+    'Decision': 'var(--cat-decision)',
+    'Risk': 'var(--cat-risk)',
+    'Psychology': 'var(--cat-psych)',
+    'Systems': 'var(--cat-systems)',
+    'Thinking Quality': 'var(--cat-thinking)',
+    'Causality & Logic': 'var(--cat-causality)',
+    'Change & Adaptation': 'var(--cat-change)',
+    'Ethics & Values': 'var(--cat-ethics)',
+    'Leadership & Influence': 'var(--cat-leadership)',
+    'Strategy & Competition': 'var(--cat-strategy)',
+    'Communication & Persuasion': 'var(--cat-communication)',
+    'Learning & Knowledge': 'var(--cat-learning)',
+    'Creativity & Innovation': 'var(--cat-creativity)',
+    'Time & Energy': 'var(--cat-time)'
+  };
+  return colors[cat] || 'var(--text-dim)';
 }
+
 function getCatDim(cat) {
   return {
-    Clarity:'rgba(124,110,224,0.12)',Decision:'rgba(212,168,67,0.12)',
-    Risk:'rgba(74,159,212,0.12)',Psychology:'rgba(212,107,67,0.12)',
-    Systems:'rgba(58,181,160,0.12)'
+    'Clarity':'rgba(124,110,224,0.12)',
+    'Decision':'rgba(212,168,67,0.12)',
+    'Risk':'rgba(74,159,212,0.12)',
+    'Psychology':'rgba(212,107,67,0.12)',
+    'Systems':'rgba(58,181,160,0.12)',
+    'Thinking Quality':'rgba(138,124,224,0.12)',
+    'Causality & Logic':'rgba(96,124,128,0.12)',
+    'Change & Adaptation':'rgba(212,168,67,0.12)',
+    'Ethics & Values':'rgba(212,107,138,0.12)',
+    'Leadership & Influence':'rgba(168,212,67,0.12)',
+    'Strategy & Competition':'rgba(212,67,184,0.12)',
+    'Communication & Persuasion':'rgba(67,212,201,0.12)',
+    'Learning & Knowledge':'rgba(224,138,60,0.12)',
+    'Creativity & Innovation':'rgba(196,212,67,0.12)',
+    'Time & Energy':'rgba(74,159,212,0.12)'
   }[cat] || 'var(--surface3)';
 }
 
 function filterLibrary(cat) {
   libFilter = cat;
-  // Update filter buttons
-  ['All','Clarity','Decision','Risk','Psychology','Systems'].forEach(c => {
-    const btn = document.getElementById('lib-' + c.toLowerCase());
+  const allCats = ['All','Clarity','Decision','Risk','Psychology','Systems',
+    'Thinking Quality','Causality & Logic','Change & Adaptation','Ethics & Values',
+    'Leadership & Influence','Strategy & Competition','Communication & Persuasion',
+    'Learning & Knowledge','Creativity & Innovation','Time & Energy'];
+  allCats.forEach(c => {
+    const btn = document.getElementById('lib-' + c.toLowerCase().replace(/[^a-z0-9]/g,'-'));
     if (btn) btn.classList.toggle('active', c === cat);
   });
   document.getElementById('lib-all')?.classList.toggle('active', cat==='All');
@@ -1931,6 +2841,21 @@ function toast(msg) {
 function esc(s) {
   if(!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── POPULATE ALL MODEL DROPDOWNS ──
+function populateModelDropdowns() {
+  const ids = ['taskModel','logModelSection','modalLogModel','modalTaskModel'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const current = el.value;
+    el.innerHTML = '<option value="General">General</option>' +
+      MENTAL_MODELS.map(m =>
+        `<option value="${m.name}">${m.name} (${m.category})</option>`
+      ).join('');
+    el.value = current || 'General';
+  });
 }
 </script>
 </body>
