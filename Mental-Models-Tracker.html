@@ -48,6 +48,14 @@
 	--cat-learning:     #e08a3c;
 	--cat-creativity:   #c4d443;
 	--cat-time:         #4a9fd4;
+	--cat-forecasting: #5d8aa8;
+  --cat-negotiation: #d4a843;
+  --cat-motivation: #ff9f43;
+  --cat-complexity: #8395a7;
+  --cat-diagnosis: #ee5253;
+  --cat-cognitive: #10ac84;
+  --cat-interpersonal: #54a0ff;
+  --cat-financial: #5f27cd;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -185,6 +193,16 @@
 .cc-causality::before     { background: var(--cat-causality); }
 .cc-change::before        { background: var(--cat-change); }
 .cc-ethics::before        { background: var(--cat-ethics); }
+
+
+.cc-negotiation::before     { background: var(--cat-negotiation); }
+.cc-motivation::before        { background: var(--cat-motivation); }
+.cc-complexity::before        { background: var(--cat-complexity); }
+.cc-diagnosis::before     { background: var(--cat-diagnosis); }
+.cc-cognitive::before        { background: var(--cat-cognitive); }
+.cc-interpersonal::before        { background: var(--cat-interpersonal); }
+.cc-financial::before     { background: var(--cat-financial); }
+
 
   .cat-num { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-bottom: 8px; }
   .cat-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
@@ -407,7 +425,7 @@
     <div class="nav-item" data-section="library" onclick="showSection('library',this)">
       <div class="nav-dot" style="background:var(--cat-systems)"></div>
       Model Library
-      <span class="nav-count">75</span>
+      <span class="nav-count">104</span>
     </div>
     <div class="nav-item" data-section="applications" onclick="showSection('applications',this)">
       <div class="nav-dot" style="background:var(--cat-decision)"></div>
@@ -584,6 +602,71 @@
     <div class="cat-desc">Reason well under moral uncertainty</div>
     <span class="cat-badge" style="background:rgba(212,107,138,0.12);color:var(--cat-ethics)" id="catb-ethics">6 models</span>
   </div>
+  
+  <!-- Forecasting & Epistemics -->
+<div class="cat-card cc-forecasting" onclick="filterLibrary('Forecasting & Epistemics')">
+  <div class="cat-num">16 · FORECASTING</div>
+  <div class="cat-name" style="color:var(--cat-forecasting)">Epistemics</div>
+  <div class="cat-desc">Improve judgment and accuracy</div>
+  <span class="cat-badge" style="background:rgba(102,107,138,0.12);color:var(--cat-forecasting)" id="catb-forecasting">4 models</span>
+</div>
+
+<!-- Negotiation & Conflict -->
+<div class="cat-card cc-negotiation" onclick="filterLibrary('Negotiation & Conflict')">
+  <div class="cat-num">17 · NEGOTIATION</div>
+  <div class="cat-name" style="color:var(--cat-negotiation)">Conflict</div>
+  <div class="cat-desc">Navigate disputes and agreements</div>
+  <span class="cat-badge" style="background:rgba(102,177,138,0.12);color:var(--cat-negotiation)" id="catb-negotiation">0 models</span>
+</div>
+
+<!-- Motivation & Behaviour Change -->
+<div class="cat-card cc-motivation" onclick="filterLibrary('Motivation & Behaviour Change')">
+  <div class="cat-num">18 · MOTIVATION</div>
+  <div class="cat-name" style="color:var(--cat-motivation)">Behaviour Change</div>
+  <div class="cat-desc">Design habits and drive action</div>
+  <span class="cat-badge" style="background:rgba(262,177,138,0.12);color:var(--cat-motivation)" id="catb-motivation">0 models</span>
+</div>
+
+<!-- Complexity & Uncertainty -->
+<div class="cat-card cc-complexity" onclick="filterLibrary('Complexity & Uncertainty')">
+  <div class="cat-num">19 · COMPLEXITY</div>
+  <div class="cat-name" style="color:var(--cat-complexity)">Uncertainty</div>
+  <div class="cat-desc">Operate in non-linear environments</div>
+  <span class="cat-badge" style="background:rgba(262,177,178,0.12);color:var(--cat-complexity)" id="catb-complexity">0 models</span>
+</div>
+
+<!-- Problem Diagnosis -->
+<div class="cat-card cc-diagnosis" onclick="filterLibrary('Problem Diagnosis')">
+  <div class="cat-num">20 · DIAGNOSIS</div>
+  <div class="cat-name" style="color:var(--cat-diagnosis)">Problem Solving</div>
+  <div class="cat-desc">Isolate root causes efficiently</div>
+  <span class="cat-badge" style="background:rgba(142,177,108,0.12);color:var(--cat-diagnosis)" id="catb-diagnosis">3 models</span>
+</div>
+
+<!-- Cognitive Load & Attention -->
+<div class="cat-card cc-cognitive" onclick="filterLibrary('Cognitive Load & Attention')">
+  <div class="cat-num">21 · COGNITION</div>
+  <div class="cat-name" style="color:var(--cat-cognitive)">Attention</div>
+  <div class="cat-desc">Manage focus and mental bandwidth</div>
+  <span class="cat-badge" style="background:rgba(92,177,108,0.12);color:var(--cat-cognitive)" id="catb-cognitive">0 models</span>
+</div>
+
+<!-- Interpersonal & Relationship -->
+<div class="cat-card cc-interpersonal" onclick="filterLibrary('Interpersonal & Relationship')">
+  <div class="cat-num">22 · RELATIONSHIPS</div>
+  <div class="cat-name" style="color:var(--cat-interpersonal)">Interpersonal</div>
+  <div class="cat-desc">Strengthen connections and empathy</div>
+  <span class="cat-badge" style="background:rgba(92,177,108,0.12);color:var(--cat-interpersonal)" id="catb-interpersonal">0 models</span>
+</div>
+
+<!-- Financial Thinking -->
+<div class="cat-card cc-financial" onclick="filterLibrary('Financial Thinking')">
+  <div class="cat-num">23 · FINANCE</div>
+  <div class="cat-name" style="color:var(--cat-financial)">Money</div>
+  <div class="cat-desc">Make sound fiscal decisions</div>
+  <span class="cat-badge" style="background:rgba(92,177,108,0.12);color:var(--cat-financial)" id="catb-financial">3 models</span>
+</div>
+  
 </div>
 
       <div class="two-col">
@@ -697,6 +780,14 @@
             <button class="tab" onclick="filterModelSelector('Learning & Knowledge',this)">Learning & Knowledge</button>
             <button class="tab" onclick="filterModelSelector('Creativity & Innovation',this)">Creativity & Innovation</button>
             <button class="tab" onclick="filterModelSelector('Time & Energy',this)">Time & Energy</button>
+			<button class="tab" onclick="filterModelSelector('Forecasting & Epistemics', this)">Forecasting & Epistemics</button>
+			<button class="tab" onclick="filterModelSelector('Negotiation & Conflict', this)">Negotiation & Conflict</button>
+			<button class="tab" onclick="filterModelSelector('Motivation & Behaviour Change', this)">Motivation & Behaviour Change</button>
+			<button class="tab" onclick="filterModelSelector('Complexity & Uncertainty', this)">Complexity & Uncertainty</button>
+			<button class="tab" onclick="filterModelSelector('Problem Diagnosis', this)">Problem Diagnosis</button>
+			<button class="tab" onclick="filterModelSelector('Cognitive Load & Attention', this)">Cognitive Load & Attention</button>
+			<button class="tab" onclick="filterModelSelector('Interpersonal & Relationship', this)">Interpersonal & Relationship</button>
+			<button class="tab" onclick="filterModelSelector('Financial Thinking', this)">Financial Thinking</button>
           </div>
           <div class="model-selector-grid" id="model-selector-grid"></div>
         </div>
@@ -774,7 +865,7 @@
     <div class="content-area">
       <div class="section-head">
         <h2>Model Library</h2>
-        <span>75 high-leverage mental models</span>
+        <span>104 high-leverage mental models</span>
       </div>
 
       <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
@@ -794,6 +885,14 @@
         <button class="btn" id="lib-learning---knowledge" onclick="filterLibrary('Learning & Knowledge')" style="border-left:3px solid var(--cat-learning)">Learning & Knowledge</button>
         <button class="btn" id="lib-creativity---innovation" onclick="filterLibrary('Creativity & Innovation')" style="border-left:3px solid var(--cat-creativity)">Creativity & Innovation</button>
         <button class="btn" id="lib-time---energy" onclick="filterLibrary('Time & Energy')" style="border-left:3px solid var(--cat-time)">Time & Energy</button>
+		<button class="btn" id="lib-forecasting---epistemics" onclick="filterLibrary('Forecasting & Epistemics')" style="border-left:3px solid var(--cat-forecasting)">Forecasting & Epistemics</button>
+<button class="btn" id="lib-negotiation---conflict" onclick="filterLibrary('Negotiation & Conflict')" style="border-left:3px solid var(--cat-negotiation)">Negotiation & Conflict</button>
+<button class="btn" id="lib-motivation---behaviour-change" onclick="filterLibrary('Motivation & Behaviour Change')" style="border-left:3px solid var(--cat-motivation)">Motivation & Behaviour Change</button>
+<button class="btn" id="lib-complexity---uncertainty" onclick="filterLibrary('Complexity & Uncertainty')" style="border-left:3px solid var(--cat-complexity)">Complexity & Uncertainty</button>
+<button class="btn" id="lib-problem-diagnosis" onclick="filterLibrary('Problem Diagnosis')" style="border-left:3px solid var(--cat-diagnosis)">Problem Diagnosis</button>
+<button class="btn" id="lib-cognitive-load---attention" onclick="filterLibrary('Cognitive Load & Attention')" style="border-left:3px solid var(--cat-cognitive)">Cognitive Load & Attention</button>
+<button class="btn" id="lib-interpersonal---relationship" onclick="filterLibrary('Interpersonal & Relationship')" style="border-left:3px solid var(--cat-interpersonal)">Interpersonal & Relationship</button>
+<button class="btn" id="lib-financial-thinking" onclick="filterLibrary('Financial Thinking')" style="border-left:3px solid var(--cat-financial)">Financial Thinking</button>
       </div>
 
       <div class="model-grid" id="model-grid"></div>
@@ -825,6 +924,14 @@
         <button class="btn" onclick="filterApps('learning & knowledge',this)" style="border-left:3px solid var(--cat-learning)">Learning & Knowledge</button>
         <button class="btn" onclick="filterApps('creativity & innovation',this)" style="border-left:3px solid var(--cat-creativity)">Creativity & Innovation</button>
         <button class="btn" onclick="filterApps('time & energy',this)" style="border-left:3px solid var(--cat-time)">Time & Energy</button>
+		<button class="btn" onclick="filterApps('forecasting & epistemics',this)" style="border-left:3px solid var(--cat-forecasting)">Forecasting & Epistemics</button>
+        <button class="btn" onclick="filterApps('negotiation & conflict',this)" style="border-left:3px solid var(--cat-negotiation)">Negotiation & Conflict</button>
+        <button class="btn" onclick="filterApps('motivation & behaviour change',this)" style="border-left:3px solid var(--cat-motivation)">Motivation & Behaviour Change</button>
+        <button class="btn" onclick="filterApps('complexity & uncertainty',this)" style="border-left:3px solid var(--cat-complexity)">Complexity & Uncertainty</button>
+        <button class="btn" onclick="filterApps('problem diagnosis',this)" style="border-left:3px solid var(--cat-diagnosis)">Problem Diagnosis</button>
+        <button class="btn" onclick="filterApps('cognitive load & attention',this)" style="border-left:3px solid var(--cat-cognitive)">Cognitive Load & Attention</button>
+        <button class="btn" onclick="filterApps('interpersonal & relationship',this)" style="border-left:3px solid var(--cat-interpersonal)">Interpersonal & Relationship</button>
+        <button class="btn" onclick="filterApps('financial thinking',this)" style="border-left:3px solid var(--cat-financial)">Financial Thinking</button>
         <button class="btn" onclick="filterApps('high-eff',this)">⭐ High Impact</button>
       </div>
 
@@ -2127,6 +2234,403 @@ const MENTAL_MODELS = [
     { prompt: 'If you forced yourself to reason about scale rather than feel about it, what would you do differently?', placeholder: 'A scale-adjusted approach would: … | The highest-impact reallocation would be…' },
   ]
 },
+// ═══════════════════════════════════════
+// NEW MENTAL MODELS — PASTE INTO EXISTING MENTAL_MODELS ARRAY
+// 8 new categories, 31 models, same data structure
+// ═══════════════════════════════════════
+
+// ── FORECASTING & EPISTEMICS ──
+{
+  id: 'outside-vs-inside-view', name: 'Outside View vs Inside View', icon: '◎', category: 'Forecasting & Epistemics',
+  color: 'var(--cat-forecasting)',
+  summary: 'The inside view reasons from the unique details of your case. The outside view asks: how do similar cases actually turn out? The inside view is almost always too optimistic.',
+  when: 'Project planning, timelines, fundraising forecasts, any situation where you have skin in the game and feel your case is special.',
+  steps: [
+    { prompt: 'What are you trying to forecast or plan? State the specific outcome and timeline.', placeholder: 'I am forecasting / planning: … by [date]' },
+    { prompt: 'Inside view first: what is your current estimate, and what specific details of YOUR situation drive it?', placeholder: 'My estimate is… based on these specifics: …' },
+    { prompt: 'Now take the outside view: what reference class does this belong to? How do similar projects / plans / ventures actually turn out statistically?', placeholder: 'Reference class: … | Base rate outcome for this class: … | Source: …' },
+    { prompt: 'Where does your inside-view estimate diverge from the base rate? What is making you believe your case is different?', placeholder: 'My estimate is [above/below] the base rate by… | I believe this because: …' },
+    { prompt: 'Is that "special case" reasoning justified by hard evidence, or is it optimism bias? What is your outside-view-anchored forecast?', placeholder: 'After anchoring to the outside view, my adjusted forecast is… | I am discounting my inside-view optimism because…' },
+  ]
+},
+{
+  id: 'bayesian-updating', name: 'Bayesian Updating', icon: '⟳', category: 'Forecasting & Epistemics',
+  color: 'var(--cat-forecasting)',
+  summary: 'Start with a prior belief. Update it proportionally when new evidence arrives — not emotionally, not all-at-once, not not-at-all. Posterior = Prior × Likelihood of evidence.',
+  when: 'Any ongoing situation where evidence accumulates over time. Hiring decisions, medical diagnosis, business hypotheses, relationship judgments.',
+  steps: [
+    { prompt: 'What belief or hypothesis are you evaluating? State it precisely and assign an initial probability (your prior).', placeholder: 'Hypothesis: … | My prior probability: __% | Based on: …' },
+    { prompt: 'What new piece of evidence has arrived? Describe it specifically.', placeholder: 'New evidence: …' },
+    { prompt: 'How likely is this evidence if the hypothesis is TRUE? How likely if the hypothesis is FALSE? (This is the likelihood ratio)', placeholder: 'If hypothesis is true, this evidence appears __% of the time | If false, it appears __% of the time | Likelihood ratio: …' },
+    { prompt: 'Multiply: does this evidence make the hypothesis more or less probable, and by roughly how much?', placeholder: 'This evidence [increases / decreases] my probability because the likelihood ratio is [>1 / <1]… | Updated probability: __%' },
+    { prompt: 'What would make you update significantly in the other direction? Define your falsification trigger in advance.', placeholder: 'I would revise downward to __% if I saw: … | I would revise upward to __% if: …' },
+  ]
+},
+{
+  id: 'superforecasting', name: 'Superforecasting', icon: '◇', category: 'Forecasting & Epistemics',
+  color: 'var(--cat-forecasting)',
+  summary: 'Accurate forecasting is a learnable skill: break predictions into specific, time-bound, falsifiable questions. Track calibration. Aggregate views. Update relentlessly.',
+  when: 'High-stakes predictions about business, markets, geopolitics, or any domain where being right or wrong has consequences.',
+  steps: [
+    { prompt: 'What are you trying to predict? Restate it as a specific, binary, time-bound question.', placeholder: 'Precise question: Will [X] happen by [specific date]? Yes / No.' },
+    { prompt: 'Break this into sub-questions. What smaller, more tractable questions does the big question depend on?', placeholder: 'Sub-question 1: … | Sub-question 2: … | Sub-question 3: …' },
+    { prompt: 'For each sub-question, what is your probability estimate and what is it based on? (Outside view first, then inside view adjustments)', placeholder: 'Sub-Q1: __% because… | Sub-Q2: __% because… | Aggregate estimate: __%' },
+    { prompt: 'Who might disagree with your estimate, and why? What do they know or weight differently?', placeholder: 'Someone who estimates higher would say: … | Someone lower would say: … | This shifts my estimate by…' },
+    { prompt: 'Set a date to revisit and score this forecast. What new information will you look for, and how will it change your estimate?', placeholder: 'Review date: … | Key information to watch for: … | If [signal] appears, I update to __%' },
+  ]
+},
+{
+  id: 'known-unknown-unknowns', name: 'Known & Unknown Unknowns', icon: '◈', category: 'Forecasting & Epistemics',
+  color: 'var(--cat-forecasting)',
+  summary: 'Known knowns (facts you have), known unknowns (gaps you are aware of), unknown unknowns (risks you do not know you are missing). The last category causes the most damage.',
+  when: 'Risk assessment, due diligence, strategy in novel environments, any situation with high uncertainty or novelty.',
+  steps: [
+    { prompt: 'What situation, plan, or decision are you assessing for uncertainty?', placeholder: 'The situation I am assessing is…' },
+    { prompt: 'Known knowns: what do you actually have confirmed, verified information about?', placeholder: 'Confirmed facts I can rely on: 1. … 2. … 3. …' },
+    { prompt: 'Known unknowns: what gaps in your knowledge are you already aware of? What are you actively uncertain about?', placeholder: 'Gaps I know I have: … | Questions I know I cannot currently answer: …' },
+    { prompt: 'Unknown unknowns: what might you be missing entirely? What questions are you not even asking? Who has been in this situation before and what surprised them?', placeholder: 'To surface unknown unknowns, I will ask: … | People who might see what I cannot: … | Historical analogues that surprised participants: …' },
+    { prompt: 'Given the unknown unknown risk, what decision posture is appropriate — more optionality, more reversibility, smaller initial commitment?', placeholder: 'To protect against what I cannot see, I will: … | The appropriate hedging strategy is…' },
+  ]
+},
+
+// ── NEGOTIATION & CONFLICT ──
+{
+  id: 'batna', name: 'BATNA', icon: '⇌', category: 'Negotiation & Conflict',
+  color: 'var(--cat-negotiation)',
+  summary: 'Your Best Alternative To a Negotiated Agreement is your real source of power in any negotiation. The better your BATNA, the less you need this deal — and the stronger your position.',
+  when: 'Any negotiation: salary, contracts, partnerships, vendors, real estate, conflict resolution.',
+  steps: [
+    { prompt: 'What negotiation are you entering? What outcome are you hoping to achieve?', placeholder: 'The negotiation is about: … | My target outcome: …' },
+    { prompt: 'If this negotiation fails entirely, what are your realistic alternatives? List all options available to you outside this deal.', placeholder: 'If this deal falls through, I could: 1. … 2. … 3. …' },
+    { prompt: 'Which alternative is your best one? What would it actually look like to pursue it?', placeholder: 'My best alternative is: … | Pursuing it would mean: … | Its realistic value to me is: …' },
+    { prompt: 'What is the other party likely BATNA? What happens to them if this negotiation fails?', placeholder: 'Their best alternative is probably: … | They need this deal more / less than I do because: …' },
+    { prompt: 'Given your BATNA, what is your walk-away point — the worst deal you would accept before exercising your alternative?', placeholder: 'I will walk away if the deal is below: … | Knowing my BATNA, I will negotiate with [more/less] confidence because: …' },
+  ]
+},
+{
+  id: 'principled-negotiation', name: 'Principled Negotiation', icon: '⊹', category: 'Negotiation & Conflict',
+  color: 'var(--cat-negotiation)',
+  summary: 'Separate people from the problem. Focus on interests, not positions. Invent options for mutual gain before committing to any. Insist on objective criteria.',
+  when: 'Any negotiation where the relationship matters, or where a deal exists that both parties are not yet seeing.',
+  steps: [
+    { prompt: 'What is the negotiation and what position is each side currently holding?', placeholder: 'My stated position: … | Their stated position: … | The apparent conflict: …' },
+    { prompt: 'Separate people from problem: what emotions, perceptions, or relationship dynamics are tangling up the substantive issue?', placeholder: 'The people issues at play: … | To address them separately, I will: …' },
+    { prompt: 'Dig beneath positions to interests: WHY does each side want what they say they want? What underlying needs, fears, or goals drive the positions?', placeholder: 'My real underlying interests: … | Their likely underlying interests: … | Shared interests: …' },
+    { prompt: 'Generate options for mutual gain: given the real interests, what creative solutions might satisfy both sides — solutions neither party has proposed yet?', placeholder: 'Possible options neither side has raised: 1. … 2. … 3. …' },
+    { prompt: 'What objective criteria — market rates, precedent, expert opinion, legal standards — can anchor the final agreement independent of who has more power?', placeholder: 'Objective standards I can invoke: … | The criteria both sides could accept as fair: …' },
+  ]
+},
+{
+  id: 'zopa', name: 'ZOPA — Zone of Possible Agreement', icon: '↔', category: 'Negotiation & Conflict',
+  color: 'var(--cat-negotiation)',
+  summary: 'Every negotiation has a zone between each party\'s walk-away point. If the zones overlap, a deal is possible. If they do not, no deal can be reached without changing the terms.',
+  when: 'Before entering any negotiation — to know whether a deal is structurally possible, and where it will likely land.',
+  steps: [
+    { prompt: 'What is being negotiated? Define the key variable or variables (price, terms, timeline, scope).', placeholder: 'The primary negotiating variable is: …' },
+    { prompt: 'What is your ideal outcome, and what is your absolute walk-away point (reservation value)?', placeholder: 'My target: … | My walk-away point (worst I will accept): …' },
+    { prompt: 'What do you estimate the other party\'s ideal is, and what is their likely walk-away point?', placeholder: 'Their estimated target: … | Their estimated walk-away point: …' },
+    { prompt: 'Is there an overlap between your walk-away and theirs? Map the ZOPA — the range where both parties would say yes.', placeholder: 'The ZOPA runs from: [low end] to [high end] | If there is no overlap: the gap is… and it can be closed by…' },
+    { prompt: 'Given the ZOPA, what is a realistic landing point — and what moves will you make to anchor toward your preferred end of the zone?', placeholder: 'Likely landing point: … | My anchoring strategy: … | My opening offer: …' },
+  ]
+},
+{
+  id: 'mirroring-labelling', name: 'Mirroring & Labelling', icon: '⟐', category: 'Negotiation & Conflict',
+  color: 'var(--cat-negotiation)',
+  summary: 'Tactical empathy tools from hostage negotiation. Mirroring repeats the last few words to invite elaboration. Labelling names the other party\'s emotion. Both disarm defensiveness and extract information.',
+  when: 'Tense conversations, conflict resolution, sales, negotiations where the other party is defensive or emotional.',
+  steps: [
+    { prompt: 'What conversation or conflict are you entering where the other party is likely emotional, defensive, or withholding?', placeholder: 'The situation is: … | The emotional dynamic I expect: …' },
+    { prompt: 'Identify what the other party has said or signalled. What are the key words and what emotion seems to be underneath them?', placeholder: 'Key words or statements from them: … | Underlying emotion I observe: …' },
+    { prompt: 'Draft a mirror: repeat the last 1-3 words (or the most emotionally loaded phrase) as a question to invite them to elaborate.', placeholder: 'Mirror response: "[Their words]…?" | What this might surface: …' },
+    { prompt: 'Draft a label: name the emotion you observe without asserting it — "It seems like…" or "It sounds like you feel…"', placeholder: 'Label: "It seems like… | It sounds like…" | Effect I expect: …' },
+    { prompt: 'After mirroring and labelling, what information or shift in dynamic do you expect — and what is your next move?', placeholder: 'Information likely to emerge: … | How this changes the conversation: … | My follow-up: …' },
+  ]
+},
+
+// ── MOTIVATION & BEHAVIOUR CHANGE ──
+{
+  id: 'fogg-behaviour-model', name: 'Fogg Behaviour Model', icon: '🔺', category: 'Motivation & Behaviour Change',
+  color: 'var(--cat-behaviour)',
+  summary: 'Behaviour = Motivation × Ability × Prompt. All three must converge at the same moment for a behaviour to fire. Most behaviour change fails by targeting motivation while ignoring ability and prompt.',
+  when: 'Designing habits, building products, changing your own behaviour, getting others to act.',
+  steps: [
+    { prompt: 'What specific behaviour are you trying to make happen — in yourself or someone else? Be precise.', placeholder: 'The target behaviour is: [who] does [what] at [when]' },
+    { prompt: 'Motivation: how motivated is the person (or are you) to do this? What drives toward it and what drives away?', placeholder: 'Motivation level: [high / medium / low] | Drivers toward: … | Drivers away: …' },
+    { prompt: 'Ability: how easy or hard is it to execute this behaviour right now? What makes it difficult?', placeholder: 'Current difficulty: … | Specific friction points: … | Simplest version of this behaviour: …' },
+    { prompt: 'Prompt: what triggers the behaviour? Is there a reliable cue that fires at the right moment? What is missing?', placeholder: 'Current prompt / trigger: … | Is it firing at the right moment? … | A better prompt would be: …' },
+    { prompt: 'Which of the three (motivation, ability, prompt) is the weakest link? What single change would most reliably make this behaviour happen?', placeholder: 'The weakest link is: … | The highest-leverage intervention is: …' },
+  ]
+},
+{
+  id: 'identity-based-habits', name: 'Identity-Based Habits', icon: '🪪', category: 'Motivation & Behaviour Change',
+  color: 'var(--cat-behaviour)',
+  summary: 'Outcome-based change ("I want to lose weight") is fragile. Identity-based change ("I am a healthy person") is durable. Each action is a vote cast for the identity you want to become.',
+  when: 'Building lasting habits, breaking persistent bad ones, any behaviour change that has failed before with outcome-focused approaches.',
+  steps: [
+    { prompt: 'What behaviour change are you trying to make stick? What is the outcome you have been chasing?', placeholder: 'Outcome goal: … | Behaviour I want to sustain: …' },
+    { prompt: 'What type of person reliably does this behaviour as a matter of course? Define their identity.', placeholder: 'A person who does this consistently would describe themselves as: "I am a ___"' },
+    { prompt: 'Is that identity true for you right now? If not, what evidence would need to accumulate to make it true?', placeholder: 'That identity is [true / partially true / not yet true] for me | Evidence I would need: …' },
+    { prompt: 'What is the smallest action that counts as a vote for that identity — something you could do today?', placeholder: 'The smallest identity-confirming action is: … | I can do this by: …' },
+    { prompt: 'How will you reinforce the identity narrative over time — what do you tell yourself after each vote cast?', placeholder: 'After doing this action, I will affirm: "I am the kind of person who…" | Reinforcement ritual: …' },
+  ]
+},
+{
+  id: 'implementation-intentions', name: 'Implementation Intentions', icon: '📌', category: 'Motivation & Behaviour Change',
+  color: 'var(--cat-behaviour)',
+  summary: '"If situation X, then I will do Y." Pre-committing a specific when, where, and how dramatically increases follow-through — turning vague intentions into automatic responses.',
+  when: 'Any goal or habit where you intend to act but frequently fail to. The gap between intention and behaviour.',
+  steps: [
+    { prompt: 'What intention have you stated before but failed to follow through on consistently?', placeholder: 'I keep intending to: … but it does not happen because: …' },
+    { prompt: 'Identify the specific WHEN: what exact time, day, or triggering situation will cue this behaviour?', placeholder: 'The specific trigger moment is: "When [situation / time / event]…"' },
+    { prompt: 'Identify the specific WHERE: in what physical location or context will this happen?', placeholder: '…at / in [specific place or context]…' },
+    { prompt: 'Identify the specific HOW: what exactly will you do — the precise first action, not the general goal?', placeholder: '…I will [exact first physical action]."' },
+    { prompt: 'Write out the full implementation intention and identify what might disrupt it — then add a coping intention for that obstacle.', placeholder: 'Full intention: "If [X], then I will [Y]." | Obstacle: … | Coping intention: "If [obstacle], then I will [backup]."' },
+  ]
+},
+{
+  id: 'temptation-bundling', name: 'Temptation Bundling', icon: '🔗', category: 'Motivation & Behaviour Change',
+  color: 'var(--cat-behaviour)',
+  summary: 'Pair something you want to do (a temptation) with something you need to do (an obligation). The pleasurable activity becomes only available during the effortful one.',
+  when: 'Habits you consistently procrastinate on despite knowing their value. Exercise, admin, learning, deep work.',
+  steps: [
+    { prompt: 'What is the behaviour you need to do but consistently avoid or delay?', placeholder: 'The obligation I avoid: …' },
+    { prompt: 'What activities do you genuinely enjoy or find rewarding — things you gravitate toward naturally?', placeholder: 'Temptations / enjoyable activities: 1. … 2. … 3. …' },
+    { prompt: 'Which of those enjoyable activities is compatible with the obligation — can it be done simultaneously or immediately before/after?', placeholder: 'Compatible pairing: [obligation] + [temptation] | How they can be done together: …' },
+    { prompt: 'Impose the rule: the temptation is ONLY allowed during the obligation. Define the rule precisely.', placeholder: 'Rule: "I only [temptation] while / immediately after [obligation]." | No exceptions: …' },
+    { prompt: 'What would break this bundle — when would you be tempted to separate them? How will you protect the pairing?', placeholder: 'Likely breakdown moment: … | Protection rule: …' },
+  ]
+},
+
+// ── COMPLEXITY & UNCERTAINTY ──
+{
+  id: 'cynefin', name: 'Cynefin Framework', icon: '🧭', category: 'Complexity & Uncertainty',
+  color: 'var(--cat-complexity)',
+  summary: 'Problems live in one of four domains — Clear, Complicated, Complex, or Chaotic — each requiring a fundamentally different response. Applying the wrong approach to the wrong domain is one of the most common strategic errors.',
+  when: 'Before choosing a problem-solving approach. Especially when conventional methods are failing or the situation is novel.',
+  steps: [
+    { prompt: 'What problem or situation are you trying to navigate? Describe it as specifically as possible.', placeholder: 'The situation is: …' },
+    { prompt: 'What is the relationship between cause and effect here? Is it obvious (Clear), knowable through analysis (Complicated), only visible in retrospect (Complex), or not visible at all (Chaotic)?', placeholder: 'Cause-effect relationship: [obvious / knowable / retrospective / unclear] | Evidence for this: …' },
+    { prompt: 'Which Cynefin domain does this belong to — and what does that domain call for? (Clear: best practice | Complicated: expert analysis | Complex: probe-sense-respond | Chaotic: act-sense-respond)', placeholder: 'Domain: … | Standard response type for this domain: …' },
+    { prompt: 'Are you (or your organisation) treating this as the wrong type of problem? What approach are you currently using — and is it matched to the actual domain?', placeholder: 'Current approach: … | Mismatch: I am applying [X-domain thinking] to a [Y-domain] problem because…' },
+    { prompt: 'What would a domain-appropriate response actually look like? What changes in your approach?', placeholder: 'Domain-matched response: … | Specific changes from current approach: …' },
+  ]
+},
+{
+  id: 'wicked-problems', name: 'Wicked Problems', icon: '🌀', category: 'Complexity & Uncertainty',
+  color: 'var(--cat-complexity)',
+  summary: 'Wicked problems have no definitive formulation, no stopping rule, no right or wrong solutions — only better or worse ones. Every attempt to solve them changes the problem. They cannot be solved, only navigated.',
+  when: 'Strategy, policy, organisational design, climate, poverty, culture change — any problem that resists resolution despite effort.',
+  steps: [
+    { prompt: 'What problem are you trying to solve? Describe the current approach and why it keeps not working.', placeholder: 'The problem is: … | Attempts so far: … | Why they have not resolved it: …' },
+    { prompt: 'Is this problem actually wicked? Does it have: no agreed formulation, no clear stopping point, solutions that change the problem, and effects that cannot be fully undone?', placeholder: 'Wickedness check: no formulation agreement [yes/no] | no stopping rule [yes/no] | solutions change the problem [yes/no] | irreversible effects [yes/no]' },
+    { prompt: 'If it is wicked, who are all the legitimate stakeholders — and how do they each define the problem differently?', placeholder: 'Stakeholder 1 frames it as: … | Stakeholder 2: … | Stakeholder 3: … | The frames in conflict: …' },
+    { prompt: 'Since you cannot solve it definitively, what does "better" look like? What partial, impermanent interventions could improve the situation without locking in a wrong answer?', placeholder: 'Better (not solved) looks like: … | Reversible interventions to try: … | How to test without over-committing: …' },
+    { prompt: 'How will you sustain ongoing navigation rather than one-time solving — what monitoring, adaptation, and stakeholder engagement structure is needed?', placeholder: 'Ongoing navigation structure: … | Review cadence: … | Who stays involved: …' },
+  ]
+},
+{
+  id: 'black-swan-fat-tails', name: 'Black Swan / Fat Tails', icon: '🦢', category: 'Complexity & Uncertainty',
+  color: 'var(--cat-complexity)',
+  summary: 'Normal distributions dramatically underweight rare, extreme events. Real-world distributions have fat tails — the improbable happens far more often than the bell curve predicts, and the impact is disproportionate.',
+  when: 'Risk planning, financial decisions, infrastructure, any domain where a rare event could be catastrophic.',
+  steps: [
+    { prompt: 'What system, plan, or position are you stress-testing for tail risk?', placeholder: 'The thing I am examining: …' },
+    { prompt: 'What are the tail scenarios — rare events that your current model treats as negligible but that would be catastrophic if they occurred?', placeholder: 'Tail scenarios: 1. … 2. … 3. … | Current assumed probability of each: …' },
+    { prompt: 'Are you in a Mediocristan domain (bounded, averages dominate) or Extremistan (unbounded, single events dominate)? Most social and financial systems are Extremistan.', placeholder: 'This domain is [Mediocristan / Extremistan] because: …' },
+    { prompt: 'How would you survive the worst tail scenario? Is your current exposure such that a tail event would be merely painful or actually terminal?', placeholder: 'Tail event survival: [I survive / it is terminal] because: … | Current exposure to the worst tail: …' },
+    { prompt: 'What position changes or insurance structures would make you antifragile to tail events — or at least ensure you cannot be wiped out by them?', placeholder: 'Tail-risk adjustments: … | Barbell strategy (safe core + small high-upside bets): … | What I will cut to reduce terminal exposure: …' },
+  ]
+},
+{
+  id: 'robust-decision-making', name: 'Robust Decision Making', icon: '🛡', category: 'Complexity & Uncertainty',
+  color: 'var(--cat-complexity)',
+  summary: 'Instead of optimising for the best outcome in one forecast, find strategies that produce acceptable outcomes across the widest range of possible futures. Sacrifice some upside to eliminate catastrophic downside.',
+  when: 'High-uncertainty decisions, long-term strategy, infrastructure, any decision where a wrong forecast would be very costly.',
+  steps: [
+    { prompt: 'What decision are you making under deep uncertainty — where you cannot reliably forecast which future will occur?', placeholder: 'The decision is: … | Key uncertainties I cannot resolve: …' },
+    { prompt: 'Map the scenario space: what are the distinct futures that could plausibly unfold? Define 3-5 scenarios.', placeholder: 'Scenario A (likely): … | Scenario B: … | Scenario C (tail): … | Scenario D: …' },
+    { prompt: 'For each candidate strategy, how does it perform across each scenario? Identify which strategies fail badly in which scenarios.', placeholder: 'Strategy 1 in Scenario A: … B: … C: … | Strategy 2 in A: … B: … C: …' },
+    { prompt: 'Which strategy produces the best worst-case performance — acceptable results even in the scenarios you most fear?', placeholder: 'Most robust strategy: … | Its worst-case scenario performs at: … | What it sacrifices in the upside scenarios: …' },
+    { prompt: 'Are there adaptive strategies — ones that start robustly and allow you to shift as uncertainty resolves?', placeholder: 'Adaptive path: begin with … then if [signal] pivot to … | Decision triggers to watch: …' },
+  ]
+},
+
+// ── PROBLEM DIAGNOSIS ──
+{
+  id: 'five-whys', name: '5 Whys', icon: '❓', category: 'Problem Diagnosis',
+  color: 'var(--cat-diagnosis)',
+  summary: 'Ask "why" five times to drill from surface symptom to root cause. Most first attempts at fixing a problem address a symptom. The fifth why usually points to a systemic failure.',
+  when: 'Any recurring problem, quality failure, process breakdown, or situation where the obvious fix has not worked.',
+  steps: [
+    { prompt: 'State the problem as a clear, specific observable symptom. Do not include causes yet — just what you can see.', placeholder: 'The observable symptom is: … | It occurred at: … | Frequency / magnitude: …' },
+    { prompt: 'Why 1: Why is this symptom occurring? What is the most immediate, direct cause?', placeholder: 'Why 1: This happens because…' },
+    { prompt: 'Why 2: Why does that cause exist? What is causing the cause?', placeholder: 'Why 2: That exists because…' },
+    { prompt: 'Why 3 & 4: Keep drilling. Why does that exist? And why does that exist?', placeholder: 'Why 3: … because… | Why 4: … because…' },
+    { prompt: 'Why 5: What is the deepest systemic root? What would you need to fix so this class of problem cannot recur?', placeholder: 'Root cause (Why 5): … | Systemic fix required: … | Indicator this is truly root: fixing it would prevent recurrence because…' },
+  ]
+},
+{
+  id: 'fishbone-diagram', name: 'Fishbone / Ishikawa Diagram', icon: '≋', category: 'Problem Diagnosis',
+  color: 'var(--cat-diagnosis)',
+  summary: 'Organise potential causes of a problem across multiple dimensions — People, Process, Environment, Equipment, Materials, Measurement. Prevents tunnel-vision on the first obvious cause.',
+  when: 'Complex failures with multiple potential causes. Quality problems, project failures, recurring issues where a single root cause is not obvious.',
+  steps: [
+    { prompt: 'Define the effect — the specific, measurable problem you are diagnosing. Write it precisely.', placeholder: 'The problem effect: … | Measurable evidence: … | When it occurs: …' },
+    { prompt: 'People: what human factors could be causing this? Skills, training, behaviour, communication, fatigue?', placeholder: 'People causes: …' },
+    { prompt: 'Process & Environment: what about the process steps, procedures, or physical environment could be contributing?', placeholder: 'Process causes: … | Environment causes: …' },
+    { prompt: 'Equipment, Materials & Measurement: what tools, inputs, or measurement systems might be introducing the problem?', placeholder: 'Equipment causes: … | Materials causes: … | Measurement causes: …' },
+    { prompt: 'Looking across all categories, which causes are most likely and most testable? Rank them and define the test you would run to confirm each.', placeholder: 'Most likely cause 1: … | Test: … | Most likely cause 2: … | Test: …' },
+  ]
+},
+{
+  id: 'symptom-vs-root-cause', name: 'Symptom vs Root Cause', icon: '🌡', category: 'Problem Diagnosis',
+  color: 'var(--cat-diagnosis)',
+  summary: 'Treating symptoms provides relief but the problem recurs. Treating root causes eliminates the problem class. The key distinction: a root cause, if fixed, makes the symptom impossible to recur.',
+  when: 'Any recurring problem, any "we fixed this before" situation, firefighting cultures, chronic issues.',
+  steps: [
+    { prompt: 'What problem are you dealing with — and has it recurred before after being "fixed"?', placeholder: 'The problem: … | Previous fixes attempted: … | It recurred because: …' },
+    { prompt: 'Describe the current proposed fix. Is it addressing the visible symptom or the underlying generator?', placeholder: 'Proposed fix: … | This addresses: [symptom / root cause] because…' },
+    { prompt: 'What would the world look like if the root cause were fixed — not just this instance, but the entire class of the problem?', placeholder: 'If root cause fixed, we would never again see: … | The system would work differently in that: …' },
+    { prompt: 'Trace backward: what upstream condition, decision, or design creates this symptom repeatedly? That is closer to the root.', placeholder: 'Upstream condition generating the symptom: … | Why that condition exists: …' },
+    { prompt: 'What would it take to fix the root — and what is the risk of continuing to treat only symptoms?', placeholder: 'Root-level fix: … | Cost / effort: … | Cost of continued symptom treatment: …' },
+  ]
+},
+
+// ── COGNITIVE LOAD & ATTENTION ──
+{
+  id: 'dual-process-theory', name: 'Dual Process Theory (System 1 / System 2)', icon: '⟁', category: 'Cognitive Load & Attention',
+  color: 'var(--cat-cognitive)',
+  summary: 'System 1: fast, automatic, intuitive, effortless, error-prone in predictable ways. System 2: slow, deliberate, effortful, accurate but lazy. Most errors occur when System 1 is engaged on problems that require System 2.',
+  when: 'Any important decision, evaluating your own reasoning, designing processes, understanding bias.',
+  steps: [
+    { prompt: 'What decision or judgment are you making? How are you currently approaching it?', placeholder: 'The decision is: … | My current approach: automatic / deliberate / mixed' },
+    { prompt: 'Is your response coming from System 1 (fast, intuitive, feels certain) or System 2 (slow, effortful, explicit reasoning)?', placeholder: 'Source of my current thinking: System [1 / 2] | Signs of this: …' },
+    { prompt: 'What are the known failure modes of System 1 in this type of situation? (Anchoring, availability, representativeness, affect heuristic, overconfidence)', placeholder: 'Relevant System 1 biases here: … | How they might be distorting my judgment: …' },
+    { prompt: 'Does this decision warrant engaging System 2 deliberately? What would a slow, explicit, step-by-step analysis look like?', placeholder: 'Explicit System 2 analysis: step 1… step 2… step 3… | Conclusion from deliberate analysis: …' },
+    { prompt: 'Does the System 2 analysis agree with your System 1 intuition — or reveal a gap? What is the right call?', placeholder: 'Gap between S1 and S2: … | I will defer to [S1 / S2] because: … | Final decision: …' },
+  ]
+},
+{
+  id: 'cognitive-load-theory', name: 'Cognitive Load Theory', icon: '🧠', category: 'Cognitive Load & Attention',
+  color: 'var(--cat-cognitive)',
+  summary: 'Working memory is severely limited. Cognitive load = Intrinsic (task complexity) + Extraneous (bad design, unnecessary friction) + Germane (useful learning effort). Overload causes failure. Reduce extraneous load to free capacity for what matters.',
+  when: 'Designing training, onboarding, communications, or any task where people are struggling to perform or learn.',
+  steps: [
+    { prompt: 'What task, process, or piece of communication are you designing or troubleshooting?', placeholder: 'The task / communication is: …' },
+    { prompt: 'Intrinsic load: how genuinely complex is this task? What is the irreducible cognitive demand of doing it well?', placeholder: 'Irreducible complexity: … | This requires holding [X] elements in mind simultaneously because…' },
+    { prompt: 'Extraneous load: what unnecessary friction, poor design, or unclear information is adding cognitive burden beyond the task itself?', placeholder: 'Extraneous load sources: confusing instructions / poor layout / irrelevant information / unclear sequence: …' },
+    { prompt: 'What can be eliminated, simplified, chunked, or sequenced better to reduce extraneous load without reducing intrinsic challenge?', placeholder: 'Extraneous load reductions: eliminate… simplify… chunk by… resequence so that…' },
+    { prompt: 'Germane load: what effortful processing genuinely builds skill or understanding and should be preserved even though it is hard?', placeholder: 'Preserve this productive difficulty: … | The remaining load after redesign: intrinsic [X] + germane [Y] — manageable because…' },
+  ]
+},
+{
+  id: 'attentional-spotlight', name: 'Attentional Spotlight', icon: '🔦', category: 'Cognitive Load & Attention',
+  color: 'var(--cat-cognitive)',
+  summary: 'Attention is a narrow, directed beam — not a flood. What you attend to expands and becomes more real. What you ignore atrophies. You cannot be aware of what is outside the spotlight, including your own blind spots.',
+  when: 'Prioritisation, managing teams, evaluating where your mental energy actually goes, understanding what you are systematically missing.',
+  steps: [
+    { prompt: 'What domain — work, a relationship, a project, your health — are you examining for attentional patterns?', placeholder: 'The domain I am examining: …' },
+    { prompt: 'Where is your spotlight currently pointing? What occupies most of your attention in this domain?', placeholder: 'Most of my attention goes to: … | Evidence: I spend [X]% of my thinking on…' },
+    { prompt: 'What is outside your spotlight — important things you are systematically not attending to in this domain?', placeholder: 'In shadow (not attended to): … | How long have I been ignoring this: …' },
+    { prompt: 'What is the cost of the current spotlight position? What opportunities or risks are you blind to?', placeholder: 'Cost of current spotlight: … | Risk I am not seeing: … | Opportunity in the shadow: …' },
+    { prompt: 'Where should the spotlight shift — and what would you have to consciously stop attending to in order to make room?', placeholder: 'Redirect spotlight toward: … | To do this I must deliberately reduce attention on: …' },
+  ]
+},
+
+// ── INTERPERSONAL & RELATIONSHIP ──
+{
+  id: 'fundamental-attribution-error', name: 'Fundamental Attribution Error', icon: '👁', category: 'Interpersonal & Relationship',
+  color: 'var(--cat-interpersonal)',
+  summary: 'We explain others\' behaviour by their character or disposition ("they are lazy"). We explain our own by circumstances ("I was busy"). This asymmetry distorts judgment, blame, and empathy.',
+  when: 'Interpreting frustrating behaviour, giving feedback, building relationships, managing teams, conflict.',
+  steps: [
+    { prompt: 'What behaviour from another person is frustrating, confusing, or disappointing you?', placeholder: 'What they did: … | My initial interpretation of them as a person: …' },
+    { prompt: 'What dispositional (character-based) explanation are you defaulting to? Be honest.', placeholder: 'I am telling myself they are: lazy / selfish / incompetent / dishonest because…' },
+    { prompt: 'Now generate at least three situational explanations. What circumstances, pressures, or context could explain the same behaviour without assuming a character flaw?', placeholder: 'Situational explanation 1: … | 2: … | 3: …' },
+    { prompt: 'If you were in their exact situation — their constraints, information, pressures, history — would you have behaved differently? Be honest.', placeholder: 'In their situation, I might have: … | What I would need to know to act differently: …' },
+    { prompt: 'How does correcting for the fundamental attribution error change how you should respond or what you should say?', placeholder: 'Instead of responding to their character, I will respond to the situation by: …' },
+  ]
+},
+{
+  id: 'johari-window', name: 'Johari Window', icon: '🪟', category: 'Interpersonal & Relationship',
+  color: 'var(--cat-interpersonal)',
+  summary: 'Four quadrants of self-knowledge: Open (known to you and others), Blind Spot (unknown to you, known to others), Hidden (known to you, unknown to others), Unknown (unknown to both). Growth requires expanding the Open quadrant.',
+  when: 'Self-development, leadership, feedback culture, team trust, any relationship where there is a gap between self-perception and how others experience you.',
+  steps: [
+    { prompt: 'What context — work, a relationship, a team — are you examining through the Johari Window?', placeholder: 'The context I am examining: …' },
+    { prompt: 'Open quadrant: what do you know about yourself that you believe others also see clearly? (Strengths and weaknesses alike)', placeholder: 'Open (known to me + others): …' },
+    { prompt: 'Blind spot quadrant: what have others told you — directly or through feedback — that surprised you, or that you have resisted? What might they see that you do not?', placeholder: 'Possible blind spots (others see, I do not): … | Feedback I have dismissed or resisted: …' },
+    { prompt: 'Hidden quadrant: what do you know about yourself — fears, motivations, struggles — that you have not disclosed to others in this context? What would change if you disclosed it?', placeholder: 'Hidden (I know, others do not): … | Effect of disclosing: …' },
+    { prompt: 'What one action would most expand your Open quadrant — seeking specific feedback to shrink the blind spot, or disclosing something relevant to shrink the hidden area?', placeholder: 'Highest-leverage move: [seek feedback on X from Y] or [disclose Z to W] | Why this matters now: …' },
+  ]
+},
+{
+  id: 'emotional-bank-account', name: 'Emotional Bank Account', icon: '🏦', category: 'Interpersonal & Relationship',
+  color: 'var(--cat-interpersonal)',
+  summary: 'Every relationship runs on a trust balance. Deposits: understanding, kindness, honesty, kept commitments. Withdrawals: criticism, broken promises, dismissiveness. Overdrawn accounts cannot handle conflict or stress.',
+  when: 'Important relationships under strain, team culture, any situation where trust is being depleted faster than it is replenished.',
+  steps: [
+    { prompt: 'Which relationship are you examining — with a person, a team, or an organisation?', placeholder: 'The relationship: …' },
+    { prompt: 'What deposits have been made recently? (Understanding their priorities, keeping small commitments, showing genuine care, being honest even when hard)', placeholder: 'Recent deposits: … | Approximate balance running total: …' },
+    { prompt: 'What withdrawals have occurred? (Broken commitments, dismissiveness, criticism without empathy, surprises, poor communication)', placeholder: 'Recent withdrawals: … | Which withdrawals were largest: …' },
+    { prompt: 'What is your honest assessment of the current balance — and how would the other party describe the account if asked?', placeholder: 'My estimate of the balance: [positive / neutral / overdrawn] | How they might assess it: …' },
+    { prompt: 'What specific deposit could you make in the next 48 hours — and what withdrawal risk must you avoid?', placeholder: 'Next deposit: … | Withdrawal to avoid: … | Longer-term replenishment plan: …' },
+  ]
+},
+{
+  id: 'transactional-analysis', name: 'Transactional Analysis', icon: '🔄', category: 'Interpersonal & Relationship',
+  color: 'var(--cat-interpersonal)',
+  summary: 'Three ego states: Parent (authoritative, nurturing or critical), Adult (rational, present-moment), Child (emotional, creative or reactive). Dysfunctional communication happens when states are mismatched. Adult-to-Adult is the goal.',
+  when: 'Recurring conflict patterns, communication breakdowns, parent-child dynamics in professional settings, any relationship with stuck patterns.',
+  steps: [
+    { prompt: 'What recurring communication pattern or conflict are you analysing?', placeholder: 'The pattern: … | It tends to trigger when: …' },
+    { prompt: 'In this pattern, what ego state are YOU typically operating from — Critical Parent, Nurturing Parent, Adult, Free Child, or Adapted Child?', placeholder: 'My typical ego state in this dynamic: … | Signs of this: …' },
+    { prompt: 'What ego state is the other person typically operating from — and how does your state invite or provoke theirs?', placeholder: 'Their typical ego state: … | How my state triggers theirs: …' },
+    { prompt: 'What does an Adult-to-Adult version of this conversation look like — rational, present-focused, without the Parent-Child hook?', placeholder: 'Adult-to-Adult version: … | What I would say differently: … | What I would stop doing: …' },
+    { prompt: 'What is the hook that pulls you out of Adult? What internal trigger do you need to intercept before it changes your ego state?', placeholder: 'My hook: … | Intercept strategy: "When I notice [X], I will pause and [Y] before responding"' },
+  ]
+},
+
+// ── FINANCIAL THINKING ──
+{
+  id: 'net-present-value', name: 'Net Present Value (NPV)', icon: '📉', category: 'Financial Thinking',
+  color: 'var(--cat-financial)',
+  summary: 'A dollar today is worth more than a dollar in the future. NPV discounts future cash flows to their present value, then nets them against the cost. If NPV is positive, the investment creates value.',
+  when: 'Evaluating any investment, project, or decision with costs now and returns later. Business cases, career decisions, education, capital allocation.',
+  steps: [
+    { prompt: 'What investment or decision are you evaluating? What is the upfront cost or commitment?', placeholder: 'The decision: … | Upfront cost / commitment: …' },
+    { prompt: 'What are the expected future cash flows or benefits — and when will they arrive?', placeholder: 'Year 1 benefit: … | Year 2: … | Year 3: … | Ongoing: …' },
+    { prompt: 'What discount rate is appropriate? (Your cost of capital, required return, or opportunity cost — the rate your money could earn elsewhere)', placeholder: 'Discount rate: __% | Justified by: …' },
+    { prompt: 'Calculate roughly: at that discount rate, what are the future benefits worth in today\'s money? Does the present value of benefits exceed the cost?', placeholder: 'Present value of future benefits ≈ … | Net of upfront cost = … | NPV is [positive / negative]' },
+    { prompt: 'How sensitive is the NPV to changes in assumptions? What would have to be true for this investment to be a bad idea?', placeholder: 'Breaks even if: benefits drop by __% or timing slips by [X] | Key assumption to stress-test: …' },
+  ]
+},
+{
+  id: 'leverage-asymmetry', name: 'Leverage & Asymmetry', icon: '⚠', category: 'Financial Thinking',
+  color: 'var(--cat-financial)',
+  summary: 'Leverage amplifies both gains and losses symmetrically — but the consequences are asymmetric. A 50% loss requires a 100% gain to recover. Ruin is permanent. Upside is recoverable from; downside sometimes is not.',
+  when: 'Borrowing, scaling a business, using financial leverage, concentration decisions, any bet where failure could be terminal.',
+  steps: [
+    { prompt: 'What decision involves leverage — financial, operational, or otherwise? Describe the structure.', placeholder: 'The leveraged structure is: … | Borrowed / leveraged portion: … | Equity / owned portion: …' },
+    { prompt: 'What does the upside look like with leverage? How does it amplify returns versus an unleveraged position?', placeholder: 'Unleveraged return: __% | Leveraged return on same outcome: __% | Amplification factor: …' },
+    { prompt: 'What does the downside look like with leverage? What happens if the asset falls 20%, 40%, 60%? At what point is there total loss?', placeholder: 'At -20%: … | At -40%: … | Wipeout point: … | Can I cover margin calls / debt service if this happens? …' },
+    { prompt: 'Is the downside survivable — can you recover from the worst case, or is it terminal?', placeholder: 'Worst case outcome: … | This is [survivable / terminal] because: … | Recovery time if survivable: …' },
+    { prompt: 'Given the asymmetry, what is the appropriate leverage level — and what deleveraging trigger will you set before entering?', placeholder: 'Maximum leverage I will use: … | Pre-committed deleveraging trigger: "If [X], I reduce to [Y]"' },
+  ]
+},
+{
+  id: 'liquidity-vs-solvency', name: 'Liquidity vs Solvency', icon: '💧', category: 'Financial Thinking',
+  color: 'var(--cat-financial)',
+  summary: 'Solvent means assets exceed liabilities. Liquid means you have cash to meet obligations right now. Entities can be solvent but illiquid — and die anyway. Most crises are liquidity crises first, solvency crises second.',
+  when: 'Financial planning, evaluating a business, stress-testing a personal balance sheet, assessing counterparties.',
+  steps: [
+    { prompt: 'What entity — a business, personal finances, an investment — are you stress-testing?', placeholder: 'The entity I am examining: …' },
+    { prompt: 'Solvency check: what are the total assets and total liabilities? Is the net worth positive?', placeholder: 'Total assets: … | Total liabilities: … | Net worth / equity: … | Solvent? [yes / no]' },
+    { prompt: 'Liquidity check: what cash or near-cash is available right now? What obligations must be met in the next 30, 90, 180 days?', placeholder: 'Available cash / liquid assets: … | Obligations next 30 days: … | 90 days: … | 180 days: …' },
+    { prompt: 'Stress scenario: if income or inflows stopped for 90 days, could obligations still be met? How long does the runway last?', placeholder: 'Without new inflows, runway is: … | First obligation that cannot be met: … at [day/month]' },
+    { prompt: 'What changes would improve liquidity — without necessarily improving solvency — to prevent a cash crisis even in a storm?', placeholder: 'Liquidity improvements: build cash reserve of … | extend credit lines by … | reduce fixed obligations by …' },
+  ]
+},
 ];
 
 // ═══════════════════════════════════════
@@ -2215,7 +2719,7 @@ function updateCatBadges() {
     'learning':'Learning & Knowledge','creativity':'Creativity & Innovation',
     'strategy':'Strategy & Competition','communication':'Communication & Persuasion',
     'leadership':'Leadership & Influence','time':'Time & Energy',
-    'causality':'Causality & Logic','change':'Change & Adaptation','ethics':'Ethics & Values'
+    'causality':'Causality & Logic','change':'Change & Adaptation','ethics':'Ethics & Values','forecast':'Forecasting & Epistemics','negotiation':'Negotiation & Conflict','motivation':'Motivation & Behaviour Change','complexity':'Complexity & Uncertainty','problem':'Problem Diagnosis','cognitive':'Cognitive Load & Attention','interpersonal':'Interpersonal & Relationship','finance':'Financial Thinking',
   };
   Object.entries(catMap).forEach(([key, cat]) => {
     const el = document.getElementById('catb-' + key);
@@ -2345,7 +2849,15 @@ function getCatColor(cat) {
     'Communication & Persuasion': 'var(--cat-communication)',
     'Learning & Knowledge': 'var(--cat-learning)',
     'Creativity & Innovation': 'var(--cat-creativity)',
-    'Time & Energy': 'var(--cat-time)'
+    'Time & Energy': 'var(--cat-time)',
+	'Forecasting & Epistemics': 'var(--cat-forecasting)',
+	'Negotiation & Conflict': 'var(--cat-negotiation)',
+	'Motivation & Behaviour Change':'var(--cat-motivation)',
+	'Complexity & Uncertainty':'var(--cat-complexity)',
+	'Problem Diagnosis':'var(--cat-diagnosis)',
+	'Cognitive Load & Attention': 'var(--cat-cognitive)',
+	'Interpersonal & Relationship':'var(--cat-interpersonal)',
+	'Financial Thinking':'var(--cat-financial)',
   };
   return colors[cat] || 'var(--text-dim)';
 }
@@ -2366,16 +2878,46 @@ function getCatDim(cat) {
     'Communication & Persuasion':'rgba(67,212,201,0.12)',
     'Learning & Knowledge':'rgba(224,138,60,0.12)',
     'Creativity & Innovation':'rgba(196,212,67,0.12)',
-    'Time & Energy':'rgba(74,159,212,0.12)'
+    'Time & Energy':'rgba(74,159,212,0.12)',
+	'Forecasting & Epistemics': 'rgba(120,80,200,0.12)',
+    'Negotiation & Conflict': 'rgba(230,120,50,0.12)',
+    'Motivation & Behaviour Change': 'rgba(80,200,120,0.12)',
+    'Complexity & Uncertainty': 'rgba(100,100,100,0.12)',
+    'Problem Diagnosis': 'rgba(200,80,80,0.12)',
+    'Cognitive Load & Attention': 'rgba(60,150,220,0.12)',
+    'Interpersonal & Relationship': 'rgba(210,180,50,0.12)',
+    'Financial Thinking': 'rgba(50,180,90,0.12)'
   }[cat] || 'var(--surface3)';
 }
 
 function filterLibrary(cat) {
   libFilter = cat;
-  const allCats = ['All','Clarity','Decision','Risk','Psychology','Systems',
-    'Thinking Quality','Causality & Logic','Change & Adaptation','Ethics & Values',
-    'Leadership & Influence','Strategy & Competition','Communication & Persuasion',
-    'Learning & Knowledge','Creativity & Innovation','Time & Energy'];
+  const allCats = [
+  'All',
+  'Clarity',
+  'Decision',
+  'Risk',
+  'Psychology',
+  'Systems',
+  'Thinking Quality',
+  'Causality & Logic',
+  'Change & Adaptation',
+  'Ethics & Values',
+  'Leadership & Influence',
+  'Strategy & Competition',
+  'Communication & Persuasion',
+  'Learning & Knowledge',
+  'Creativity & Innovation',
+  'Time & Energy',
+  'Forecasting & Epistemics',
+  'Negotiation & Conflict',
+  'Motivation & Behaviour Change',
+  'Complexity & Uncertainty',
+  'Problem Diagnosis',
+  'Cognitive Load & Attention',
+  'Interpersonal & Relationship',
+  'Financial Thinking',
+];
   allCats.forEach(c => {
     const btn = document.getElementById('lib-' + c.toLowerCase().replace(/[^a-z0-9]/g,'-'));
     if (btn) btn.classList.toggle('active', c === cat);
